@@ -2,6 +2,7 @@ FROM golang:stretch as build-env
 
 # Install minimum necessary dependencies
 ENV PACKAGES curl make git libc-dev bash gcc
+ENV GOPROXY https://goproxy.cn,direct
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y $PACKAGES
 
