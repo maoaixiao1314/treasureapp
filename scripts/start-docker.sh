@@ -7,7 +7,10 @@ echo "starting ethermint node $ID in background ..."
 ./ethermintd start \
 --home /ethermint \
 --keyring-backend test \
---json-rpc.api eth,txpool,personal,net,debug,web3,miner
+--json-rpc.api eth,txpool,personal,net,debug,web3,miner \
+--pruning=nothing \
+--trace
+
 
 echo "started ethermint node"
 tail -f /dev/null
