@@ -390,17 +390,24 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 					fmt.Println("error:", err)
 				}
 				for index, vlog := range Data {
-					fmt.Printf("账户地址到验证器地址的转换:%+v\n", vlog[2].(string))
-					a := []byte(vlog[2].(string))
+					fmt.Printf("账户地址到验证器地址的转换:%+v\n", vlog[0].(string))
+					a := []byte(vlog[0].(string))
 					c := string(a[2:])
 					s := strings.ToUpper(c)
 					NewValidatoradd, _ := sdk.ValAddressFromHex(s)
 					fmt.Printf("NewValidatoradd22222:%+v\n", NewValidatoradd)
 					fmt.Println("index", index)
-					tat = int64(vlog[0].(float64) * math.Pow10(int(10)))
-					newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+					//state 1 表示TAT;2表示unit
+					state := int64(vlog[2].(float64) * math.Pow10(int(10)))
 					fmt.Println("tat监听值:", tat)
 					fmt.Println("newunit监听值:", newunit)
+					if state == int64(1) {
+						tat = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+					} else {
+						tat = int64(0)
+						newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+					}
 					k.SetTat(ctx, tat, NewValidatoradd)
 					k.SetNewToken(ctx, newunit, NewValidatoradd)
 				}
