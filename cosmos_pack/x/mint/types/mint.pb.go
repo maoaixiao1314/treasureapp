@@ -398,9 +398,9 @@ func (m *Minter) Unmarshal(dAtA []byte) error {
 			}
 		}
 		fieldNum := int32(wire >> 3) // 左移 wire乘以2的3次,右移就是除以2的3次
-		fmt.Println("fieldNum:", fieldNum)
+		//fmt.Println("fieldNum:", fieldNum)
 		wireType := int(wire & 0x7)
-		fmt.Println("wireType:", wireType)
+		//fmt.Println("wireType:", wireType)
 		if wireType == 4 {
 			return fmt.Errorf("proto: Minter: wiretype end group for non-group")
 		}

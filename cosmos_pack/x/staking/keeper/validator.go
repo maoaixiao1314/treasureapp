@@ -15,8 +15,8 @@ import (
 // get a single validator
 func (k Keeper) GetValidator(ctx sdk.Context, addr sdk.ValAddress) (validator types.Validator, found bool) {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Println("GetValidator addr:", addr)
-	fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
+	//fmt.Println("GetValidator addr:", addr)
+	//fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
 	value := store.Get(types.GetValidatorKey(addr))
 	if value == nil {
 		return validator, false
@@ -35,8 +35,8 @@ func (k Keeper) GetValidator(ctx sdk.Context, addr sdk.ValAddress) (validator ty
 }
 func (k Keeper) GetTatTokens(ctx sdk.Context, addr sdk.ValAddress) (TatTokens int64, found bool) {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Println("GetValidator addr:", addr)
-	fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
+	//fmt.Println("GetValidator addr:", addr)
+	//fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
 	value := store.Get(types.GetTatTokensKey(addr))
 	if value == nil {
 		return TatTokens, false
@@ -48,8 +48,8 @@ func (k Keeper) GetTatTokens(ctx sdk.Context, addr sdk.ValAddress) (TatTokens in
 }
 func (k Keeper) GetNewTokens(ctx sdk.Context, addr sdk.ValAddress) (NewTokens int64, found bool) {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Println("GetValidator addr:", addr)
-	fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
+	//fmt.Println("GetValidator addr:", addr)
+	//fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
 	value := store.Get(types.GetNewTokensKey(addr))
 	if value == nil {
 		return NewTokens, false
@@ -61,8 +61,8 @@ func (k Keeper) GetNewTokens(ctx sdk.Context, addr sdk.ValAddress) (NewTokens in
 }
 func (k Keeper) GetTatPower(ctx sdk.Context, addr sdk.ValAddress) (TatPower int64, found bool) {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Println("GetValidator addr:", addr)
-	fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
+	//fmt.Println("GetValidator addr:", addr)
+	//fmt.Println("types.GetValidatorKey(addr)", types.GetValidatorKey(addr))
 	value := store.Get(types.GetTatPowerKey(addr))
 	if value == nil {
 		return TatPower, false

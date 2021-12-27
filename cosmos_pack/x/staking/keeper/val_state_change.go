@@ -357,7 +357,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	// validator, _ := sdk.ValAddressFromBech32(delegator_address)
 	// fmt.Printf("validator:%v\n", validator)
 	validator_address := sdk.ValAddress(account_address).String()
-	fmt.Printf("validator_address:%v\n", validator_address)
+	//fmt.Printf("validator_address:%v\n", validator_address)
 
 	//将TAT质押比例作为validator验证器
 	//k.SetValidatorByPowerIndex(ctx, validator)
@@ -367,15 +367,15 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	//iterator := k.ValidatorsNewPowerStoreIterator(ctx)
 	defer iterator.Close()
 	//defer TatIterator.Close()
-	fmt.Println("iterator:", iterator)
+	//fmt.Println("iterator:", iterator)
 	for count := 0; iterator.Valid() && count < int(maxValidators); iterator.Next() {
 		// everything that is iterated in this loop is becoming or already a
 		// part of the bonded validator set
-		fmt.Printf("iterator.Value:%v\n", iterator.Value())
+		//fmt.Printf("iterator.Value:%v\n", iterator.Value())
 		valAddr := sdk.ValAddress(iterator.Value())
-		fmt.Println("valAddr:", valAddr)
-		validatorstring := valAddr.String()
-		fmt.Printf("validatorstring:%+v\n", validatorstring)
+		//fmt.Println("valAddr:", valAddr)
+		//validatorstring := valAddr.String()
+		//fmt.Printf("validatorstring:%+v\n", validatorstring)
 		// tat := int64(120000000000)
 		// newunit := int64(120000000000)
 		var tat int64
@@ -420,7 +420,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		// k.SetNewToken(ctx, newunit, valAddr)
 		validator := k.mustGetValidator(ctx, valAddr)
 
-		fmt.Printf("validator:%+v\n", validator)
+		//fmt.Printf("validator:%+v\n", validator)
 		//通过判断validator struct中的jailed来证明是否被监禁
 		if validator.Jailed {
 			panic("should never retrieve a jailed validator from the power store")
