@@ -255,7 +255,7 @@ func InitTestnet(
 			valPubKeys[i],
 			sdk.NewCoin(coinDenom, valTokens),
 			stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
-			stakingtypes.NewCommissionRates(sdk.OneDec(), sdk.OneDec(), sdk.OneDec()),
+			stakingtypes.NewCommissionRates(sdk.DockRateDec(), sdk.DockMaxRateDec(), sdk.DockMaxChanDec()),
 			sdk.OneInt(),
 		)
 

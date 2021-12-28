@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# echo "Allocate genesis accounts (cosmos formatted addresses)"
+# ./ethermintd add-genesis-account $KEY 100000000000000000000000000aphoton --home /ethermint --keyring-backend $KEYRING
+# echo "Sign genesis transaction"
+# ethermintd gentx $KEY 1000000000000000000000aphoton --keyring-backend $KEYRING --chain-id $CHAINID
 echo "prepare genesis: Run validate-genesis to ensure everything worked and that the genesis file is setup correctly"
 ./ethermintd validate-genesis --home /ethermint
 

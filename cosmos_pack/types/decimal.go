@@ -64,6 +64,10 @@ func ZeroDec() Dec     { return Dec{new(big.Int).Set(zeroInt)} }
 func OneDec() Dec      { return Dec{precisionInt()} }
 func SmallestDec() Dec { return Dec{new(big.Int).Set(oneInt)} }
 
+func DockRateDec() Dec    { return NewDecWithPrec(10, 2) }
+func DockMaxRateDec() Dec { return NewDecWithPrec(20, 2) }
+func DockMaxChanDec() Dec { return NewDecWithPrec(1, 2) }
+
 // calculate the precision multiplier
 func calcPrecisionMultiplier(prec int64) *big.Int {
 	if prec > Precision {

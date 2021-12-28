@@ -357,7 +357,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	// validator, _ := sdk.ValAddressFromBech32(delegator_address)
 	// fmt.Printf("validator:%v\n", validator)
 	validator_address := sdk.ValAddress(account_address).String()
-	//fmt.Printf("validator_address:%v\n", validator_address)
+	fmt.Printf("validator_address:%v\n", validator_address)
 
 	//将TAT质押比例作为validator验证器
 	//k.SetValidatorByPowerIndex(ctx, validator)
