@@ -60,6 +60,7 @@ func NewValidator(operator sdk.ValAddress, pubKey cryptotypes.PubKey, descriptio
 		TatTokens:         sdk.ZeroInt(),
 		NewTokens:         sdk.ZeroInt(),
 		TatPower:          sdk.ZeroInt(),
+		NewUnitPower:      sdk.ZeroInt(),
 	}, nil
 }
 
@@ -603,6 +604,7 @@ func (v Validator) GetTokens() sdk.Int       { return v.Tokens }
 func (v Validator) GetTatTokens() sdk.Int    { return v.TatTokens }
 func (v Validator) GetNewTokens() sdk.Int    { return v.NewTokens }
 func (v Validator) GetTatPower() sdk.Int     { return v.TatPower }
+func (v Validator) GetNewUnitPower() sdk.Int { return v.NewUnitPower }
 func (v Validator) GetBondedTokens() sdk.Int { return v.BondedTokens() }
 func (v Validator) GetConsensusPower(r sdk.Int) int64 {
 	return v.ConsensusPower(r)

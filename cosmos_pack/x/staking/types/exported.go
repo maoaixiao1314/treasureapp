@@ -30,6 +30,7 @@ type ValidatorI interface {
 	GetTatTokens() sdk.Int                                  // validation tattokens
 	GetNewTokens() sdk.Int                                  // validation newtokens
 	GetTatPower() sdk.Int                                   // validation tatpower
+	GetNewUnitPower() sdk.Int                               // validation newunitpower
 	GetBondedTokens() sdk.Int                               // validator bonded tokens
 	GetConsensusPower(sdk.Int) int64                        // validation power in tendermint
 	GetCommission() sdk.Dec                                 // validator commission rate

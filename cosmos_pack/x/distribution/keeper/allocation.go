@@ -101,13 +101,17 @@ func (k Keeper) AllocateTokens(
 	// allocate tokens proportionally to voting power 与投票权成比例地分配代币
 	// TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376
 	var tattotalpower int64
+	var newunitallpower int64
 	fmt.Printf("bondedVotes:%+v\n", bondedVotes)
 	//TAT奖励分配
 	for _, vote := range bondedVotes {
 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 		TatPower := validator.GetTatPower()
 		newtatpower := TatPower.Int64()
+		NewUnitPower := validator.GetNewUnitPower()
+		NewUnitPower2 := NewUnitPower.Int64()
 		tattotalpower += newtatpower
+		newunitallpower += NewUnitPower2
 	}
 	fmt.Println("tattotalpower：", tattotalpower)
 	if tattotalpower != int64(0) {
@@ -136,8 +140,13 @@ func (k Keeper) AllocateTokens(
 		fmt.Println("voteMultiplier:", voteMultiplier)
 		// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
 		// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-		fmt.Println("江离测试totalPreviousPower:", totalPreviousPower)
-		powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
+		//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
+		fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
+		newunit := validator.GetNewUnitPower().Int64()
+		newpower := vote.Validator.Power - newunit
+		newtotalPreviousPower := totalPreviousPower - newunitallpower
+		//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
+		powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
 		fmt.Printf("powerFraction:%+v\n", powerFraction)
 		reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
 		fmt.Printf("reward:%+v\n", reward)

@@ -56,6 +56,7 @@ var (
 	TatTokensKey      = []byte{0x51}
 	NewTokensKey      = []byte{0x52}
 	TatPowerKey       = []byte{0x53}
+	NewUnitPowerKey   = []byte{0x54}
 )
 
 // GetValidatorKey creates the key for the validator with address
@@ -71,6 +72,9 @@ func GetNewTokensKey(operatorAddr sdk.ValAddress) []byte {
 }
 func GetTatPowerKey(operatorAddr sdk.ValAddress) []byte {
 	return append(TatPowerKey, address.MustLengthPrefix(operatorAddr)...)
+}
+func GetNewUnitPowerKey(operatorAddr sdk.ValAddress) []byte {
+	return append(NewUnitPowerKey, address.MustLengthPrefix(operatorAddr)...)
 }
 
 // GetValidatorByConsAddrKey creates the key for the validator with pubkey

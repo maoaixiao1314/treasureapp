@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strconv"
 	"strings"
 
 	gogotypes "github.com/gogo/protobuf/types"
@@ -327,7 +328,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	maxValidators := params.MaxValidators
 	powerReduction := k.PowerReduction(ctx)
 	//nft为0时的新powerReduction值
-	//powerReduction2 := k.PowerReduction2(ctx)
+	powerReduction2 := k.PowerReduction2(ctx)
 	totalPower := sdk.ZeroInt()
 	//TattotalPower := sdk.ZeroInt()
 	amtFromBondedToNotBonded, amtFromNotBondedToBonded := sdk.ZeroInt(), sdk.ZeroInt()
@@ -378,8 +379,11 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		//fmt.Printf("validatorstring:%+v\n", validatorstring)
 		// tat := int64(120000000000)
 		// newunit := int64(120000000000)
-		var tat int64
-		var newunit int64
+		// var tat int64
+		// var newunit int64
+		var tat sdk.Int
+		var newunit sdk.Int
+
 		for _, eventlog := range log {
 			if eventlog.MsgIndex == 1 {
 				fmt.Printf("获取日志成功:%+v\n", eventlog)
@@ -402,14 +406,26 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 					fmt.Println("tat监听值:", tat)
 					fmt.Println("newunit监听值:", newunit)
 					if state == int64(1) {
-						tat = int64(vlog[1].(float64) * math.Pow10(int(10)))
-						newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						//现将日志中的数据转化成string 然后在将string转换为Int类型
+						stringtat := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						tat, _ = sdk.NewIntFromString(stringtat)
+						//tat = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						//newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						stringunit := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						newunit, _ = sdk.NewIntFromString(stringunit)
 					} else {
-						tat = int64(0)
-						newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						//tat = int64(0)
+						tat = sdk.ZeroInt()
+						//newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
+						stringunit := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						newunit, _ = sdk.NewIntFromString(stringunit)
 					}
-					k.SetTat(ctx, tat, NewValidatoradd)
-					k.SetNewToken(ctx, newunit, NewValidatoradd)
+					// k.SetTat(ctx, tat, NewValidatoradd)
+					// k.SetNewToken(ctx, newunit, NewValidatoradd)
+					newtat, _ := tat.MarshalJSON()
+					newunitbyte, _ := newunit.MarshalJSON()
+					k.SetTat2(ctx, newtat, NewValidatoradd)
+					k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 				}
 			}
 		}
@@ -420,7 +436,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		// k.SetNewToken(ctx, newunit, valAddr)
 		validator := k.mustGetValidator(ctx, valAddr)
 
-		//fmt.Printf("validator:%+v\n", validator)
+		fmt.Printf("validator:%+v\n", validator)
 		//通过判断validator struct中的jailed来证明是否被监禁
 		if validator.Jailed {
 			panic("should never retrieve a jailed validator from the power store")
@@ -470,11 +486,13 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		fmt.Println("oldPowerBytes:", oldPowerBytes)
 		fmt.Println("found", found)
 		//newPower := validator.ConsensusPower(powerReduction)
-		newPower2 := validator.ConsensusTatPower(powerReduction)
+		newPower2 := validator.ConsensusTatPower(powerReduction2)
 		fmt.Println("newPower2:", newPower2)
 		newPower := validator.ConsensusNewsPower(powerReduction)
 		fmt.Println("newPower:", newPower)
+		newunitPower := validator.ConsensusNewPower(powerReduction)
 		k.SetTatPower(ctx, newPower2, valAddr)
+		k.SetNewUnitPower(ctx, newunitPower, valAddr)
 		//newPower := validator.ConsensusNewPower(powerReduction)
 		fmt.Println("newPower:", newPower)
 		//将tatpower累计起来

@@ -340,7 +340,9 @@ type Validator struct {
 	// newtokens define the delegated tokens (incl. self-delegation).
 	NewTokens github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=new_tokens,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"new_tokens"`
 	// tatpower define the delegated tokens (incl. self-delegation).
-	TatPower github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=tat_power,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"tat_power"`
+	TatPower github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,14,opt,name=tat_power,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"tat_power"`
+	// tatpower define the delegated tokens (incl. self-delegation).
+	NewUnitPower github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,15,opt,name=newunit_power,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"newunit_power"`
 }
 
 func (m *Validator) Reset()      { *m = Validator{} }
