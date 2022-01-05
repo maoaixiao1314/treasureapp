@@ -289,7 +289,7 @@ func (v Validator) ABCIValidatorUpdateZero() abci.ValidatorUpdate {
 
 // ABCIValidatorUpdateZero returns an abci.ValidatorUpdate from a staking validator type
 // with zero power used for validator updates.
-func (v Validator) ABCIValidatorNewUpdate(newtat int64, r sdk.Int) abci.ValidatorUpdate {
+func (v Validator) ABCIValidatorNewUpdate(r sdk.Int) abci.ValidatorUpdate {
 	tmProtoPk, err := v.TmConsPublicKey()
 	if err != nil {
 		panic(err)
@@ -297,7 +297,7 @@ func (v Validator) ABCIValidatorNewUpdate(newtat int64, r sdk.Int) abci.Validato
 
 	return abci.ValidatorUpdate{
 		PubKey:   tmProtoPk,
-		Power:    v.ConsensusNewPower(r),
+		Power:    v.ConsensusNewsPower(r),
 		TatPower: v.ConsensusTatPower(r),
 	}
 }

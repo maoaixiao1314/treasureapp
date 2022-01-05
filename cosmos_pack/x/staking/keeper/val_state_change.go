@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -402,33 +403,58 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 					fmt.Printf("NewValidatoradd22222:%+v\n", NewValidatoradd)
 					fmt.Println("index", index)
 					//state 1 表示TAT;2表示unit
-					state := int64(vlog[2].(float64) * math.Pow10(int(10)))
-					fmt.Println("tat监听值:", tat)
-					fmt.Println("newunit监听值:", newunit)
+					state := int64(vlog[2].(float64) * math.Pow10(int(0)))
+					fmt.Println("state:", state)
+					fmt.Println(reflect.TypeOf(vlog[2]))
 					if state == int64(1) {
 						//现将日志中的数据转化成string 然后在将string转换为Int类型
-						stringtat := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						fmt.Println(reflect.TypeOf(vlog[1]))
+						stringtat := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
+						fmt.Println("stringtat:", stringtat)
 						tat, _ = sdk.NewIntFromString(stringtat)
 						//tat = int64(vlog[1].(float64) * math.Pow10(int(10)))
 						//newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
-						stringunit := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
+						fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
+						fmt.Println("tat监听值:", tat)
+						fmt.Println("newunit监听值:", newunit)
+						newtat, _ := tat.MarshalJSON()
+						newunitbyte, _ := newunit.MarshalJSON()
+						fmt.Println("newtat:", newtat)
+						fmt.Println("newunitbyte:", newunitbyte)
+						k.SetTat2(ctx, newtat, NewValidatoradd)
+						k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 					} else {
 						//tat = int64(0)
 						tat = sdk.ZeroInt()
 						//newunit = int64(vlog[1].(float64) * math.Pow10(int(10)))
-						stringunit := strconv.FormatFloat(vlog[1].(float64), 'E', -1, 64)
+						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
+						fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
+						fmt.Println("tat监听值:", tat)
+						fmt.Println("newunit监听值:", newunit)
+						newtat, _ := tat.MarshalJSON()
+						newunitbyte, _ := newunit.MarshalJSON()
+						fmt.Println("newtat:", newtat)
+						fmt.Println("newunitbyte:", newunitbyte)
+						k.SetTat2(ctx, newtat, NewValidatoradd)
+						k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 					}
+					fmt.Println("tat:", tat)
+					fmt.Println("newunit:", newunit)
 					// k.SetTat(ctx, tat, NewValidatoradd)
 					// k.SetNewToken(ctx, newunit, NewValidatoradd)
-					newtat, _ := tat.MarshalJSON()
-					newunitbyte, _ := newunit.MarshalJSON()
-					k.SetTat2(ctx, newtat, NewValidatoradd)
-					k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
+					// newtat, _ := tat.MarshalJSON()
+					// newunitbyte, _ := newunit.MarshalJSON()
+					// fmt.Println("newtat:", newtat)
+					// fmt.Println("newunitbyte:", newunitbyte)
+					// k.SetTat2(ctx, newtat, NewValidatoradd)
+					// k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 				}
 			}
 		}
+
 		//tatInt := sdk.NewInt(newtat)
 		//newunitInt := sdk.NewInt(newunit)
 		//保存对应验证器TAT的值和unit的值
@@ -491,6 +517,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		newPower := validator.ConsensusNewsPower(powerReduction)
 		fmt.Println("newPower:", newPower)
 		newunitPower := validator.ConsensusNewPower(powerReduction)
+		fmt.Println("newunitPower:", newunitPower)
 		k.SetTatPower(ctx, newPower2, valAddr)
 		k.SetNewUnitPower(ctx, newunitPower, valAddr)
 		//newPower := validator.ConsensusNewPower(powerReduction)
@@ -505,7 +532,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		fmt.Println("newPowerBytes:", newPowerBytes)
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
-			updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
+			updates = append(updates, validator.ABCIValidatorNewUpdate(powerReduction))
 			fmt.Println("updatesold2:", updates)
 			fmt.Println("valAddrold", valAddr)
 			k.SetLastValidatorPower(ctx, valAddr, newPower)

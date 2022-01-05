@@ -55,14 +55,22 @@ func (k Keeper) GetTatTokens(ctx sdk.Context, addr sdk.ValAddress) (TatTokens in
 func (k Keeper) GetTatTokens2(ctx sdk.Context, addr sdk.ValAddress) (TatTokens sdk.Int, found bool) {
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetTatTokensKey(addr))
+	fmt.Println("value:", value)
 	if value == nil {
 		return sdk.ZeroInt(), false
 		//return TatTokens, false
 	}
-	newtat, _ := sdk.NewIntFromString(string(value))
+	//newtat, _ := sdk.NewIntFromString(string(value))
+	err := TatTokens.UnmarshalJSON(value)
+	if err != nil {
+		return sdk.ZeroInt(), false
+	} else {
+		fmt.Println("newtat:", TatTokens)
+		return TatTokens, true
+	}
 	//strtat, _ := sdk.NewIntFromString(string(value))
-	TatTokens = newtat
-	return TatTokens, true
+	//TatTokens = newtat
+	//return TatTokens, true
 }
 func (k Keeper) GetNewTokens(ctx sdk.Context, addr sdk.ValAddress) (NewTokens int64, found bool) {
 	store := ctx.KVStore(k.storeKey)
@@ -84,10 +92,17 @@ func (k Keeper) GetNewTokens2(ctx sdk.Context, addr sdk.ValAddress) (NewTokens s
 		return sdk.ZeroInt(), false
 		//return NewTokens, false
 	}
-	newtat, _ := sdk.NewIntFromString(string(value))
+	//newtat, _ := sdk.NewIntFromString(string(value))
 	//strtat, _ := sdk.NewIntFromString(string(value))
-	NewTokens = newtat
-	return NewTokens, true
+	err := NewTokens.UnmarshalJSON(value)
+	if err != nil {
+		return sdk.ZeroInt(), false
+	} else {
+		fmt.Println("newunit:", NewTokens)
+		return NewTokens, true
+	}
+	// NewTokens = newtat
+	// return NewTokens, true
 }
 func (k Keeper) GetTatPower(ctx sdk.Context, addr sdk.ValAddress) (TatPower int64, found bool) {
 	store := ctx.KVStore(k.storeKey)
@@ -109,19 +124,31 @@ func (k Keeper) GetTatPower2(ctx sdk.Context, addr sdk.ValAddress) (TatPower sdk
 		return sdk.ZeroInt(), false
 		//return TatPower, false
 	}
-	tatpower, _ := sdk.NewIntFromString(string(value))
-	TatPower = tatpower
-	return TatPower, true
+	// tatpower, _ := sdk.NewIntFromString(string(value))
+	// TatPower = tatpower
+	// return TatPower, true
+	err := TatPower.UnmarshalJSON(value)
+	if err != nil {
+		return sdk.ZeroInt(), false
+	} else {
+		fmt.Println("TatPower:", TatPower)
+		return TatPower, true
+	}
 }
 func (k Keeper) GetNewUnitPower(ctx sdk.Context, addr sdk.ValAddress) (NewUnitPower sdk.Int, found bool) {
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetNewUnitPowerKey(addr))
+	fmt.Println("newunitpower value:", value)
 	if value == nil {
 		return sdk.ZeroInt(), false
 		//return NewUnitPower, false
 	}
-	newunitpower, _ := sdk.NewIntFromString(string(value))
-	NewUnitPower = newunitpower
+	// newunitpower, _ := sdk.NewIntFromString(string(value))
+	// NewUnitPower = newunitpower
+	// return NewUnitPower, true
+	newunitpower, _ := strconv.ParseInt(string(value), 10, 64)
+	//strtat, _ := sdk.NewIntFromString(string(value))
+	NewUnitPower = sdk.NewInt(newunitpower)
 	return NewUnitPower, true
 }
 func (k Keeper) mustGetValidator(ctx sdk.Context, addr sdk.ValAddress) types.Validator {

@@ -90,7 +90,7 @@ func getLogs(Start, End int64) {
 		}
 		dst := make([][]interface{}, len(logs))
 		for index, vLog := range logs {
-			LogAbi, err := contractAbi.Unpack("ItemSet", vLog.Data)
+			LogAbi, err := contractAbi.Unpack("bidList", vLog.Data)
 			if err != nil {
 				log.Fatal(err)
 			}

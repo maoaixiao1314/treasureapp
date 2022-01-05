@@ -146,6 +146,7 @@ func (k Keeper) AllocateTokens(
 		newunit := validator.GetNewUnitPower().Int64()
 		fmt.Println("newunit:", newunit)
 		newpower := vote.Validator.Power - newunit
+		fmt.Println("vote.Validator.Power:", vote.Validator.Power)
 		fmt.Println("newpower:", newpower)
 		newtotalPreviousPower := totalPreviousPower - newunitallpower
 		//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
