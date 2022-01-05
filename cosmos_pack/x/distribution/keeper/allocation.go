@@ -135,6 +135,7 @@ func (k Keeper) AllocateTokens(
 			fmt.Println("tat分配后remaining:", remaining)
 		}
 	}
+	fmt.Println("newunitallpower：", newunitallpower)
 	for _, vote := range bondedVotes {
 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 		fmt.Println("voteMultiplier:", voteMultiplier)
@@ -143,7 +144,9 @@ func (k Keeper) AllocateTokens(
 		//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
 		fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
 		newunit := validator.GetNewUnitPower().Int64()
+		fmt.Println("newunit:", newunit)
 		newpower := vote.Validator.Power - newunit
+		fmt.Println("newpower:", newpower)
 		newtotalPreviousPower := totalPreviousPower - newunitallpower
 		//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
 		powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))

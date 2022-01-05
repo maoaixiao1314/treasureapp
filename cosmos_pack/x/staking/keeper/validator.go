@@ -56,7 +56,8 @@ func (k Keeper) GetTatTokens2(ctx sdk.Context, addr sdk.ValAddress) (TatTokens s
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetTatTokensKey(addr))
 	if value == nil {
-		return TatTokens, false
+		return sdk.ZeroInt(), false
+		//return TatTokens, false
 	}
 	newtat, _ := sdk.NewIntFromString(string(value))
 	//strtat, _ := sdk.NewIntFromString(string(value))
@@ -80,7 +81,8 @@ func (k Keeper) GetNewTokens2(ctx sdk.Context, addr sdk.ValAddress) (NewTokens s
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetNewTokensKey(addr))
 	if value == nil {
-		return NewTokens, false
+		return sdk.ZeroInt(), false
+		//return NewTokens, false
 	}
 	newtat, _ := sdk.NewIntFromString(string(value))
 	//strtat, _ := sdk.NewIntFromString(string(value))
@@ -104,7 +106,8 @@ func (k Keeper) GetTatPower2(ctx sdk.Context, addr sdk.ValAddress) (TatPower sdk
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetTatPowerKey(addr))
 	if value == nil {
-		return TatPower, false
+		return sdk.ZeroInt(), false
+		//return TatPower, false
 	}
 	tatpower, _ := sdk.NewIntFromString(string(value))
 	TatPower = tatpower
@@ -114,7 +117,8 @@ func (k Keeper) GetNewUnitPower(ctx sdk.Context, addr sdk.ValAddress) (NewUnitPo
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetNewUnitPowerKey(addr))
 	if value == nil {
-		return NewUnitPower, false
+		return sdk.ZeroInt(), false
+		//return NewUnitPower, false
 	}
 	newunitpower, _ := sdk.NewIntFromString(string(value))
 	NewUnitPower = newunitpower
