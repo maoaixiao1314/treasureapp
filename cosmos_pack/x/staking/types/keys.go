@@ -57,6 +57,7 @@ var (
 	NewTokensKey      = []byte{0x52}
 	TatPowerKey       = []byte{0x53}
 	NewUnitPowerKey   = []byte{0x54}
+	TotalAllPowerKey  = []byte{0x55}
 )
 
 // GetValidatorKey creates the key for the validator with address

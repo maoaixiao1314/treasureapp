@@ -136,29 +136,56 @@ func (k Keeper) AllocateTokens(
 		}
 	}
 	fmt.Println("newunitallpower：", newunitallpower)
-	for _, vote := range bondedVotes {
-		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
-		fmt.Println("voteMultiplier:", voteMultiplier)
-		// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
-		// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-		//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
-		fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
-		newunit := validator.GetNewUnitPower().Int64()
-		fmt.Println("newunit:", newunit)
-		newpower := vote.Validator.Power - newunit
-		fmt.Println("vote.Validator.Power:", vote.Validator.Power)
-		fmt.Println("newpower:", newpower)
-		newtotalPreviousPower := totalPreviousPower - newunitallpower
-		//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
-		powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
-		fmt.Printf("powerFraction:%+v\n", powerFraction)
-		reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
-		fmt.Printf("reward:%+v\n", reward)
-		k.AllocateTokensToValidator(ctx, validator, reward)
-		remaining = remaining.Sub(reward)
-		fmt.Println("validator后remaining的奖励:", remaining)
+	//先获取之前的totalPreviousPower
+	totalallpower := k.stakingKeeper.GetTotalAllPower(ctx)
+	k.stakingKeeper.SetTotalAllPower(ctx, totalPreviousPower)
+	if totalPreviousPower == totalallpower {
+		for _, vote := range bondedVotes {
+			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
+			fmt.Println("voteMultiplier:", voteMultiplier)
+			// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
+			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
+			//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
+			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
+			// newunit := validator.GetNewUnitPower().Int64()
+			// fmt.Println("newunit:", newunit)
+			//newpower := vote.Validator.Power - newunit
+			fmt.Println("vote.Validator.Power:", vote.Validator.Power)
+			//fmt.Println("newpower:", newpower)
+			//newtotalPreviousPower := totalPreviousPower - newunitallpower
+			powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
+			//powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
+			fmt.Printf("powerFraction:%+v\n", powerFraction)
+			reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
+			fmt.Printf("reward:%+v\n", reward)
+			k.AllocateTokensToValidator(ctx, validator, reward)
+			remaining = remaining.Sub(reward)
+			fmt.Println("validator后remaining的奖励:", remaining)
+		}
+	} else {
+		for _, vote := range bondedVotes {
+			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
+			fmt.Println("voteMultiplier:", voteMultiplier)
+			// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
+			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
+			//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
+			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
+			newunit := validator.GetNewUnitPower().Int64()
+			fmt.Println("newunit:", newunit)
+			newpower := vote.Validator.Power - newunit
+			fmt.Println("vote.Validator.Power:", vote.Validator.Power)
+			fmt.Println("newpower:", newpower)
+			newtotalPreviousPower := totalPreviousPower - newunitallpower
+			//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
+			powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
+			fmt.Printf("powerFraction:%+v\n", powerFraction)
+			reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
+			fmt.Printf("reward:%+v\n", reward)
+			k.AllocateTokensToValidator(ctx, validator, reward)
+			remaining = remaining.Sub(reward)
+			fmt.Println("validator后remaining的奖励:", remaining)
+		}
 	}
-
 	// allocate community funding 分配社区资金
 	feePool.CommunityPool = feePool.CommunityPool.Add(remaining...)
 	k.SetFeePool(ctx, feePool)

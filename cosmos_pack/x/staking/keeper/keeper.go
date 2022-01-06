@@ -115,3 +115,22 @@ func (k Keeper) SetLastTatTotalPower(ctx sdk.Context, tatpower sdk.Int) {
 	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: tatpower})
 	store.Set(types.LastTatTotalPowerKey, bz)
 }
+func (k Keeper) SetTotalAllPower(ctx sdk.Context, totalpower int64) {
+	store := ctx.KVStore(k.storeKey)
+	newtotalpower := sdk.NewInt(totalpower)
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: newtotalpower})
+	store.Set(types.TotalAllPowerKey, bz)
+}
+func (k Keeper) GetTotalAllPower(ctx sdk.Context) int64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.TotalAllPowerKey)
+
+	if bz == nil {
+		return sdk.ZeroInt().Int64()
+	}
+
+	ip := sdk.IntProto{}
+	k.cdc.MustUnmarshal(bz, &ip)
+
+	return ip.Int.Int64()
+}
