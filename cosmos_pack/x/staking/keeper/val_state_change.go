@@ -523,10 +523,10 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		//newPower := validator.ConsensusNewPower(powerReduction)
 		fmt.Println("newPower:", newPower)
 		//将tatpower累计起来
-		contatpower := params.TatTokens
-		contatpower += newPower2
-		params.TatTokens = contatpower
-		k.SetParams(ctx, params)
+		// contatpower := params.TatTokens
+		// contatpower += newPower2
+		// params.TatTokens = contatpower
+		// k.SetParams(ctx, params)
 		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
 		fmt.Println("updatesold1:", updates)
 		fmt.Println("newPowerBytes:", newPowerBytes)

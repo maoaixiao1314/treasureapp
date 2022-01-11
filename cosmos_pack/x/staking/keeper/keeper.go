@@ -134,3 +134,7 @@ func (k Keeper) GetTotalAllPower(ctx sdk.Context) int64 {
 
 	return ip.Int.Int64()
 }
+func (k Keeper) GetPowerReduction(ctx sdk.Context) sdk.Int {
+	powerReduction := k.PowerReduction(ctx)
+	return powerReduction
+}

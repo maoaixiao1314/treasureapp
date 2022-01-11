@@ -102,7 +102,10 @@ func (k Keeper) AllocateTokens(
 	// TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376
 	var tattotalpower int64
 	var newunitallpower int64
+	var alltokenpower int64
+	powerReduction := k.stakingKeeper.GetPowerReduction(ctx)
 	fmt.Printf("bondedVotes:%+v\n", bondedVotes)
+	fmt.Printf("powerReduction:%+v\n", powerReduction)
 	//TAT奖励分配
 	for _, vote := range bondedVotes {
 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
@@ -110,10 +113,13 @@ func (k Keeper) AllocateTokens(
 		newtatpower := TatPower.Int64()
 		NewUnitPower := validator.GetNewUnitPower()
 		NewUnitPower2 := NewUnitPower.Int64()
+		TokenPower := validator.GetConsensusPower(powerReduction)
 		tattotalpower += newtatpower
 		newunitallpower += NewUnitPower2
+		alltokenpower += TokenPower
 	}
 	fmt.Println("tattotalpower：", tattotalpower)
+	fmt.Println("alltokenpower：", alltokenpower)
 	if tattotalpower != int64(0) {
 		for _, vote := range bondedVotes {
 			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
@@ -137,24 +143,17 @@ func (k Keeper) AllocateTokens(
 	}
 	fmt.Println("newunitallpower：", newunitallpower)
 	//先获取之前的totalPreviousPower
-	totalallpower := k.stakingKeeper.GetTotalAllPower(ctx)
-	k.stakingKeeper.SetTotalAllPower(ctx, totalPreviousPower)
-	if totalPreviousPower == totalallpower {
+	//totalallpower := k.stakingKeeper.GetTotalAllPower(ctx)
+	//k.stakingKeeper.SetTotalAllPower(ctx, totalPreviousPower)
+	if totalPreviousPower == alltokenpower {
 		for _, vote := range bondedVotes {
 			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 			fmt.Println("voteMultiplier:", voteMultiplier)
-			// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
+			// TODO consider microslashing for missing votes.
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-			//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
 			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
-			// newunit := validator.GetNewUnitPower().Int64()
-			// fmt.Println("newunit:", newunit)
-			//newpower := vote.Validator.Power - newunit
 			fmt.Println("vote.Validator.Power:", vote.Validator.Power)
-			//fmt.Println("newpower:", newpower)
-			//newtotalPreviousPower := totalPreviousPower - newunitallpower
 			powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
-			//powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
 			fmt.Printf("powerFraction:%+v\n", powerFraction)
 			reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
 			fmt.Printf("reward:%+v\n", reward)
@@ -166,9 +165,9 @@ func (k Keeper) AllocateTokens(
 		for _, vote := range bondedVotes {
 			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 			fmt.Println("voteMultiplier:", voteMultiplier)
-			// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
+			// TODO consider microslashing for missing votes.
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-			//计算staking的奖励需要将unit的质押的抛除掉，来达到staking和bid的相互隔离
+			//To calculate the reward of stacking, you need to discard the pledge of unit to isolate stacking and bid from each other
 			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
 			newunit := validator.GetNewUnitPower().Int64()
 			fmt.Println("newunit:", newunit)
@@ -198,7 +197,7 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 	shared := tokens.Sub(commission)
 	fmt.Println("佣金:", commission)
 	fmt.Println("减去佣金:", shared)
-	// update current commission 更新当前佣金
+	// update current commission
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeCommission,
@@ -210,12 +209,12 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 	currentCommission.Commission = currentCommission.Commission.Add(commission...)
 	k.SetValidatorAccumulatedCommission(ctx, val.GetOperator(), currentCommission)
 
-	// update current rewards  更新当前奖励
+	// update current rewards
 	currentRewards := k.GetValidatorCurrentRewards(ctx, val.GetOperator())
 	currentRewards.Rewards = currentRewards.Rewards.Add(shared...)
 	k.SetValidatorCurrentRewards(ctx, val.GetOperator(), currentRewards)
 
-	// update outstanding rewards  更新杰出奖励
+	// update outstanding rewards
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeRewards,
