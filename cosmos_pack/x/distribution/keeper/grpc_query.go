@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -65,6 +66,29 @@ func (k Keeper) ValidatorCommission(c context.Context, req *types.QueryValidator
 	commission := k.GetValidatorAccumulatedCommission(ctx, valAdr)
 
 	return &types.QueryValidatorCommissionResponse{Commission: commission}, nil
+}
+
+// ValidatorTatreward queries accumulated tatreward for a validator
+func (k Keeper) ValidatorTatreward(c context.Context, req *types.QueryValidatorTatrewardRequest) (*types.QueryValidatorTatrewardResponse, error) {
+	fmt.Println("req:", req)
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if req.ValidatorAddress == "" {
+		return nil, status.Error(codes.InvalidArgument, "empty validator address")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	valAdr, err := sdk.ValAddressFromBech32(req.ValidatorAddress)
+	fmt.Println("valAdr:", valAdr)
+	if err != nil {
+		return nil, err
+	}
+	tatreward := k.GetValidatorAccumulatedTatreward(ctx, valAdr)
+
+	return &types.QueryValidatorTatrewardResponse{Tatreward: tatreward}, nil
 }
 
 // ValidatorSlashes queries slash events of a validator

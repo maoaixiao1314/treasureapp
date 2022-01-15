@@ -260,6 +260,37 @@ func (k Keeper) DeleteValidatorAccumulatedCommission(ctx sdk.Context, val sdk.Va
 	store.Delete(types.GetValidatorAccumulatedCommissionKey(val))
 }
 
+// get accumulated tatreward for a validator
+func (k Keeper) GetValidatorAccumulatedTatreward(ctx sdk.Context, val sdk.ValAddress) (tatreward types.ValidatorAccumulatedTatreward) {
+	store := ctx.KVStore(k.storeKey)
+	b := store.Get(types.GetValidatorAccumulatedTatrewardKey(val))
+	if b == nil {
+		return types.ValidatorAccumulatedTatreward{}
+	}
+	k.cdc.MustUnmarshal(b, &tatreward)
+	return
+}
+
+// set accumulated tatreward for a validator
+func (k Keeper) SetValidatorAccumulatedTatreward(ctx sdk.Context, val sdk.ValAddress, tatreward types.ValidatorAccumulatedTatreward) {
+	var bz []byte
+
+	store := ctx.KVStore(k.storeKey)
+	if tatreward.Tatreward.IsZero() {
+		bz = k.cdc.MustMarshal(&types.ValidatorAccumulatedTatreward{})
+	} else {
+		bz = k.cdc.MustMarshal(&tatreward)
+	}
+
+	store.Set(types.GetValidatorAccumulatedTatrewardKey(val), bz)
+}
+
+// delete accumulated commission for a validator
+func (k Keeper) DeleteValidatorAccumulatedTatreward(ctx sdk.Context, val sdk.ValAddress) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.GetValidatorAccumulatedTatrewardKey(val))
+}
+
 // iterate over accumulated commissions
 func (k Keeper) IterateValidatorAccumulatedCommissions(ctx sdk.Context, handler func(val sdk.ValAddress, commission types.ValidatorAccumulatedCommission) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)

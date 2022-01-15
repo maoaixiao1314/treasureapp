@@ -6,6 +6,10 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	io "io"
+	math "math"
+	math_bits "math/bits"
+
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	types "github.com/cosmos/cosmos-sdk/types"
 	query "github.com/cosmos/cosmos-sdk/types/query"
@@ -16,9 +20,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	io "io"
-	math "math"
-	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -304,6 +305,100 @@ func (m *QueryValidatorCommissionResponse) GetCommission() ValidatorAccumulatedC
 		return m.Commission
 	}
 	return ValidatorAccumulatedCommission{}
+}
+
+// QueryValidatorTatrewardRequest is the request type for the
+// Query/ValidatorTatreward RPC method
+type QueryValidatorTatrewardRequest struct {
+	// validator_address defines the validator address to query for.
+	ValidatorAddress string `protobuf:"bytes,1,opt,name=validator_address,json=validatorAddress,proto3" json:"validator_address,omitempty"`
+}
+
+func (m *QueryValidatorTatrewardRequest) Reset()         { *m = QueryValidatorTatrewardRequest{} }
+func (m *QueryValidatorTatrewardRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryValidatorTatrewardRequest) ProtoMessage()    {}
+func (*QueryValidatorTatrewardRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5efd02cbc06efdc9, []int{4}
+}
+func (m *QueryValidatorTatrewardRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryValidatorTatrewardRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryValidatorTatrewardRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryValidatorTatrewardRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryValidatorTatrewardRequest.Merge(m, src)
+}
+func (m *QueryValidatorTatrewardRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryValidatorTatrewardRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryValidatorTatrewardRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryValidatorTatrewardRequest proto.InternalMessageInfo
+
+func (m *QueryValidatorTatrewardRequest) GetValidatorAddress() string {
+	if m != nil {
+		return m.ValidatorAddress
+	}
+	return ""
+}
+
+// QueryValidatorTatrewardResponse is the response type for the
+// Query/ValidatorTatreward RPC method
+type QueryValidatorTatrewardResponse struct {
+	// tatreward defines the tatreward the validator received.
+	Tatreward ValidatorAccumulatedTatreward `protobuf:"bytes,1,opt,name=tatreward,proto3" json:"tatreward"`
+}
+
+func (m *QueryValidatorTatrewardResponse) Reset()         { *m = QueryValidatorTatrewardResponse{} }
+func (m *QueryValidatorTatrewardResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryValidatorTatrewardResponse) ProtoMessage()    {}
+func (*QueryValidatorTatrewardResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5efd02cbc06efdc9, []int{5}
+}
+func (m *QueryValidatorTatrewardResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryValidatorTatrewardResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryValidatorTatrewardResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryValidatorTatrewardResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryValidatorTatrewardResponse.Merge(m, src)
+}
+func (m *QueryValidatorTatrewardResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryValidatorTatrewardResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryValidatorTatrewardResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryValidatorTatrewardResponse proto.InternalMessageInfo
+
+func (m *QueryValidatorTatrewardResponse) GetTatreward() ValidatorAccumulatedTatreward {
+	if m != nil {
+		return m.Tatreward
+	}
+	return ValidatorAccumulatedTatreward{}
 }
 
 // QueryValidatorSlashesRequest is the request type for the
@@ -954,6 +1049,8 @@ type QueryClient interface {
 	ValidatorOutstandingRewards(ctx context.Context, in *QueryValidatorOutstandingRewardsRequest, opts ...grpc.CallOption) (*QueryValidatorOutstandingRewardsResponse, error)
 	// ValidatorCommission queries accumulated commission for a validator.
 	ValidatorCommission(ctx context.Context, in *QueryValidatorCommissionRequest, opts ...grpc.CallOption) (*QueryValidatorCommissionResponse, error)
+	// ValidatorTatreward queries accumulated tatreward for a validator.
+	ValidatorTatreward(ctx context.Context, in *QueryValidatorTatrewardRequest, opts ...grpc.CallOption) (*QueryValidatorTatrewardResponse, error)
 	// ValidatorSlashes queries slash events of a validator.
 	ValidatorSlashes(ctx context.Context, in *QueryValidatorSlashesRequest, opts ...grpc.CallOption) (*QueryValidatorSlashesResponse, error)
 	// DelegationRewards queries the total rewards accrued by a delegation.
@@ -998,6 +1095,15 @@ func (c *queryClient) ValidatorOutstandingRewards(ctx context.Context, in *Query
 func (c *queryClient) ValidatorCommission(ctx context.Context, in *QueryValidatorCommissionRequest, opts ...grpc.CallOption) (*QueryValidatorCommissionResponse, error) {
 	out := new(QueryValidatorCommissionResponse)
 	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/ValidatorCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ValidatorTatreward(ctx context.Context, in *QueryValidatorTatrewardRequest, opts ...grpc.CallOption) (*QueryValidatorTatrewardResponse, error) {
+	out := new(QueryValidatorTatrewardResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.distribution.v1beta1.Query/ValidatorTatreward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1066,6 +1172,8 @@ type QueryServer interface {
 	ValidatorOutstandingRewards(context.Context, *QueryValidatorOutstandingRewardsRequest) (*QueryValidatorOutstandingRewardsResponse, error)
 	// ValidatorCommission queries accumulated commission for a validator.
 	ValidatorCommission(context.Context, *QueryValidatorCommissionRequest) (*QueryValidatorCommissionResponse, error)
+	// ValidatorTatreward queries accumulated tatreward for a validator.
+	ValidatorTatreward(context.Context, *QueryValidatorTatrewardRequest) (*QueryValidatorTatrewardResponse, error)
 	// ValidatorSlashes queries slash events of a validator.
 	ValidatorSlashes(context.Context, *QueryValidatorSlashesRequest) (*QueryValidatorSlashesResponse, error)
 	// DelegationRewards queries the total rewards accrued by a delegation.
@@ -1093,6 +1201,9 @@ func (*UnimplementedQueryServer) ValidatorOutstandingRewards(ctx context.Context
 }
 func (*UnimplementedQueryServer) ValidatorCommission(ctx context.Context, req *QueryValidatorCommissionRequest) (*QueryValidatorCommissionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorCommission not implemented")
+}
+func (*UnimplementedQueryServer) ValidatorTatreward(ctx context.Context, req *QueryValidatorTatrewardRequest) (*QueryValidatorTatrewardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorTatreward not implemented")
 }
 func (*UnimplementedQueryServer) ValidatorSlashes(ctx context.Context, req *QueryValidatorSlashesRequest) (*QueryValidatorSlashesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorSlashes not implemented")
@@ -1167,6 +1278,24 @@ func _Query_ValidatorCommission_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorCommission(ctx, req.(*QueryValidatorCommissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ValidatorTatreward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryValidatorTatrewardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ValidatorTatreward(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.distribution.v1beta1.Query/ValidatorTatreward",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ValidatorTatreward(ctx, req.(*QueryValidatorTatrewardRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1294,6 +1423,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorCommission",
 			Handler:    _Query_ValidatorCommission_Handler,
+		},
+		{
+			MethodName: "ValidatorTatreward",
+			Handler:    _Query_ValidatorTatreward_Handler,
 		},
 		{
 			MethodName: "ValidatorSlashes",
@@ -1506,6 +1639,68 @@ func (m *QueryValidatorCommissionResponse) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryValidatorTatrewardRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryValidatorTatrewardRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryValidatorTatrewardRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryValidatorTatrewardResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryValidatorTatrewardResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryValidatorTatrewardResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Tatreward.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
 func (m *QueryValidatorSlashesRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2019,6 +2214,30 @@ func (m *QueryValidatorCommissionResponse) Size() (n int) {
 	var l int
 	_ = l
 	l = m.Commission.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryValidatorTatrewardRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryValidatorTatrewardResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Tatreward.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -2654,6 +2873,171 @@ func (m *QueryValidatorCommissionResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Commission.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryValidatorTatrewardRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryValidatorTatrewardRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryValidatorTatrewardRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryValidatorTatrewardResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryValidatorTatrewardResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryValidatorTatrewardResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tatreward", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Tatreward.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

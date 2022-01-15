@@ -123,7 +123,7 @@ func (k Keeper) AllocateTokens(
 	if tattotalpower != int64(0) {
 		for _, vote := range bondedVotes {
 			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
-			fmt.Println("voteMultiplier:", voteMultiplier)
+			//fmt.Println("voteMultiplier:", voteMultiplier)
 			//获取tatpower的总量
 			//params := k.stakingKeeper.GetParams(ctx)
 			TatPower := validator.GetTatPower()
@@ -136,7 +136,8 @@ func (k Keeper) AllocateTokens(
 			fmt.Printf("tatpowerFraction:%+v\n", tatpowerFraction)
 			tatreward := feesCollected.MulDecTruncate(tatReward).MulDecTruncate(tatpowerFraction)
 			fmt.Printf("reward:%+v\n", tatreward)
-			k.AllocateTokensToValidator(ctx, validator, tatreward)
+			//k.AllocateTokensToValidator(ctx, validator, tatreward)
+			k.AllocateTokensToValidatorTat(ctx, validator, tatreward)
 			remaining = remaining.Sub(tatreward)
 			fmt.Println("tat分配后remaining:", remaining)
 		}
@@ -225,4 +226,21 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 	outstanding := k.GetValidatorOutstandingRewards(ctx, val.GetOperator())
 	outstanding.Rewards = outstanding.Rewards.Add(tokens...)
 	k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
+}
+
+// AllocateTokensToValidatorTat allocate tokens to a particular validator, splitting according to Tatreward 将令牌分配给特定的验证器，根据佣金进行拆分
+func (k Keeper) AllocateTokensToValidatorTat(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins) {
+	// split tokens between validator and delegators according to commission 根据佣金在验证者和委托者之间分配代币
+	// update current tatreward
+	fmt.Println("Tat奖励:", tokens)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeTatreward,
+			sdk.NewAttribute(sdk.AttributeKeyAmount, tokens.String()),
+			sdk.NewAttribute(types.AttributeKeyValidator, val.GetOperator().String()),
+		),
+	)
+	currentTatreward := k.GetValidatorAccumulatedTatreward(ctx, val.GetOperator())
+	currentTatreward.Tatreward = currentTatreward.Tatreward.Add(tokens...)
+	k.SetValidatorAccumulatedTatreward(ctx, val.GetOperator(), currentTatreward)
 }

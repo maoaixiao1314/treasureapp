@@ -239,6 +239,52 @@ func (m *ValidatorAccumulatedCommission) GetCommission() github_com_cosmos_cosmo
 	return nil
 }
 
+// ValidatorAccumulatedTatreward represents accumulated ctatreward
+// for a validator kept as a running counter, can be withdrawn at any time.
+type ValidatorAccumulatedTatreward struct {
+	Tatreward github_com_cosmos_cosmos_sdk_types.DecCoins `protobuf:"bytes,1,rep,name=tatreward,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.DecCoins" json:"tatreward"`
+}
+
+func (m *ValidatorAccumulatedTatreward) Reset()         { *m = ValidatorAccumulatedTatreward{} }
+func (m *ValidatorAccumulatedTatreward) String() string { return proto.CompactTextString(m) }
+func (*ValidatorAccumulatedTatreward) ProtoMessage()    {}
+func (*ValidatorAccumulatedTatreward) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cd78a31ea281a992, []int{3}
+}
+func (m *ValidatorAccumulatedTatreward) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ValidatorAccumulatedTatreward) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ValidatorAccumulatedTatreward.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ValidatorAccumulatedTatreward) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ValidatorAccumulatedTatreward.Merge(m, src)
+}
+func (m *ValidatorAccumulatedTatreward) XXX_Size() int {
+	return m.Size()
+}
+func (m *ValidatorAccumulatedTatreward) XXX_DiscardUnknown() {
+	xxx_messageInfo_ValidatorAccumulatedTatreward.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ValidatorAccumulatedTatreward proto.InternalMessageInfo
+
+func (m *ValidatorAccumulatedTatreward) GetTatreward() github_com_cosmos_cosmos_sdk_types.DecCoins {
+	if m != nil {
+		return m.Tatreward
+	}
+	return nil
+}
+
 // ValidatorOutstandingRewards represents outstanding (un-withdrawn) rewards
 // for a validator inexpensive to track, allows simple sanity checks.
 type ValidatorOutstandingRewards struct {
@@ -1221,6 +1267,42 @@ func (m *ValidatorAccumulatedCommission) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
+func (m *ValidatorAccumulatedTatreward) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ValidatorAccumulatedTatreward) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ValidatorAccumulatedTatreward) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Tatreward) > 0 {
+		for iNdEx := len(m.Tatreward) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Tatreward[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintDistribution(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
 func (m *ValidatorOutstandingRewards) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1653,6 +1735,20 @@ func (m *ValidatorAccumulatedCommission) Size() (n int) {
 	return n
 }
 
+func (m *ValidatorAccumulatedTatreward) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Tatreward) > 0 {
+		for _, e := range m.Tatreward {
+			l = e.Size()
+			n += 1 + l + sovDistribution(uint64(l))
+		}
+	}
+	return n
+}
 func (m *ValidatorOutstandingRewards) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2248,6 +2344,90 @@ func (m *ValidatorAccumulatedCommission) Unmarshal(dAtA []byte) error {
 			}
 			m.Commission = append(m.Commission, types.DecCoin{})
 			if err := m.Commission[len(m.Commission)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDistribution(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthDistribution
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ValidatorAccumulatedTatreward) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDistribution
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ValidatorAccumulatedTatreward: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ValidatorAccumulatedTatreward: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tatreward", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDistribution
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDistribution
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDistribution
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Tatreward = append(m.Tatreward, types.DecCoin{})
+			if err := m.Tatreward[len(m.Tatreward)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

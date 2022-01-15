@@ -10,6 +10,7 @@ const (
 	TypeMsgSetWithdrawAddress          = "set_withdraw_address"
 	TypeMsgWithdrawDelegatorReward     = "withdraw_delegator_reward"
 	TypeMsgWithdrawValidatorCommission = "withdraw_validator_commission"
+	TypeMsgWithdrawValidatorTatreward  = "withdraw_validator_tatreward"
 	TypeMsgFundCommunityPool           = "fund_community_pool"
 )
 
@@ -115,6 +116,38 @@ func (msg MsgWithdrawValidatorCommission) GetSignBytes() []byte {
 
 // quick validity check
 func (msg MsgWithdrawValidatorCommission) ValidateBasic() error {
+	if msg.ValidatorAddress == "" {
+		return ErrEmptyValidatorAddr
+	}
+	return nil
+}
+
+func NewMsgWithdrawValidatorTatreward(valAddr sdk.ValAddress) *MsgWithdrawValidatorTatreward {
+	return &MsgWithdrawValidatorTatreward{
+		ValidatorAddress: valAddr.String(),
+	}
+}
+
+func (msg MsgWithdrawValidatorTatreward) Route() string { return ModuleName }
+func (msg MsgWithdrawValidatorTatreward) Type() string  { return TypeMsgWithdrawValidatorTatreward }
+
+// Return address that must sign over msg.GetSignBytes()
+func (msg MsgWithdrawValidatorTatreward) GetSigners() []sdk.AccAddress {
+	valAddr, err := sdk.ValAddressFromBech32(msg.ValidatorAddress)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{valAddr.Bytes()}
+}
+
+// get the bytes for the message signer to sign on
+func (msg MsgWithdrawValidatorTatreward) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// quick validity check
+func (msg MsgWithdrawValidatorTatreward) ValidateBasic() error {
 	if msg.ValidatorAddress == "" {
 		return ErrEmptyValidatorAddr
 	}

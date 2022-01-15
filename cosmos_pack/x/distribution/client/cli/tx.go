@@ -19,6 +19,7 @@ import (
 // Transaction flags for the x/distribution module
 var (
 	FlagCommission       = "commission"
+	FlagTatreward        = "tatreward"
 	FlagMaxMessagesPerTx = "max-msgs"
 )
 
@@ -88,8 +89,9 @@ and optionally withdraw validator commission if the delegation address given is 
 Example:
 $ %s tx distribution withdraw-rewards %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj --from mykey
 $ %s tx distribution withdraw-rewards %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj --from mykey --commission
+$ %s tx distribution withdraw-rewards %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj --from mykey --tatreward
 `,
-				version.AppName, bech32PrefixValAddr, version.AppName, bech32PrefixValAddr,
+				version.AppName, bech32PrefixValAddr, version.AppName, bech32PrefixValAddr, version.AppName, bech32PrefixValAddr,
 			),
 		),
 		Args: cobra.ExactArgs(1),
@@ -110,6 +112,10 @@ $ %s tx distribution withdraw-rewards %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj 
 				msgs = append(msgs, types.NewMsgWithdrawValidatorCommission(valAddr))
 			}
 
+			if tatreward, _ := cmd.Flags().GetBool(FlagTatreward); tatreward {
+				msgs = append(msgs, types.NewMsgWithdrawValidatorTatreward(valAddr))
+			}
+
 			for _, msg := range msgs {
 				if err := msg.ValidateBasic(); err != nil {
 					return err
@@ -121,6 +127,7 @@ $ %s tx distribution withdraw-rewards %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj 
 	}
 
 	cmd.Flags().Bool(FlagCommission, false, "Withdraw the validator's commission in addition to the rewards")
+	cmd.Flags().Bool(FlagTatreward, false, "Withdraw the validator's tatreward in addition to the rewards")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

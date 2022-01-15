@@ -28,6 +28,7 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryParams(),
 		GetCmdQueryValidatorOutstandingRewards(),
 		GetCmdQueryValidatorCommission(),
+		GetCmdQueryValidatorTatreward(),
 		GetCmdQueryValidatorSlashes(),
 		GetCmdQueryDelegatorRewards(),
 		GetCmdQueryCommunityPool(),
@@ -146,6 +147,51 @@ $ %s query distribution commission %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj
 			}
 
 			return clientCtx.PrintProto(&res.Commission)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetCmdQueryValidatorTatreward implements the query validator tatreward command.
+func GetCmdQueryValidatorTatreward() *cobra.Command {
+	bech32PrefixValAddr := sdk.GetConfig().GetBech32ValidatorAddrPrefix()
+
+	cmd := &cobra.Command{
+		Use:   "tatreward [validator]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Query distribution validator tatreward",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query validator tat rewards from delegators to that validator.
+
+Example:
+$ %s query distribution tatreward %s1gghjut3ccd8ay0zduzj64hwre2fxs9ldmqhffj
+`,
+				version.AppName, bech32PrefixValAddr,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+			validatorAddr, err := sdk.ValAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
+			fmt.Println("validatorAddr.String()", validatorAddr.String())
+			res, err := queryClient.ValidatorTatreward(
+				cmd.Context(),
+				&types.QueryValidatorTatrewardRequest{ValidatorAddress: validatorAddr.String()},
+			)
+			fmt.Println("获取结束")
+			if err != nil {
+				return err
+			}
+			fmt.Println(555555)
+			return clientCtx.PrintProto(&res.Tatreward)
 		},
 	}
 
