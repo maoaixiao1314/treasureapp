@@ -15,7 +15,7 @@ var (
 )
 
 // ----------------------------------------------------------------------------
-// Main Ethermint account
+// Main Treasurenet account
 // ----------------------------------------------------------------------------
 
 // ProtoAccount defines the prototype function for BaseAccount used for an

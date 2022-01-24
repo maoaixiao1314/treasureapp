@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/tharsis/ethermint/testutil/network"
-	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/treasurenet/testutil/network"
+	treasurenet "github.com/treasurenet/types"
 )
 
 type IntegrationTestSuite struct {
@@ -45,7 +45,7 @@ func (s *IntegrationTestSuite) TestChainID() {
 
 	s.T().Log(chainID.Int64())
 
-	eip155ChainID, err := ethermint.ParseChainID(s.network.Config.ChainID)
+	eip155ChainID, err := treasurenet.ParseChainID(s.network.Config.ChainID)
 	s.Require().NoError(err)
 	s.Require().Equal(chainID, eip155ChainID)
 }

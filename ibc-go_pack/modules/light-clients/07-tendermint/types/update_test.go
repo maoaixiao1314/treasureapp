@@ -177,7 +177,7 @@ func (suite *TendermintTestSuite) TestCheckHeaderAndUpdateState() {
 			setup: func(suite *TendermintTestSuite) {
 				clientState = types.NewClientState(chainID, types.DefaultTrustLevel, trustingPeriod, ubdPeriod, maxClockDrift, height, commitmenttypes.GetSDKSpecs(), upgradePath, false, false)
 				consensusState = types.NewConsensusState(suite.clientTime, commitmenttypes.NewMerkleRoot(suite.header.Header.GetAppHash()), suite.valsHash)
-				newHeader = suite.chainA.CreateTMClientHeader("ethermint", int64(heightPlus1.RevisionHeight), height, suite.headerTime, suite.valSet, suite.valSet, signers)
+				newHeader = suite.chainA.CreateTMClientHeader("treasurenet", int64(heightPlus1.RevisionHeight), height, suite.headerTime, suite.valSet, suite.valSet, signers)
 				currentTime = suite.now
 			},
 			expFrozen: false,

@@ -7,8 +7,10 @@ TMVERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::'
 COMMIT := $(shell git log -1 --format='%H')
 LEDGER_ENABLED ?= true
 BINDIR ?= $(GOPATH)/bin
-ETHERMINT_BINARY = ethermintd
-ETHERMINT_DIR = ethermint
+# ETHERMINT_BINARY = ethermintd
+TREASURENET_BINARY = treasurenetd
+# ETHERMINT_DIR = ethermint
+TREASURENET_DIR = treasurenet
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
 HTTPS_GIT := https://github.com/tharsis/ethermint.git
@@ -61,8 +63,8 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=ethermint \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=$(ETHERMINT_BINARY) \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=treasurenet \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=$(TREASURENET_BINARY) \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 			-X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
@@ -124,12 +126,13 @@ docker-build:
 	docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
 	# docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${COMMIT_HASH}
 	# update old container
-	docker rm ethermint || true
+	docker rm treasurenet || true
 	# create a new container from the latest image
-	docker create --name ethermint -t -i tharsis/ethermint:latest ethermint
+	# docker create --name treasurenet -t -i tharsis/ethermint:latest ethermint
+	docker create --name treasurenet -t -i treasurenet:latest treasurenet
 	# move the binaries to the ./build directory
 	mkdir -p ./build/
-	docker cp ethermint:/usr/bin/ethermintd ./build/
+	docker cp treasurenet:/usr/bin/treasurenetd ./build/
 
 $(MOCKS_DIR):
 	mkdir -p $(MOCKS_DIR)
@@ -262,7 +265,7 @@ update-swagger-docs: statik
 .PHONY: update-swagger-docs
 
 godocs:
-	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/tharsis/ethermint/types"
+	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/treasurenet/types"
 	godoc -http=:6060
 
 # Start docs site at localhost:8080
@@ -350,8 +353,8 @@ test-sim-nondeterminism:
 
 test-sim-custom-genesis-fast:
 	@echo "Running custom genesis simulation..."
-	@echo "By default, ${HOME}/.$(ETHERMINT_DIR)/config/genesis.json will be used."
-	@go test -mod=readonly $(SIMAPP) -run TestFullAppSimulation -Genesis=${HOME}/.$(ETHERMINT_DIR)/config/genesis.json \
+	@echo "By default, ${HOME}/.$(TREASURENET_DIR)/config/genesis.json will be used."
+	@go test -mod=readonly $(SIMAPP) -run TestFullAppSimulation -Genesis=${HOME}/.$(TREASURENET_DIR)/config/genesis.json \
 		-Enabled=true -NumBlocks=100 -BlockSize=200 -Commit=true -Seed=99 -Period=5 -v -timeout 24h
 
 test-sim-import-export: runsim
@@ -364,8 +367,8 @@ test-sim-after-import: runsim
 
 test-sim-custom-genesis-multi-seed: runsim
 	@echo "Running multi-seed custom genesis simulation..."
-	@echo "By default, ${HOME}/.$(ETHERMINT_DIR)/config/genesis.json will be used."
-	@$(BINDIR)/runsim -Genesis=${HOME}/.$(ETHERMINT_DIR)/config/genesis.json -SimAppPkg=$(SIMAPP) -ExitOnFail 400 5 TestFullAppSimulation
+	@echo "By default, ${HOME}/.$(TREASURENET_DIR)/config/genesis.json will be used."
+	@$(BINDIR)/runsim -Genesis=${HOME}/.$(TREASURENET_DIR)/config/genesis.json -SimAppPkg=$(SIMAPP) -ExitOnFail 400 5 TestFullAppSimulation
 
 test-sim-multi-seed-long: runsim
 	@echo "Running long multi-seed application simulation. This may take awhile!"
@@ -413,7 +416,7 @@ lint-fix:
 format:
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs gofmt -w -s
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs goimports -w -local github.com/tharsis/ethermint
+	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs goimports -w -local github.com/treasurenet
 .PHONY: format
 
 ###############################################################################
@@ -499,13 +502,13 @@ ifeq ($(OS),Windows_NT)
 	mkdir localnet-setup &
 	@$(MAKE) localnet-build
 
-	IF not exist "build/node0/$(ETHERMINT_BINARY)/config/genesis.json" docker run --rm -v $(CURDIR)/build\ethermint\Z ethermintd/node "./ethermintd testnet --v 8 -o /ethermint --keyring-backend=test --ip-addresses ethermintdnode0,ethermintdnode1,ethermintdnode2,ethermintdnode3,ethermintdnode4,ethermintdnode5,ethermintdnode6,ethermintdnode7"
+	IF not exist "build/node0/$(TREASURENET_BINARY)/config/genesis.json" docker run --rm -v $(CURDIR)/build\treasurenet\Z treasurenetd/node "./treasurenetd testnet --v 8 -o /treasurenet --keyring-backend=test --ip-addresses treasurenetdnode0,treasurenetdnode1,treasurenetdnode2,treasurenetdnode3,treasurenetdnode4,treasurenetdnode5,treasurenetdnode6,treasurenetdnode7"
 	docker-compose up -d
 else
 	mkdir -p localnet-setup
 	@$(MAKE) localnet-build
 
-	if ! [ -f localnet-setup/node0/$(ETHERMINT_BINARY)/config/genesis.json ]; then docker run --rm -v $(CURDIR)/localnet-setup:/ethermint:Z ethermintd/node "./ethermintd testnet --v 8 -o /ethermint --keyring-backend=test --ip-addresses ethermintdnode0,ethermintdnode1,ethermintdnode2,ethermintdnode3,ethermintdnode4,ethermintdnode5,ethermintdnode6,ethermintdnode7"; fi
+	if ! [ -f localnet-setup/node0/$(TREASURENET_BINARY)/config/genesis.json ]; then docker run --rm -v $(CURDIR)/localnet-setup:/treasurenet:Z treasurenetd/node "./treasurenetd testnet --v 8 -o /treasurenet --keyring-backend=test --ip-addresses treasurenetdnode0,treasurenetdnode1,treasurenetdnode2,treasurenetdnode3,treasurenetdnode4,treasurenetdnode5,treasurenetdnode6,treasurenetdnode7"; fi
 	docker-compose up -d
 endif
 
@@ -522,28 +525,36 @@ localnet-clean:
 localnet-unsafe-reset:
 	docker-compose down
 ifeq ($(OS),Windows_NT)
-	@docker run --rm -v $(CURDIR)\localnet-setup\node0\ethermitd:ethermint\Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)\localnet-setup\node1\ethermitd:ethermint\Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)\localnet-setup\node2\ethermitd:ethermint\Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)\localnet-setup\node3\ethermitd:ethermint\Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node0\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node1\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node2\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node3\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node4\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node5\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node6\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node7\treasurenetd:treasurenet\Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
 else
-	@docker run --rm -v $(CURDIR)/localnet-setup/node0/ethermitd:/ethermint:Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)/localnet-setup/node1/ethermitd:/ethermint:Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)/localnet-setup/node2/ethermitd:/ethermint:Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
-	@docker run --rm -v $(CURDIR)/localnet-setup/node3/ethermitd:/ethermint:Z ethermintd/node "./ethermintd unsafe-reset-all --home=/ethermint"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node0/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node1/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node2/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node3/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node4/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node5/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node6/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node7/treasurenetd:/treasurenet:Z treasurenetd/node "./treasurenetd unsafe-reset-all --home=/treasurenet"
 endif
 
 # Clean testnet
 localnet-show-logstream:
 	docker-compose logs --tail=1000 -f
 
-.PHONY: build-docker-local-ethermint localnet-start localnet-stop
+.PHONY: build-docker-local-treasurenet localnet-start localnet-stop
 
 ###############################################################################
 ###                                Releasing                                ###
 ###############################################################################
 
-PACKAGE_NAME:=github.com/tharsis/ethermint
+PACKAGE_NAME:=github.com/treasurenet
 GOLANG_CROSS_VERSION  = v1.16.4
 release-dry-run:
 	docker run \

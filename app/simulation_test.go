@@ -70,7 +70,7 @@ package app
 //		require.NoError(t, os.RemoveAll(dir))
 //	}()
 //
-//	app := NewEthermintApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
+//	app := NewTreasurenetApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
 //	require.Equal(t, appName, app.Name())
 //
 //	// run randomized simulation
@@ -108,7 +108,7 @@ package app
 //		require.NoError(t, os.RemoveAll(dir))
 //	}()
 //
-//	app := NewEthermintApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
+//	app := NewTreasurenetApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
 //	require.Equal(t, appName, app.Name())
 //
 //	// Run randomized simulation
@@ -149,7 +149,7 @@ package app
 //		require.NoError(t, os.RemoveAll(newDir))
 //	}()
 //
-//	newApp := NewEthermintApp(log.NewNopLogger(), newDB, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
+//	newApp := NewTreasurenetApp(log.NewNopLogger(), newDB, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
 //	require.Equal(t, appName, newApp.Name())
 //
 //	var genesisState simapp.GenesisState
@@ -206,7 +206,7 @@ package app
 //		require.NoError(t, os.RemoveAll(dir))
 //	}()
 //
-//	app := NewEthermintApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
+//	app := NewTreasurenetApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
 //	require.Equal(t, appName, app.Name())
 //
 //	// Run randomized simulation
@@ -251,7 +251,7 @@ package app
 //		require.NoError(t, os.RemoveAll(newDir))
 //	}()
 //
-//	newApp := NewEthermintApp(log.NewNopLogger(), newDB, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
+//	newApp := NewTreasurenetApp(log.NewNopLogger(), newDB, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, fauxMerkleModeOpt)
 //	require.Equal(t, appName, newApp.Name())
 //
 //	newApp.InitChain(abci.RequestInitChain{
@@ -302,7 +302,7 @@ package app
 //			}
 //
 //			db := dbm.NewMemDB()
-//			app := NewEthermintApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, interBlockCacheOpt())
+//			app := NewTreasurenetApp(logger, db, nil, true, map[int64]bool{}, DefaultNodeHome, simapp.FlagPeriodValue, MakeEncodingConfig(), simapp.EmptyAppOptions{}, interBlockCacheOpt())
 //
 //			fmt.Printf(
 //				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",

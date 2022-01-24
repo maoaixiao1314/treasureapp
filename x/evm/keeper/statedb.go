@@ -13,8 +13,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	ethermint "github.com/tharsis/ethermint/types"
-	"github.com/tharsis/ethermint/x/evm/types"
+	treasurenet "github.com/treasurenet/types"
+	"github.com/treasurenet/x/evm/types"
 )
 
 var _ vm.StateDB = &Keeper{}
@@ -227,7 +227,7 @@ func (k *Keeper) GetCodeHash(addr common.Address) common.Hash {
 		return common.BytesToHash(types.EmptyCodeHash)
 	}
 
-	ethAccount, isEthAccount := account.(*ethermint.EthAccount)
+	ethAccount, isEthAccount := account.(*treasurenet.EthAccount)
 	if !isEthAccount {
 		return common.BytesToHash(types.EmptyCodeHash)
 	}
@@ -273,7 +273,7 @@ func (k *Keeper) SetCode(addr common.Address, code []byte) {
 		k.accountKeeper.SetAccount(k.Ctx(), account)
 	}
 
-	ethAccount, isEthAccount := account.(*ethermint.EthAccount)
+	ethAccount, isEthAccount := account.(*treasurenet.EthAccount)
 	if !isEthAccount {
 		k.Logger(k.Ctx()).Error(
 			"invalid account type",
@@ -395,7 +395,7 @@ func (k *Keeper) SetState(addr common.Address, key, value common.Hash) {
 	key = types.KeyAddressStorage(addr, key)
 
 	action := "updated"
-	if ethermint.IsEmptyHash(value.Hex()) {
+	if treasurenet.IsEmptyHash(value.Hex()) {
 		store.Delete(key.Bytes())
 		action = "deleted"
 	} else {
@@ -490,7 +490,7 @@ func (k *Keeper) Empty(addr common.Address) bool {
 
 	if account != nil {
 		nonce = account.GetSequence()
-		ethAccount, isEthAccount := account.(*ethermint.EthAccount)
+		ethAccount, isEthAccount := account.(*treasurenet.EthAccount)
 		if !isEthAccount {
 			return false
 		}

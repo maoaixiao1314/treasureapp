@@ -12,7 +12,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	ethermint "github.com/tharsis/ethermint/types"
+	treasurenet "github.com/treasurenet/types"
 )
 
 // InitConfig adds the chain-id, encoding and output flags to the persistent flag set.
@@ -51,7 +51,7 @@ func ValidateChainID(baseCmd *cobra.Command) *cobra.Command {
 	validateFn := func(cmd *cobra.Command, args []string) error {
 		chainID, _ := cmd.Flags().GetString(flags.FlagChainID)
 
-		if !ethermint.IsValidChainID(chainID) {
+		if !treasurenet.IsValidChainID(chainID) {
 			return fmt.Errorf("invalid chain-id format: %s", chainID)
 		}
 

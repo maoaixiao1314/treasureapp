@@ -1,5 +1,5 @@
 // Package rpc contains RPC handler methods and utilities to start
-// Ethermint's Web3-compatibly JSON-RPC server.
+// reasurenet's Web3-compatibly JSON-RPC server.
 package rpc
 
 import (
@@ -8,16 +8,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/tharsis/ethermint/ethereum/rpc/backend"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/debug"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/eth"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/eth/filters"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/miner"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/net"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/personal"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/txpool"
-	"github.com/tharsis/ethermint/ethereum/rpc/namespaces/web3"
-	"github.com/tharsis/ethermint/ethereum/rpc/types"
+	"github.com/treasurenet/ethereum/rpc/backend"
+	"github.com/treasurenet/ethereum/rpc/namespaces/debug"
+	"github.com/treasurenet/ethereum/rpc/namespaces/eth"
+	"github.com/treasurenet/ethereum/rpc/namespaces/eth/filters"
+	"github.com/treasurenet/ethereum/rpc/namespaces/miner"
+	"github.com/treasurenet/ethereum/rpc/namespaces/net"
+	"github.com/treasurenet/ethereum/rpc/namespaces/personal"
+	"github.com/treasurenet/ethereum/rpc/namespaces/txpool"
+	"github.com/treasurenet/ethereum/rpc/namespaces/web3"
+	"github.com/treasurenet/ethereum/rpc/types"
 
 	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 )

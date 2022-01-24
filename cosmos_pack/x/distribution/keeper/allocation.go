@@ -10,8 +10,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
-// AllocateTokens handles distribution of the collected fees 处理已收取费用的分配
-// bondedVotes is a list of (validator address, validator voted on last block flag) for all  是绑定集中所有验证器的列表（验证器地址，验证器在最后一个块上投票标志）
+// AllocateTokens handles distribution of the collected fees
+// bondedVotes is a list of (validator address, validator voted on last block flag) for all
 // validators in the bonded set.
 func (k Keeper) AllocateTokens(
 	ctx sdk.Context, sumPreviousPrecommitPower, totalPreviousPower int64,
@@ -20,17 +20,13 @@ func (k Keeper) AllocateTokens(
 
 	logger := k.Logger(ctx)
 
-	// fetch and clear the collected fees for distribution, since this is 获取并清除收取的分发费用，因为这是在 BeginBlock 中调用，收取的费用将来自前一个块
+	// fetch and clear the collected fees for distribution, since this is
 	// called in BeginBlock, collected fees will be from the previous block
-	// (and distributed to the previous proposer) 并分发给先前的投标人
+	// (and distributed to the previous proposer)
 	feeCollector := k.authKeeper.GetModuleAccount(ctx, k.feeCollectorName)
 	feesCollectedInt := k.bankKeeper.GetAllBalances(ctx, feeCollector.GetAddress())
 	feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
-	fmt.Println("feeCollector:", feeCollector)
-	fmt.Println("feesCollectedInt:", feesCollectedInt)
-	fmt.Println("feesCollected:", feesCollected)
-	// transfer collected fees to the distribution module account 将收取的费用转入分销模块账户
-	fmt.Println("feeCollectorName:", k.feeCollectorName)
+	// transfer collected fees to the distribution module account
 	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, k.feeCollectorName, types.ModuleName, feesCollectedInt)
 	if err != nil {
 		panic(err)
@@ -45,24 +41,20 @@ func (k Keeper) AllocateTokens(
 		return
 	}
 
-	// calculate fraction votes  sumPreviousPrecommitPower 是根据区块中的投票信息计算出来的投票权重的和   totalPreviousPower-》通过LastCommitInfo来统计总的投票权重previousTotalPower
+	// calculate fraction votes  sumPreviousPrecommitPower   totalPreviousPower->Count the total voting weight through lastcommitinfo
 	previousFractionVotes := sdk.NewDec(sumPreviousPrecommitPower).Quo(sdk.NewDec(totalPreviousPower))
-	fmt.Println("previousFractionVotes:", previousFractionVotes)
-	// calculate previous proposer reward 计算先前的提议者奖励
-	baseProposerReward := k.GetBaseProposerReward(ctx) //提案人费率    区块提案者获得当前区块奖励的固定比例作为基础奖励 默认值为%1(根据项目需求设置成%30)
-	fmt.Println("baseProposerReward:", baseProposerReward)
-	bonusProposerReward := k.GetBonusProposerReward(ctx) //当前分发奖金提议者奖励率    区块提案者的额外奖励--》当所有活跃验证者都进行了投票并且所有的投票都被打包进区块时，区块提案者可以得到的额外奖励比例最大 默认为%4
-	fmt.Println("bonusProposerReward:", bonusProposerReward)
-	//proposermutiplier这个值是计算额外奖励的，区块提案者的基本奖励比例固定，但额外奖励比例是浮动的，这个方法是计算两部分奖励的比例之和
-	//计算公式：proposerMultiplier = baseProposerReward+bonusProposerReward*（sumPrecommitPower/totalPower）sumPrecommitPower/totalPower 这个值就是previousFractionVotes
+	// calculate previous proposer reward
+	baseProposerReward := k.GetBaseProposerReward(ctx)   //Proposer rate block proponents receive a fixed proportion of the current block reward as the basic reward. The default value is% 1 (set to% 30 according to project requirements)
+	bonusProposerReward := k.GetBonusProposerReward(ctx) //Current payout proposer reward rate     Additional incentives for block proponents --> When all active verifiers vote and all votes are packaged into blocks, the maximum proportion of additional rewards that block proponents can receive is% 4 by default
+	//proposermutiplierThis value is used to calculate the additional reward. The basic reward proportion of the block proponent is fixed, but the additional reward proportion is floating. This method is to calculate the sum of the proportion of the two rewards
+	//proposerMultiplier = baseProposerReward+bonusProposerReward*（sumPrecommitPower/totalPower）sumPrecommitPower/totalPower  这个值就是previousFractionVotes
 	proposerMultiplier := baseProposerReward.Add(bonusProposerReward.MulTruncate(previousFractionVotes))
-	fmt.Println("proposerMultiplier:", proposerMultiplier)
-	//修改proposer的奖励比例 本次区块奖励*Proposer获得比例（30%）
+	//Modify the proposer's reward proportion. This block reward * proposer's reward proportion (30%)
 	//proposerMultiplier
 	//NewproposerReward := feesCollected.MulDecTruncate(0.300000000000000000)
 	proposerReward := feesCollected.MulDecTruncate(proposerMultiplier)
 	fmt.Println("proposerReward:", proposerReward)
-	// pay previous proposer 向proposer付款
+	// pay previous proposer
 	remaining := feesCollected
 	proposerValidator := k.stakingKeeper.ValidatorByConsAddr(ctx, previousProposer)
 	//fmt.Println("proposerValidator:", proposerValidator)
@@ -78,7 +70,6 @@ func (k Keeper) AllocateTokens(
 		k.AllocateTokensToValidator(ctx, proposerValidator, proposerReward)
 
 		remaining = remaining.Sub(proposerReward)
-		fmt.Println("proposer后的remaining:", remaining)
 	} else {
 		// previous proposer can be unknown if say, the unbonding period is 1 block, so
 		// e.g. a validator undelegates at block X, it's removed entirely by
@@ -93,20 +84,18 @@ func (k Keeper) AllocateTokens(
 	}
 
 	// calculate fraction allocated to validators
-	communityTax := k.GetCommunityTax(ctx) //社区税
-	tatReward := k.GetTatReward(ctx)       //TAT奖励费率
+	communityTax := k.GetCommunityTax(ctx) //Community tax
+	tatReward := k.GetTatReward(ctx)       //Tat reward rate
 	fmt.Println("tatReward:", tatReward)
 	voteMultiplier := sdk.OneDec().Sub(proposerMultiplier).Sub(communityTax).Sub(tatReward)
 	fmt.Println("voteMultiplier:", voteMultiplier)
-	// allocate tokens proportionally to voting power 与投票权成比例地分配代币
+	// allocate tokens proportionally to voting power
 	// TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376
 	var tattotalpower int64
 	var newunitallpower int64
 	var alltokenpower int64
 	powerReduction := k.stakingKeeper.GetPowerReduction(ctx)
-	fmt.Printf("bondedVotes:%+v\n", bondedVotes)
-	fmt.Printf("powerReduction:%+v\n", powerReduction)
-	//TAT奖励分配
+	//Tat reward allocation
 	for _, vote := range bondedVotes {
 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 		TatPower := validator.GetTatPower()
@@ -123,14 +112,11 @@ func (k Keeper) AllocateTokens(
 	if tattotalpower != int64(0) {
 		for _, vote := range bondedVotes {
 			validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
-			//fmt.Println("voteMultiplier:", voteMultiplier)
-			//获取tatpower的总量
+			//Get the total amount of tatpower
 			//params := k.stakingKeeper.GetParams(ctx)
 			TatPower := validator.GetTatPower()
 			newtatpower := TatPower.Int64()
-			// fmt.Println("关键测试staking params:", params)
-			fmt.Println("关键测试tatpower", TatPower)
-			// TODO consider microslashing for missing votes. 考虑对丢失的选票进行微削减。
+			// TODO consider microslashing for missing votes.
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
 			tatpowerFraction := sdk.NewDec(newtatpower).QuoTruncate(sdk.NewDec(tattotalpower))
 			fmt.Printf("tatpowerFraction:%+v\n", tatpowerFraction)
@@ -139,11 +125,10 @@ func (k Keeper) AllocateTokens(
 			//k.AllocateTokensToValidator(ctx, validator, tatreward)
 			k.AllocateTokensToValidatorTat(ctx, validator, tatreward)
 			remaining = remaining.Sub(tatreward)
-			fmt.Println("tat分配后remaining:", remaining)
 		}
 	}
 	fmt.Println("newunitallpower：", newunitallpower)
-	//先获取之前的totalPreviousPower
+	//Get the previous totalPreviousPower
 	//totalallpower := k.stakingKeeper.GetTotalAllPower(ctx)
 	//k.stakingKeeper.SetTotalAllPower(ctx, totalPreviousPower)
 	if totalPreviousPower == alltokenpower {
@@ -152,7 +137,6 @@ func (k Keeper) AllocateTokens(
 			fmt.Println("voteMultiplier:", voteMultiplier)
 			// TODO consider microslashing for missing votes.
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
 			fmt.Println("vote.Validator.Power:", vote.Validator.Power)
 			powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
 			fmt.Printf("powerFraction:%+v\n", powerFraction)
@@ -160,7 +144,6 @@ func (k Keeper) AllocateTokens(
 			fmt.Printf("reward:%+v\n", reward)
 			k.AllocateTokensToValidator(ctx, validator, reward)
 			remaining = remaining.Sub(reward)
-			fmt.Println("validator后remaining的奖励:", remaining)
 		}
 	} else {
 		for _, vote := range bondedVotes {
@@ -169,35 +152,26 @@ func (k Keeper) AllocateTokens(
 			// TODO consider microslashing for missing votes.
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
 			//To calculate the reward of stacking, you need to discard the pledge of unit to isolate stacking and bid from each other
-			fmt.Println("奖励测试totalPreviousPower:", totalPreviousPower)
 			newunit := validator.GetNewUnitPower().Int64()
-			fmt.Println("newunit:", newunit)
 			newpower := vote.Validator.Power - newunit
-			fmt.Println("vote.Validator.Power:", vote.Validator.Power)
-			fmt.Println("newpower:", newpower)
 			newtotalPreviousPower := totalPreviousPower - newunitallpower
 			//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
 			powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
-			fmt.Printf("powerFraction:%+v\n", powerFraction)
 			reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
-			fmt.Printf("reward:%+v\n", reward)
 			k.AllocateTokensToValidator(ctx, validator, reward)
 			remaining = remaining.Sub(reward)
-			fmt.Println("validator后remaining的奖励:", remaining)
 		}
 	}
-	// allocate community funding 分配社区资金
+	// allocate community funding
 	feePool.CommunityPool = feePool.CommunityPool.Add(remaining...)
 	k.SetFeePool(ctx, feePool)
 }
 
-// AllocateTokensToValidator allocate tokens to a particular validator, splitting according to commission 将令牌分配给特定的验证器，根据佣金进行拆分
+// AllocateTokensToValidator allocate tokens to a particular validator, splitting according to commission
 func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins) {
-	// split tokens between validator and delegators according to commission 根据佣金在验证者和委托者之间分配代币
+	// split tokens between validator and delegators according to commission
 	commission := tokens.MulDec(val.GetCommission())
 	shared := tokens.Sub(commission)
-	fmt.Println("佣金:", commission)
-	fmt.Println("减去佣金:", shared)
 	// update current commission
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -228,11 +202,10 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 	k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
 }
 
-// AllocateTokensToValidatorTat allocate tokens to a particular validator, splitting according to Tatreward 将令牌分配给特定的验证器，根据佣金进行拆分
+// AllocateTokensToValidatorTat allocate tokens to a particular validator, splitting according to Tatreward
 func (k Keeper) AllocateTokensToValidatorTat(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins) {
-	// split tokens between validator and delegators according to commission 根据佣金在验证者和委托者之间分配代币
+	// split tokens between validator and delegators according to commission
 	// update current tatreward
-	fmt.Println("Tat奖励:", tokens)
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeTatreward,

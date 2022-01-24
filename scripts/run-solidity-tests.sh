@@ -2,17 +2,17 @@
 
 export GOPATH=~/go
 export PATH=$PATH:$GOPATH/bin
-go build -o ./build/ethermintd ./cmd/ethermintd
+go build -o ./build/treasurenetd ./cmd/treasurenetd
 mkdir $GOPATH/bin
-cp ./build/ethermintd $GOPATH/bin
+cp ./build/treasurenetd $GOPATH/bin
 
 localKeyAddr=0x7cb61d4117ae31a12e393a1cfa3bac666481d02e
 user1Addr=0xc6fe5d33615a1c52c08018c47e8bc53646a0e101
 user2Addr=0x963ebdf2e1f8db8707d05fc75bfeffba1b5bac17
 
-CHAINID="ethermint_9000-1"
+CHAINID="treasurenet_9000-1"
 
-# build ethermint binary
+# build treasurenet binary
 make install
 
 cd tests/solidity
@@ -27,9 +27,9 @@ else
 fi
 
 chmod +x ./init-test-node.sh
-nohup ./init-test-node.sh > ethermintd.log 2>&1 &
+nohup ./init-test-node.sh > treasurenetd.log 2>&1 &
 
-# give ethermintd node enough time to launch
+# give treasurenetd node enough time to launch
 echo "sleeping ..."
 sleep 10
 
@@ -43,7 +43,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"personal_unlockAccount","params"
 # tests start
 cd suites/initializable
 yarn contract-migrate
-yarn test-ethermint
+yarn test-treasurenet
 
 ok=$?
 
@@ -51,16 +51,16 @@ if (( $? != 0 )); then
     echo "initializable test failed: exit code $?"
 fi
 
-killall ethermintd
+killall treasurenetd
 
 echo "Script exited with code $ok"
 exit $ok
 
 # initializable-buidler fails on CI, re-add later
 
-./../../init-test-node.sh > ethermintd.log
+./../../init-test-node.sh > treasurenetd.log
 cd ../initializable-buidler
-yarn test-ethermint
+yarn test-treasurenet
 
 ok=$(($? + $ok))
 
@@ -68,7 +68,7 @@ if (( $? != 0 )); then
     echo "initializable-buidler test failed: exit code $?"
 fi
 
-killall ethermintd
+killall treasurenetd
 
 echo "Script exited with code $ok"
 exit $ok

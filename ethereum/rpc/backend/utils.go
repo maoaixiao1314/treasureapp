@@ -11,8 +11,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/tharsis/ethermint/ethereum/rpc/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/ethereum/rpc/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 )
 
 // setTxDefaults populates tx message with default values in case they are not

@@ -3,7 +3,6 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
-	"fmt"
 )
 
 // Implements StakingHooks interface
@@ -12,7 +11,6 @@ var _ types.StakingHooks = Keeper{}
 // AfterValidatorCreated - call hook if registered
 func (k Keeper) AfterValidatorCreated(ctx sdk.Context, valAddr sdk.ValAddress) {
 	if k.hooks != nil {
-		fmt.Println("AfterValidatorCreated")
 		k.hooks.AfterValidatorCreated(ctx, valAddr)
 	}
 }

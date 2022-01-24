@@ -28,10 +28,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tharsis/ethermint/ethereum/rpc/types"
-	"github.com/tharsis/ethermint/server/config"
-	ethermint "github.com/tharsis/ethermint/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/ethereum/rpc/types"
+	"github.com/treasurenet/server/config"
+	treasurenet "github.com/treasurenet/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 )
 
 // Backend implements the functionality shared within namespaces.
@@ -67,7 +67,7 @@ type EVMBackend struct {
 
 // NewEVMBackend creates a new EVMBackend instance
 func NewEVMBackend(ctx *server.Context, logger log.Logger, clientCtx client.Context) *EVMBackend {
-	chainID, err := ethermint.ParseChainID(clientCtx.ChainID)
+	chainID, err := treasurenet.ParseChainID(clientCtx.ChainID)
 	if err != nil {
 		panic(err)
 	}

@@ -7,7 +7,7 @@ import (
 	ethcmn "github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	ethermint "github.com/tharsis/ethermint/types"
+	treasurenet "github.com/treasurenet/types"
 )
 
 // NewTransactionLogs creates a new NewTransactionLogs instance.
@@ -28,7 +28,7 @@ func NewTransactionLogsFromEth(hash ethcmn.Hash, ethlogs []*ethtypes.Log) Transa
 
 // Validate performs a basic validation of a GenesisAccount fields.
 func (tx TransactionLogs) Validate() error {
-	if ethermint.IsEmptyHash(tx.Hash) {
+	if treasurenet.IsEmptyHash(tx.Hash) {
 		return fmt.Errorf("hash cannot be the empty %s", tx.Hash)
 	}
 
@@ -53,22 +53,22 @@ func (tx TransactionLogs) EthLogs() []*ethtypes.Log {
 
 // Validate performs a basic validation of an ethereum Log fields.
 func (log *Log) Validate() error {
-	if err := ethermint.ValidateAddress(log.Address); err != nil {
+	if err := treasurenet.ValidateAddress(log.Address); err != nil {
 		return fmt.Errorf("invalid log address %w", err)
 	}
-	if ethermint.IsEmptyHash(log.BlockHash) {
+	if treasurenet.IsEmptyHash(log.BlockHash) {
 		return fmt.Errorf("block hash cannot be the empty %s", log.BlockHash)
 	}
 	if log.BlockNumber == 0 {
 		return errors.New("block number cannot be zero")
 	}
-	if ethermint.IsEmptyHash(log.TxHash) {
+	if treasurenet.IsEmptyHash(log.TxHash) {
 		return fmt.Errorf("tx hash cannot be the empty %s", log.TxHash)
 	}
 	return nil
 }
 
-// ToEthereum returns the Ethereum type Log from a Ethermint proto compatible Log.
+// ToEthereum returns the Ethereum type Log from a Treasurenet proto compatible Log.
 func (log *Log) ToEthereum() *ethtypes.Log {
 	var topics []ethcmn.Hash // nolint: prealloc
 	for i := range log.Topics {
@@ -97,7 +97,7 @@ func NewLogsFromEth(ethlogs []*ethtypes.Log) []*Log {
 	return logs
 }
 
-// LogsToEthereum casts the Ethermint Logs to a slice of Ethereum Logs.
+// LogsToEthereum casts the Treasurenet Logs to a slice of Ethereum Logs.
 func LogsToEthereum(logs []*Log) []*ethtypes.Log {
 	var ethLogs []*ethtypes.Log // nolint: prealloc
 	for i := range logs {

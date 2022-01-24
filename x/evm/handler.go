@@ -9,10 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/x/evm/types"
 )
 
-// NewHandler returns a handler for Ethermint type messages.
+// NewHandler returns a handler for Treasurenet type messages.
 func NewHandler(server types.MsgServer) sdk.Handler {
 	return func(ctx sdk.Context, msg sdk.Msg) (result *sdk.Result, err error) {
 		defer Recover(ctx.Logger(), &err)

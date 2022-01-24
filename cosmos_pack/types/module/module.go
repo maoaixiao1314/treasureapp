@@ -30,7 +30,6 @@ package module
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -181,7 +180,7 @@ type AppModule interface {
 	// ABCI
 	BeginBlock(sdk.Context, abci.RequestBeginBlock)
 	EndBlock(sdk.Context, abci.RequestEndBlock) []abci.ValidatorUpdate
-	//导入日志
+	//Import log
 	NewEndBlock(sdk.Context, abci.RequestEndBlock, sdk.ABCIMessageLogs) []abci.ValidatorUpdate
 }
 
@@ -443,7 +442,6 @@ func (m *Manager) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) abci.R
 	ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 	for _, moduleName := range m.OrderBeginBlockers {
-		fmt.Println("BeginBlock moduleName:", moduleName)
 		m.Modules[moduleName].BeginBlock(ctx, req)
 	}
 
@@ -481,27 +479,23 @@ func (m *Manager) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) abci.Respo
 func (m *Manager) NewEndBlock(ctx sdk.Context, req abci.RequestEndBlock, log sdk.ABCIMessageLogs) abci.ResponseEndBlock {
 	ctx = ctx.WithEventManager(sdk.NewEventManager())
 	validatorUpdates := []abci.ValidatorUpdate{}
-	fmt.Println("NewEndBlock:", 123)
-	fmt.Println("validatorUpdates:", validatorUpdates)
 	for _, moduleName := range m.OrderEndBlockers {
-		fmt.Println("endBlock modileName:", moduleName)
 		if staking := "staking"; moduleName == staking {
 			newmoduleValUpdates := m.Modules[moduleName].NewEndBlock(ctx, req, log)
 			if len(newmoduleValUpdates) > 0 {
 				if len(validatorUpdates) > 0 {
-					panic("validator EndBlock updates already set by a previous module") //验证程序结束块更新已由以前的模块设置
+					panic("validator EndBlock updates already set by a previous module")
 				}
 				validatorUpdates = newmoduleValUpdates
 			}
 
 		} else {
 			moduleValUpdates := m.Modules[moduleName].EndBlock(ctx, req)
-			fmt.Println("moduleValUpdates:", moduleValUpdates)
 			// use these validator updates if provided, the module manager assumes
 			// only one module will update the validator set
 			if len(moduleValUpdates) > 0 {
 				if len(validatorUpdates) > 0 {
-					panic("validator EndBlock updates already set by a previous module") //验证程序结束块更新已由以前的模块设置
+					panic("validator EndBlock updates already set by a previous module")
 				}
 
 				validatorUpdates = moduleValUpdates

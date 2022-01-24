@@ -22,8 +22,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	ethparams "github.com/ethereum/go-ethereum/params"
 
-	ethermint "github.com/tharsis/ethermint/types"
-	"github.com/tharsis/ethermint/x/evm/types"
+	treasurenet "github.com/treasurenet/types"
+	"github.com/treasurenet/x/evm/types"
 )
 
 var _ types.QueryServer = Keeper{}
@@ -34,7 +34,7 @@ func (k Keeper) Account(c context.Context, req *types.QueryAccountRequest) (*typ
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if err := ethermint.ValidateAddress(req.Address); err != nil {
+	if err := treasurenet.ValidateAddress(req.Address); err != nil {
 		return nil, status.Error(
 			codes.InvalidArgument, err.Error(),
 		)
@@ -57,7 +57,7 @@ func (k Keeper) CosmosAccount(c context.Context, req *types.QueryCosmosAccountRe
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if err := ethermint.ValidateAddress(req.Address); err != nil {
+	if err := treasurenet.ValidateAddress(req.Address); err != nil {
 		return nil, status.Error(
 			codes.InvalidArgument, err.Error(),
 		)
@@ -124,7 +124,7 @@ func (k Keeper) Balance(c context.Context, req *types.QueryBalanceRequest) (*typ
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if err := ethermint.ValidateAddress(req.Address); err != nil {
+	if err := treasurenet.ValidateAddress(req.Address); err != nil {
 		return nil, status.Error(
 			codes.InvalidArgument,
 			types.ErrZeroAddress.Error(),
@@ -147,7 +147,7 @@ func (k Keeper) Storage(c context.Context, req *types.QueryStorageRequest) (*typ
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if err := ethermint.ValidateAddress(req.Address); err != nil {
+	if err := treasurenet.ValidateAddress(req.Address); err != nil {
 		return nil, status.Error(
 			codes.InvalidArgument,
 			types.ErrZeroAddress.Error(),
@@ -174,7 +174,7 @@ func (k Keeper) Code(c context.Context, req *types.QueryCodeRequest) (*types.Que
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if err := ethermint.ValidateAddress(req.Address); err != nil {
+	if err := treasurenet.ValidateAddress(req.Address); err != nil {
 		return nil, status.Error(
 			codes.InvalidArgument,
 			types.ErrZeroAddress.Error(),
@@ -198,7 +198,7 @@ func (k Keeper) TxLogs(c context.Context, req *types.QueryTxLogsRequest) (*types
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if ethermint.IsEmptyHash(req.Hash) {
+	if treasurenet.IsEmptyHash(req.Hash) {
 		return nil, status.Error(
 			codes.InvalidArgument,
 			types.ErrEmptyHash.Error(),
@@ -222,7 +222,7 @@ func (k Keeper) BlockLogs(c context.Context, req *types.QueryBlockLogsRequest) (
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if ethermint.IsEmptyHash(req.Hash) {
+	if treasurenet.IsEmptyHash(req.Hash) {
 		return nil, status.Error(
 			codes.InvalidArgument,
 			types.ErrEmptyHash.Error(),
@@ -302,7 +302,7 @@ func (k Keeper) StaticCall(c context.Context, req *types.QueryStaticCallRequest)
 	// k.WithContext(ctx)
 
 	// // parse the chainID from a string to a base-10 integer
-	// chainIDEpoch, err := ethermint.ParseChainID(ctx.ChainID())
+	// chainIDEpoch, err := treasurenet.ParseChainID(ctx.ChainID())
 	// if err != nil {
 	// 	return nil, status.Error(codes.Internal, err.Error())
 	// }

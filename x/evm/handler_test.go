@@ -14,10 +14,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tharsis/ethermint/app"
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
-	"github.com/tharsis/ethermint/tests"
-	"github.com/tharsis/ethermint/x/evm"
+	"github.com/treasurenet/app"
+	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/treasurenet/tests"
+	"github.com/treasurenet/x/evm"
 
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
@@ -27,7 +27,7 @@ type EvmTestSuite struct {
 
 	ctx     sdk.Context
 	handler sdk.Handler
-	app     *app.EthermintApp
+	app     *app.TreasurenetApp
 	codec   codec.Codec
 	chainID *big.Int
 
@@ -41,7 +41,7 @@ func (suite *EvmTestSuite) SetupTest() {
 	checkTx := false
 
 	suite.app = app.Setup(checkTx)
-	suite.ctx = suite.app.BaseApp.NewContext(checkTx, tmproto.Header{Height: 1, ChainID: "ethermint_9000-1", Time: time.Now().UTC()})
+	suite.ctx = suite.app.BaseApp.NewContext(checkTx, tmproto.Header{Height: 1, ChainID: "treasurenet_9000-1", Time: time.Now().UTC()})
 	suite.app.EvmKeeper.WithContext(suite.ctx)
 	suite.handler = evm.NewHandler(suite.app.EvmKeeper)
 	suite.codec = suite.app.AppCodec()

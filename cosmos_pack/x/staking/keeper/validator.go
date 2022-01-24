@@ -24,7 +24,6 @@ func (k Keeper) GetValidator(ctx sdk.Context, addr sdk.ValAddress) (validator ty
 
 	validator = types.MustUnmarshalValidator(k.cdc, value)
 	//fmt.Printf("GetValidator:%+v\n", validator)
-	//获取tattoken
 	// TatTokens, _ := k.GetTatTokens(ctx, addr)
 	// NewTokens, _ := k.GetNewTokens(ctx, addr)
 	TatTokens, _ := k.GetTatTokens2(ctx, addr)
@@ -55,7 +54,6 @@ func (k Keeper) GetTatTokens(ctx sdk.Context, addr sdk.ValAddress) (TatTokens in
 func (k Keeper) GetTatTokens2(ctx sdk.Context, addr sdk.ValAddress) (TatTokens sdk.Int, found bool) {
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetTatTokensKey(addr))
-	fmt.Println("value:", value)
 	if value == nil {
 		return sdk.ZeroInt(), false
 		//return TatTokens, false
@@ -138,7 +136,6 @@ func (k Keeper) GetTatPower2(ctx sdk.Context, addr sdk.ValAddress) (TatPower sdk
 func (k Keeper) GetNewUnitPower(ctx sdk.Context, addr sdk.ValAddress) (NewUnitPower sdk.Int, found bool) {
 	store := ctx.KVStore(k.storeKey)
 	value := store.Get(types.GetNewUnitPowerKey(addr))
-	fmt.Println("newunitpower value:", value)
 	if value == nil {
 		return sdk.ZeroInt(), false
 		//return NewUnitPower, false
@@ -163,7 +160,6 @@ func (k Keeper) mustGetValidator(ctx sdk.Context, addr sdk.ValAddress) types.Val
 // get a single validator by consensus address
 func (k Keeper) GetValidatorByConsAddr(ctx sdk.Context, consAddr sdk.ConsAddress) (validator types.Validator, found bool) {
 	store := ctx.KVStore(k.storeKey)
-	//fmt.Println("sdk.ConsAddress 测试", types.GetValidatorByConsAddrKey(consAddr))
 	opAddr := store.Get(types.GetValidatorByConsAddrKey(consAddr))
 	if opAddr == nil {
 		return validator, false
@@ -183,22 +179,13 @@ func (k Keeper) mustGetValidatorByConsAddr(ctx sdk.Context, consAddr sdk.ConsAdd
 
 // set the main record holding validator details
 func (k Keeper) SetValidator(ctx sdk.Context, validator types.Validator) {
-	fmt.Println("SetValidator:路径测试")
 	//v := &validator
-	//fmt.Println("V的指针指向的地址：", *v)
 	store := ctx.KVStore(k.storeKey)
 	bz := types.MustMarshalValidator(k.cdc, &validator)
-	//bz, _ := json.Marshal(&validator)
-	//unbz := types.MustUnmarshalValidator(k.cdc, bz)
-	//fmt.Printf("unbz:%+v\n", unbz)
-	//UnmarshalValidator
-	//fmt.Printf("bz:%+v\n", bz)
-	//fmt.Printf("validator.GetOperator():%+v\n", validator.GetOperator())
-	//fmt.Printf("types.GetValidatorKey(validator.GetOperator()):%+v\n", types.GetValidatorKey(validator.GetOperator()))
 	store.Set(types.GetValidatorKey(validator.GetOperator()), bz)
 }
 
-//存储tattoken
+//tattoken
 func (k Keeper) SetTat(ctx sdk.Context, tatToken int64, addr sdk.ValAddress) {
 	store := ctx.KVStore(k.storeKey)
 	//tat := sdk.NewInt(tatToken)
@@ -214,7 +201,7 @@ func (k Keeper) SetTat(ctx sdk.Context, tatToken int64, addr sdk.ValAddress) {
 	store.Set(types.GetTatTokensKey(addr), bz)
 }
 
-//存储tattoken
+//tattoken
 func (k Keeper) SetTat2(ctx sdk.Context, tatToken []byte, addr sdk.ValAddress) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.GetTatTokensKey(addr), tatToken)
@@ -234,7 +221,7 @@ func (k Keeper) SetNewUnitPower(ctx sdk.Context, newunitPower int64, addr sdk.Va
 	store.Set(types.GetNewUnitPowerKey(addr), bz)
 }
 
-//存储tatpower
+//tatpower
 func (k Keeper) SetTatPower(ctx sdk.Context, tatPower int64, addr sdk.ValAddress) {
 	store := ctx.KVStore(k.storeKey)
 	bz, _ := json.Marshal(tatPower)
@@ -251,7 +238,6 @@ func (k Keeper) SetValidatorByConsAddr(ctx sdk.Context, validator types.Validato
 	if err != nil {
 		return err
 	}
-	fmt.Println("测试SetValidatorByConsAddr")
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.GetValidatorByConsAddrKey(consPk), validator.GetOperator())
 	return nil
@@ -263,7 +249,6 @@ func (k Keeper) SetValidatorByPowerIndex(ctx sdk.Context, validator types.Valida
 	if validator.Jailed {
 		return
 	}
-	fmt.Println("keeper-validator")
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.GetValidatorsByPowerIndexKey(validator, k.PowerReduction(ctx)), validator.GetOperator())
 }
@@ -274,7 +259,6 @@ func (k Keeper) SetNewValidatorByPowerIndex(ctx sdk.Context, validator types.Val
 	if validator.Jailed {
 		return
 	}
-	fmt.Println("keeper-newvalidator")
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.GetValidatorsByNewPowerIndexKey(validator, k.PowerReduction(ctx)), validator.GetOperator())
 }
@@ -316,7 +300,6 @@ func (k Keeper) AddValidatorTokensAndShares(ctx sdk.Context, validator types.Val
 	validator.NewTokens = NewTokens
 	validator.TatPower = sdk.NewInt(TatPower)
 	validator.NewUnitPower = NewUnitPower
-	fmt.Printf("测试tattoken  validator:%+v\n", validator)
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByPowerIndex(ctx, validator)
 	k.SetNewValidatorByPowerIndex(ctx, validator)
@@ -463,19 +446,15 @@ func (k Keeper) GetBondedValidatorsByPower(ctx sdk.Context) []types.Validator {
 	return validators[:i] // trim
 }
 
-// returns an iterator for the current validator power store  返回当前验证程序power store的迭代器
+// returns an iterator for the current validator power store
 func (k Keeper) ValidatorsPowerStoreIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Printf("store:%+v\n", store)
-	fmt.Printf("types.ValidatorsByPowerIndexKey:%+v\n", types.ValidatorsByPowerIndexKey)
 	return sdk.KVStoreReversePrefixIterator(store, types.ValidatorsByPowerIndexKey)
 }
 
-//returns an iterator for the current validator newpower store  返回当前验证程序newpower store的迭代器(tat)
+//returns an iterator for the current validator newpower store
 func (k Keeper) ValidatorsNewPowerStoreIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.storeKey)
-	fmt.Printf("store:%+v\n", store)
-	fmt.Printf("types.ValidatorsByNewPowerIndexKey:%+v\n", types.ValidatorsByNewPowerIndexKey)
 	return sdk.KVStoreReversePrefixIterator(store, types.ValidatorsByNewPowerIndexKey)
 }
 

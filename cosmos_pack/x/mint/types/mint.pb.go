@@ -187,15 +187,11 @@ var fileDescriptor_2df116d183c1e223 = []byte{
 
 func (m *Minter) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
-	fmt.Println("size:", size)
 	dAtA = make([]byte, size)
-	fmt.Println("dAtA:", dAtA)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	fmt.Println("n:", n)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("dAtA[:n]:", dAtA[:n])
 	return dAtA[:n], nil
 }
 

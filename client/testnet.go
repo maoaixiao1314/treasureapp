@@ -39,10 +39,10 @@ import (
 	mintypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tharsis/ethermint/crypto/hd"
-	"github.com/tharsis/ethermint/server/config"
-	ethermint "github.com/tharsis/ethermint/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/crypto/hd"
+	"github.com/treasurenet/server/config"
+	treasurenet "github.com/treasurenet/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 )
 
 var (
@@ -62,13 +62,13 @@ func TestnetCmd(
 ) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "testnet",
-		Short: "Initialize files for a Ethermint testnet",
+		Short: "Initialize files for a Treasurenet testnet",
 		Long: `testnet will create "v" number of directories and populate each with
 necessary files (private validator, genesis, config, etc.).
 
 Note, strict routability for addresses is turned off in the config file.`,
 
-		Example: "ethermintd testnet --v 4 --keyring-backend test --output-dir ./output --ip-addresses 192.168.10.2",
+		Example: "treasurenetd testnet --v 4 --keyring-backend test --output-dir ./output --ip-addresses 192.168.10.2",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -100,13 +100,13 @@ Note, strict routability for addresses is turned off in the config file.`,
 	cmd.Flags().Int(flagNumValidators, 4, "Number of validators to initialize the testnet with")
 	cmd.Flags().StringP(flagOutputDir, "o", "./mytestnet", "Directory to store initialization data for the testnet")
 	cmd.Flags().String(flagNodeDirPrefix, "node", "Prefix the directory name for each node with (node results in node0, node1, ...)")
-	cmd.Flags().String(flagNodeDaemonHome, "ethermintd", "Home directory of the node's daemon configuration")
+	cmd.Flags().String(flagNodeDaemonHome, "treasurenetd", "Home directory of the node's daemon configuration")
 	cmd.Flags().StringSlice(flagIPAddrs, []string{"192.168.0.1"}, "List of IP addresses to use (i.e. `192.168.0.1,172.168.0.1` results in persistent peers list ID0@192.168.0.1:46656, ID1@172.168.0.1)")
 	cmd.Flags().String(flags.FlagChainID, "", "genesis file chain-id, if left blank will be randomly created")
 	cmd.Flags().String(server.FlagMinGasPrices, "", "Minimum gas prices to accept for transactions; All fees in a tx must meet this minimum (e.g. 0.01inj,0.001stake)")
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|test)")
 	cmd.Flags().String(flags.FlagKeyAlgorithm, string(hd.EthSecp256k1Type), "Key signing algorithm to generate keys for")
-	cmd.Flags().String(flagCoinDenom, ethermint.AttoPhoton, "Coin denomination used for staking, governance, mint, crisis and evm parameters")
+	cmd.Flags().String(flagCoinDenom, treasurenet.AttoPhoton, "Coin denomination used for staking, governance, mint, crisis and evm parameters")
 	return cmd
 }
 
@@ -130,10 +130,10 @@ func InitTestnet(
 ) error {
 
 	if chainID == "" {
-		chainID = fmt.Sprintf("ethermint_%d-1", tmrand.Int63n(9999999999999)+1)
+		chainID = fmt.Sprintf("treasurenet_%d-1", tmrand.Int63n(9999999999999)+1)
 	}
 
-	if !ethermint.IsValidChainID(chainID) {
+	if !treasurenet.IsValidChainID(chainID) {
 		return fmt.Errorf("invalid chain-id: %s", chainID)
 	}
 
@@ -238,18 +238,18 @@ func InitTestnet(
 			return err
 		}
 
-		accStakingTokens := sdk.TokensFromConsensusPower(5000, ethermint.PowerReduction)
+		accStakingTokens := sdk.TokensFromConsensusPower(5000, treasurenet.PowerReduction)
 		coins := sdk.NewCoins(
 			sdk.NewCoin(coinDenom, accStakingTokens),
 		)
 
 		genBalances = append(genBalances, banktypes.Balance{Address: addr.String(), Coins: coins})
-		genAccounts = append(genAccounts, &ethermint.EthAccount{
+		genAccounts = append(genAccounts, &treasurenet.EthAccount{
 			BaseAccount: authtypes.NewBaseAccount(addr, nil, 0, 0),
 			CodeHash:    common.BytesToHash(evmtypes.EmptyCodeHash).Hex(),
 		})
 
-		valTokens := sdk.TokensFromConsensusPower(100, ethermint.PowerReduction)
+		valTokens := sdk.TokensFromConsensusPower(100, treasurenet.PowerReduction)
 		createValMsg, err := stakingtypes.NewMsgCreateValidator(
 			sdk.ValAddress(addr),
 			valPubKeys[i],

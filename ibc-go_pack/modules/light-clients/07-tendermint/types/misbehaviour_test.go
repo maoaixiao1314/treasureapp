@@ -154,7 +154,7 @@ func (suite *TendermintTestSuite) TestMisbehaviourValidateBasic() {
 			"chainIDs do not match",
 			&types.Misbehaviour{
 				Header1:  suite.header,
-				Header2:  suite.chainA.CreateTMClientHeader("ethermint", int64(height.RevisionHeight), heightMinus1, suite.now, suite.valSet, suite.valSet, signers),
+				Header2:  suite.chainA.CreateTMClientHeader("treasurenet", int64(height.RevisionHeight), heightMinus1, suite.now, suite.valSet, suite.valSet, signers),
 				ClientId: clientID,
 			},
 			func(misbehaviour *types.Misbehaviour) error { return nil },

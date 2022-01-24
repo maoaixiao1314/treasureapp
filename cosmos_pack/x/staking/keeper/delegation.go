@@ -560,7 +560,6 @@ func (k Keeper) Delegate(
 	if !found {
 		delegation = types.NewDelegation(delAddr, validator.GetOperator(), sdk.ZeroDec())
 	}
-	fmt.Println("测试delegateí")
 	// call the appropriate hook if present
 	if found {
 		k.BeforeDelegationSharesModified(ctx, delAddr, validator.GetOperator())
@@ -591,9 +590,7 @@ func (k Keeper) Delegate(
 		default:
 			panic("invalid validator status")
 		}
-		fmt.Println("测试sendName:", sendName)
 		coins := sdk.NewCoins(sdk.NewCoin(k.BondDenom(ctx), bondAmt))
-		fmt.Printf("测试coins:%+v\n", coins)
 		if err := k.bankKeeper.DelegateCoinsFromAccountToModule(ctx, delegatorAddress, sendName, coins); err != nil {
 			return sdk.Dec{}, err
 		}
@@ -617,14 +614,12 @@ func (k Keeper) Delegate(
 
 	_, newShares = k.AddValidatorTokensAndShares(ctx, validator, bondAmt)
 
-	fmt.Println("测试newShares:", newShares)
 	// Update delegation
 	delegation.Shares = delegation.Shares.Add(newShares)
 	k.SetDelegation(ctx, delegation)
 
 	// Call the after-modification hook
 	k.AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
-	fmt.Println("测试创建validator的过程")
 	return newShares, nil
 }
 
@@ -644,7 +639,6 @@ func (k Keeper) DelegateTat(
 	if !found {
 		delegation = types.NewDelegation(delAddr, validator.GetOperator(), sdk.ZeroDec())
 	}
-	fmt.Println("测试delegateí")
 	// call the appropriate hook if present
 	if found {
 		k.BeforeDelegationSharesModified(ctx, delAddr, validator.GetOperator())
@@ -675,9 +669,7 @@ func (k Keeper) DelegateTat(
 		default:
 			panic("invalid validator status")
 		}
-		fmt.Println("测试sendName:", sendName)
 		coins := sdk.NewCoins(sdk.NewCoin(k.BondDenom(ctx), bondAmt))
-		fmt.Printf("测试coins:%+v\n", coins)
 		if err := k.bankKeeper.DelegateCoinsFromAccountToModule(ctx, delegatorAddress, sendName, coins); err != nil {
 			return sdk.Dec{}, err
 		}

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	metrics "github.com/armon/go-metrics"
@@ -30,7 +29,7 @@ var _ types.MsgServer = msgServer{}
 // CreateValidator defines a method for creating a new validator
 func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateValidator) (*types.MsgCreateValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-    //fmt.Println("msg",&msg)
+	//fmt.Println("msg",&msg)
 	valAddr, err := sdk.ValAddressFromBech32(msg.ValidatorAddress)
 	if err != nil {
 		return nil, err
@@ -94,7 +93,6 @@ func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateVa
 
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByConsAddr(ctx, validator)
-	fmt.Println("测试tat路径")
 	//k.SetNewValidatorByPowerIndex(ctx, validator)
 	// call the after-creation hook
 	k.AfterValidatorCreated(ctx, validator.GetOperator())
@@ -120,7 +118,6 @@ func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateVa
 			sdk.NewAttribute(sdk.AttributeKeySender, msg.DelegatorAddress),
 		),
 	})
-    fmt.Println("创建validator结束")
 	return &types.MsgCreateValidatorResponse{}, nil
 }
 

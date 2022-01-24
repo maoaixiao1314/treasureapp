@@ -1,4 +1,4 @@
-module github.com/tharsis/ethermint
+module github.com/treasurenet
 
 go 1.16
 
@@ -65,4 +65,4 @@ replace github.com/tendermint/tendermint v0.34.12 => ./tendermint_pack
 
 replace github.com/cosmos/ibc-go v1.0.0 => ./ibc-go_pack
 
-replace github.com/ethereum/go-ethereum v1.10.3 => ./ethereum_pack
+//r eplace github.com/ethereum/go-ethereum v1.10.3 => ./ethereum_pack

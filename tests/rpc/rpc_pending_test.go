@@ -1,6 +1,6 @@
-// This is a test utility for Ethermint's Web3 JSON-RPC services.
+// This is a test utility for Treasurenet's Web3 JSON-RPC services.
 //
-// To run these tests please first ensure you have the ethermintd running
+// To run these tests please first ensure you have the treasurenetd running
 //
 // You can configure the desired HOST and MODE as well in integration-test-all.sh
 package rpc
@@ -15,7 +15,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"
 
-	rpctypes "github.com/tharsis/ethermint/ethereum/rpc/types"
+	rpctypes "github.com/treasurenet/ethereum/rpc/types"
 )
 
 // func TestMain(m *testing.M) {

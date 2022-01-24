@@ -8,8 +8,8 @@ import (
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/palantir/stacktrace"
 
-	ethermint "github.com/tharsis/ethermint/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	treasurenet "github.com/treasurenet/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
@@ -333,7 +333,7 @@ func (egcd EthGasConsumeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 	}
 
 	// TODO: deprecate after https://github.com/cosmos/cosmos-sdk/issues/9514  is fixed on SDK
-	blockGasLimit := ethermint.BlockGasLimit(ctx)
+	blockGasLimit := treasurenet.BlockGasLimit(ctx)
 
 	// NOTE: safety check
 	if blockGasLimit > 0 {

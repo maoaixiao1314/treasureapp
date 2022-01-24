@@ -3,7 +3,6 @@ package types
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -38,8 +37,8 @@ var (
 
 	ValidatorsKey                = []byte{0x21} // prefix for each key to a validator
 	ValidatorsByConsAddrKey      = []byte{0x22} // prefix for each key to a validator index, by pubkey
-	ValidatorsByPowerIndexKey    = []byte{0x23} // prefix for each key to a validator index, sorted by power 验证程序索引的每个键的前缀，按幂排序
-	ValidatorsByNewPowerIndexKey = []byte{0x24} // prefix for each key to a validator index, sorted by newpower 验证程序索引的每个键(TAT的power)的前缀，按幂排序
+	ValidatorsByPowerIndexKey    = []byte{0x23} // prefix for each key to a validator index, sorted by power
+	ValidatorsByNewPowerIndexKey = []byte{0x24} // prefix for each key to a validator index, sorted by newpower
 
 	DelegationKey                    = []byte{0x31} // key for a delegation
 	UnbondingDelegationKey           = []byte{0x32} // key for an unbonding-delegation
@@ -94,33 +93,25 @@ func AddressFromLastValidatorPowerKey(key []byte) []byte {
 	return key[2:] // remove prefix bytes and address length
 }
 
-// GetValidatorsByPowerIndexKey creates the validator by power index. 通过幂索引创建验证器
-// Power index is the key used in the power-store, and represents the relative   Power index是Power store中使用的键，表示相对验证程序的权限排序。
+// GetValidatorsByPowerIndexKey creates the validator by power index
+// Power index is the key used in the power-store, and represents the relative
 // power ranking of the validator.
 // VALUE: validator operator address ([]byte)
 func GetValidatorsByPowerIndexKey(validator Validator, powerReduction sdk.Int) []byte {
 	// NOTE the address doesn't need to be stored because counter bytes must always be different
 	// NOTE the larger values are of higher value
-	//fmt.Println("测试路径keys.go")
-	//fmt.Printf("keys.go中validator:%+v\n", validator)
-	fmt.Printf("测试路径：validator.Tokens.keys.go:%+v\n", validator.Tokens)
-	fmt.Printf("powerReduction:%+v\n", powerReduction)
 	consensusPower := sdk.TokensToConsensusPower(validator.Tokens, powerReduction)
-	fmt.Printf("consensusPower:%+v\n", consensusPower)
 	consensusPowerBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(consensusPowerBytes, uint64(consensusPower))
-
 	powerBytes := consensusPowerBytes
 	powerBytesLen := len(powerBytes) // 8
-	fmt.Printf("powerBytes:%+v\n", powerBytes)
 	addr, err := sdk.ValAddressFromBech32(validator.OperatorAddress)
-	fmt.Printf("addr:%+v\n", addr)
 	if err != nil {
 		panic(err)
 	}
 	operAddrInvr := sdk.CopyBytes(addr)
-	rss, _ := json.Marshal(operAddrInvr)
-	fmt.Printf("operAddrInvr:%+v\n", string(rss))
+	// rss, _ := json.Marshal(operAddrInvr)
+	// fmt.Printf("operAddrInvr:%+v\n", string(rss))
 	//fmt.Println("operAddrInvr:\n", string(operAddrInvr))
 	addrLen := len(operAddrInvr)
 
@@ -130,43 +121,39 @@ func GetValidatorsByPowerIndexKey(validator Validator, powerReduction sdk.Int) [
 
 	// key is of format prefix || powerbytes || addrLen (1byte) || addrBytes
 	key := make([]byte, 1+powerBytesLen+1+addrLen)
-	fmt.Printf("key:%+v\n", key)
 	key[0] = ValidatorsByPowerIndexKey[0]
-	fmt.Printf("key[0]:%+v\n", key[0])
 	copy(key[1:powerBytesLen+1], powerBytes)
 	key[powerBytesLen+1] = byte(addrLen)
 	copy(key[powerBytesLen+2:], operAddrInvr)
-	res, _ := json.Marshal(key)
-	fmt.Println("key:", string(res))
+	// res, _ := json.Marshal(key)
+	// fmt.Println("key:", string(res))
 	return key
 }
 
-// GetValidatorsByPowerIndexKey creates the validator by power index. 通过幂索引创建验证器（质押TAT后的validator重新创建验证器）
-// Power index is the key used in the power-store, and represents the relative   Power index是Power store中使用的键，表示相对验证程序的权限排序。
+// GetValidatorsByPowerIndexKey creates the validator by power index.
+// Power index is the key used in the power-store, and represents the relative
 // power ranking of the validator.
 // VALUE: validator operator address ([]byte)
 func GetValidatorsByNewPowerIndexKey(validator Validator, powerReduction sdk.Int) []byte {
 	// NOTE the address doesn't need to be stored because counter bytes must always be different
 	// NOTE the larger values are of higher value
-	//fmt.Printf("key.go中tat的validator:%+v\n", validator)
-	fmt.Printf("测试路径tat： validator.Tokens.keys.go:%+v\n", validator.TatTokens)
-	fmt.Printf("powerReduction:%+v\n", powerReduction)
+	//fmt.Printf("powerReduction:%+v\n", powerReduction)
 	consensusPower := sdk.TokensToConsensusPower(validator.TatTokens, powerReduction)
-	fmt.Printf("consensusPower:%+v\n", consensusPower)
+	//fmt.Printf("consensusPower:%+v\n", consensusPower)
 	consensusPowerBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(consensusPowerBytes, uint64(consensusPower))
 
 	powerBytes := consensusPowerBytes
 	powerBytesLen := len(powerBytes) // 8
-	fmt.Printf("powerBytes:%+v\n", powerBytes)
+	//fmt.Printf("powerBytes:%+v\n", powerBytes)
 	addr, err := sdk.ValAddressFromBech32(validator.OperatorAddress)
-	fmt.Printf("addr:%+v\n", addr)
+	//fmt.Printf("addr:%+v\n", addr)
 	if err != nil {
 		panic(err)
 	}
 	operAddrInvr := sdk.CopyBytes(addr)
-	rss, _ := json.Marshal(operAddrInvr)
-	fmt.Printf("operAddrInvr:%+v\n", string(rss))
+	// rss, _ := json.Marshal(operAddrInvr)
+	// fmt.Printf("operAddrInvr:%+v\n", string(rss))
 	//fmt.Println("operAddrInvr:\n", string(operAddrInvr))
 	addrLen := len(operAddrInvr)
 
@@ -176,15 +163,12 @@ func GetValidatorsByNewPowerIndexKey(validator Validator, powerReduction sdk.Int
 
 	// key is of format prefix || powerbytes || addrLen (1byte) || addrBytes
 	key := make([]byte, 1+powerBytesLen+1+addrLen)
-	fmt.Printf("key:%+v\n", key)
-	//key[0] = ValidatorsByPowerIndexKey[0]
 	key[0] = ValidatorsByNewPowerIndexKey[0]
-	fmt.Printf("key[0]:%+v\n", key[0])
 	copy(key[1:powerBytesLen+1], powerBytes)
 	key[powerBytesLen+1] = byte(addrLen)
 	copy(key[powerBytesLen+2:], operAddrInvr)
-	res, _ := json.Marshal(key)
-	fmt.Println("key:", string(res))
+	// res, _ := json.Marshal(key)
+	// fmt.Println("key:", string(res))
 	return key
 }
 

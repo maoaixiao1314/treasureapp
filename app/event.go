@@ -17,14 +17,14 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	//"github.com/tharsis/ethermint/x/evm/types"
-	store "github.com/tharsis/ethermint/app/contract"
+	//"github.com/treasurenet/x/evm/types"
+	store "github.com/treasurenet/app/contract"
 )
 
 type EventLog struct {
 	Code int             `json:"code"`
 	Msg  string          `json:"msg"`
-	Data [][]interface{} `json:"data"` //`json:"-"`不进行序列化
+	Data [][]interface{} `json:"data"` //`json:"-"`No serialization
 }
 
 // func NewEventLog() *EventLog {
@@ -39,7 +39,7 @@ func getLogs(Start, End int64) {
 	//Even = new(EventLog)
 	client, err := ethclient.Dial("ws://localhost:8546")
 	if err != nil {
-		fmt.Println("没有监听到")
+		fmt.Println("No listening")
 		Even = EventLog{
 			Code: 300,
 			Msg:  "ethclient Listening error",
@@ -51,7 +51,7 @@ func getLogs(Start, End int64) {
 		eventSignature := []byte("bidList(address,uint256,uint256)")
 		hash := crypto.Keccak256Hash(eventSignature)
 		topic := hash.Hex()
-		fmt.Println("测试获取日志标题new", topic)
+		fmt.Println("Test get log title new", topic)
 		query := ethereum.FilterQuery{
 			FromBlock: big.NewInt(Start),
 			ToBlock:   big.NewInt(End),
@@ -61,7 +61,7 @@ func getLogs(Start, End int64) {
 				},
 			},
 		}
-		fmt.Println("监听开始：", client)
+		fmt.Println("Listening start：", client)
 		logs, err := client.FilterLogs(context.Background(), query)
 		if err != nil {
 			Even = EventLog{
@@ -70,8 +70,8 @@ func getLogs(Start, End int64) {
 				Data: data,
 			}
 		}
-		fmt.Println("监听完毕")
-		fmt.Printf("测试logs:%+v\n", logs)
+		fmt.Println("Listening end")
+		fmt.Printf("logs:%+v\n", logs)
 		contractAbi, err := abi.JSON(strings.NewReader(string(store.ContractABI)))
 		if err != nil {
 			Even = EventLog{
@@ -131,7 +131,7 @@ func getLogs(Start, End int64) {
 // 	eventSignature := []byte("ItemSet(bytes32,bytes32)")
 // 	hash := crypto.Keccak256Hash(eventSignature)
 // 	topic := hash.Hex()
-// 	fmt.Println("测试获取日志标题", topic)
+// 	fmt.Println("Test get log title", topic)
 // 	query := ethereum.FilterQuery{
 // 		FromBlock: big.NewInt(1),
 // 		ToBlock:   big.NewInt(2),
@@ -141,7 +141,7 @@ func getLogs(Start, End int64) {
 // 			},
 // 		},
 // 	}
-// 	fmt.Printf("query 测试:%+v\n", query)
+// 	fmt.Printf("query :%+v\n", query)
 // 	fmt.Printf("context.Background():%+v\n", context.Background())
 // 	//logs1 := make(chan types.Log)
 // 	//ctx, cancel := context.WithCancel(context.Background())

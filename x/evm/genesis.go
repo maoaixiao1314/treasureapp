@@ -8,9 +8,9 @@ import (
 	ethcmn "github.com/ethereum/go-ethereum/common"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	ethermint "github.com/tharsis/ethermint/types"
-	"github.com/tharsis/ethermint/x/evm/keeper"
-	"github.com/tharsis/ethermint/x/evm/types"
+	treasurenet "github.com/treasurenet/types"
+	"github.com/treasurenet/x/evm/keeper"
+	"github.com/treasurenet/x/evm/types"
 )
 
 // InitGenesis initializes genesis state based on exported genesis
@@ -39,11 +39,11 @@ func InitGenesis(
 			panic(fmt.Errorf("account not found for address %s", account.Address))
 		}
 
-		_, ok := acc.(*ethermint.EthAccount)
+		_, ok := acc.(*treasurenet.EthAccount)
 		if !ok {
 			panic(
 				fmt.Errorf("account %s must be an %T type, got %T",
-					account.Address, &ethermint.EthAccount{}, acc,
+					account.Address, &treasurenet.EthAccount{}, acc,
 				),
 			)
 		}
@@ -69,7 +69,7 @@ func ExportGenesis(ctx sdk.Context, k *keeper.Keeper, ak types.AccountKeeper) *t
 	// nolint: prealloc
 	var ethGenAccounts []types.GenesisAccount
 	ak.IterateAccounts(ctx, func(account authtypes.AccountI) bool {
-		ethAccount, ok := account.(*ethermint.EthAccount)
+		ethAccount, ok := account.(*treasurenet.EthAccount)
 		if !ok {
 			// ignore non EthAccounts
 			return false

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/tharsis/ethermint/ethereum/rpc/types"
+	"github.com/treasurenet/ethereum/rpc/types"
 
 	"github.com/pkg/errors"
 	"github.com/tendermint/tendermint/libs/log"
@@ -216,7 +216,7 @@ func (f *Filter) checkMatches(transactions []common.Hash) []*ethtypes.Log {
 		logs, err := f.backend.GetTransactionLogs(tx)
 		if err != nil {
 			// ignore error if transaction didn't set any logs (eg: when tx type is not
-			// MsgEthereumTx or MsgEthermint)
+			// MsgEthereumTx or MsgTreasurenet)
 			continue
 		}
 

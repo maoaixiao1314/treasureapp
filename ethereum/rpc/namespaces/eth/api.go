@@ -31,11 +31,11 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/tharsis/ethermint/crypto/hd"
-	"github.com/tharsis/ethermint/ethereum/rpc/backend"
-	rpctypes "github.com/tharsis/ethermint/ethereum/rpc/types"
-	ethermint "github.com/tharsis/ethermint/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/crypto/hd"
+	"github.com/treasurenet/ethereum/rpc/backend"
+	rpctypes "github.com/treasurenet/ethereum/rpc/types"
+	treasurenet "github.com/treasurenet/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 )
 
 // PublicAPI is the eth_ prefixed set of APIs in the Web3 JSON-RPC spec.
@@ -56,7 +56,7 @@ func NewPublicAPI(
 	backend backend.Backend,
 	nonceLock *rpctypes.AddrLocker,
 ) *PublicAPI {
-	epoch, err := ethermint.ParseChainID(clientCtx.ChainID)
+	epoch, err := treasurenet.ParseChainID(clientCtx.ChainID)
 	if err != nil {
 		panic(err)
 	}
@@ -108,7 +108,7 @@ func (e *PublicAPI) Ctx() context.Context {
 // ProtocolVersion returns the supported Ethereum protocol version.
 func (e *PublicAPI) ProtocolVersion() hexutil.Uint {
 	e.logger.Debug("eth_protocolVersion")
-	return hexutil.Uint(ethermint.ProtocolVersion)
+	return hexutil.Uint(treasurenet.ProtocolVersion)
 }
 
 // ChainId returns the chain's identifier in hex format
@@ -164,7 +164,7 @@ func (e *PublicAPI) Hashrate() hexutil.Uint64 {
 	return 0
 }
 
-// GasPrice returns the current gas price based on Ethermint's gas price oracle.
+// GasPrice returns the current gas price based on Treasurenet's gas price oracle.
 func (e *PublicAPI) GasPrice() *hexutil.Big {
 	e.logger.Debug("eth_gasPrice")
 	out := new(big.Int).SetUint64(e.backend.RPCGasCap())
@@ -855,7 +855,7 @@ func (e *PublicAPI) GetProof(address common.Address, storageKeys []string, block
 		Balance:      (*hexutil.Big)(balance.BigInt()),
 		CodeHash:     common.HexToHash(res.CodeHash),
 		Nonce:        hexutil.Uint64(res.Nonce),
-		StorageHash:  common.Hash{}, // NOTE: Ethermint doesn't have a storage hash. TODO: implement?
+		StorageHash:  common.Hash{}, // NOTE: Treasurenet doesn't have a storage hash. TODO: implement?
 		StorageProof: storageProofs,
 	}, nil
 }

@@ -18,7 +18,7 @@ import (
 	channelkeeper "github.com/cosmos/ibc-go/modules/core/04-channel/keeper"
 	ibcante "github.com/cosmos/ibc-go/modules/core/ante"
 
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
+	"github.com/treasurenet/crypto/ethsecp256k1"
 )
 
 const (
@@ -62,7 +62,7 @@ func NewAnteHandler(
 			opts := txWithExtensions.GetExtensionOptions()
 			if len(opts) > 0 {
 				switch typeURL := opts[0].GetTypeUrl(); typeURL {
-				case "/ethermint.evm.v1.ExtensionOptionsEthereumTx":
+				case "/treasurenet.evm.v1.ExtensionOptionsEthereumTx":
 					// handle as *evmtypes.MsgEthereumTx
 
 					anteHandler = sdk.ChainAnteDecorators(

@@ -113,6 +113,5 @@ func DeliverGenTxs(
 			panic(res.Log)
 		}
 	}
-	fmt.Println("测试ApplyAndReturnValidatorSetUpdates路劲")
 	return stakingKeeper.ApplyAndReturnValidatorSetUpdates(ctx)
 }

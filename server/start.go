@@ -41,10 +41,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	ethlog "github.com/ethereum/go-ethereum/log"
-	ethdebug "github.com/tharsis/ethermint/ethereum/rpc/namespaces/debug"
-	"github.com/tharsis/ethermint/log"
-	"github.com/tharsis/ethermint/server/config"
-	srvflags "github.com/tharsis/ethermint/server/flags"
+	ethdebug "github.com/treasurenet/ethereum/rpc/namespaces/debug"
+	"github.com/treasurenet/log"
+	"github.com/treasurenet/server/config"
+	srvflags "github.com/treasurenet/server/flags"
 )
 
 // StartCmd runs the service passed in, either stand-alone or in-process with

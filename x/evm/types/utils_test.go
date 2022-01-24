@@ -9,10 +9,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	proto "github.com/gogo/protobuf/proto"
-	"github.com/tharsis/ethermint/app"
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
-	"github.com/tharsis/ethermint/encoding"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+
+	"github.com/treasurenet/app"
+	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/treasurenet/encoding"
+	evmtypes "github.com/treasurenet/x/evm/types"
 
 	"github.com/stretchr/testify/require"
 

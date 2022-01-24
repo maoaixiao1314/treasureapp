@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
-	"github.com/tharsis/ethermint/crypto/hd"
+	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/treasurenet/crypto/hd"
 )
 
 // UnsafeExportEthKeyCommand exports a key with the given name as a private key in hex format.
@@ -74,7 +74,7 @@ func UnsafeExportEthKeyCommand() *cobra.Command {
 				return fmt.Errorf("invalid key algorithm, got %s, expected %s", algo, ethsecp256k1.KeyType)
 			}
 
-			// Converts key to Ethermint secp256 implementation
+			// Converts key to Treasurenet secp256 implementation
 			ethPrivKey, ok := privKey.(*ethsecp256k1.PrivKey)
 			if !ok {
 				return fmt.Errorf("invalid private key type %T, expected %T", privKey, &ethsecp256k1.PrivKey{})

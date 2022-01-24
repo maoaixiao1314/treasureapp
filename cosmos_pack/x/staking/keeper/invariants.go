@@ -92,20 +92,17 @@ func ModuleAccountInvariants(k Keeper) sdk.Invariant {
 
 // NonNegativePowerInvariant checks that all stored validators have >= 0 power.
 func NonNegativePowerInvariant(k Keeper) sdk.Invariant {
-	fmt.Println("测试invariants")
 	return func(ctx sdk.Context) (string, bool) {
 		var (
 			msg    string
 			broken bool
 		)
-		fmt.Println("测试你好测试")
 		iterator := k.ValidatorsPowerStoreIterator(ctx)
 		for ; iterator.Valid(); iterator.Next() {
 			validator, found := k.GetValidator(ctx, iterator.Value())
 			if !found {
 				panic(fmt.Sprintf("validator record not found for address: %X\n", iterator.Value()))
 			}
-			fmt.Println("找路径GetValidatorsByPowerIndexKey")
 			powerKey := types.GetValidatorsByPowerIndexKey(validator, k.PowerReduction(ctx))
 
 			if !bytes.Equal(iterator.Key(), powerKey) {

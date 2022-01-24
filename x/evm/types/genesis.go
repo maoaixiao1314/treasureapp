@@ -5,12 +5,12 @@ import (
 	"fmt"
 
 	ethcmn "github.com/ethereum/go-ethereum/common"
-	ethermint "github.com/tharsis/ethermint/types"
+	treasurenet "github.com/treasurenet/types"
 )
 
 // Validate performs a basic validation of a GenesisAccount fields.
 func (ga GenesisAccount) Validate() error {
-	if err := ethermint.ValidateAddress(ga.Address); err != nil {
+	if err := treasurenet.ValidateAddress(ga.Address); err != nil {
 		return err
 	}
 	if len(ethcmn.Hex2Bytes(ga.Code)) == 0 {

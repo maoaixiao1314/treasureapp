@@ -30,9 +30,9 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tharsis/ethermint/ethereum/rpc"
-	ethsrv "github.com/tharsis/ethermint/server"
-	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/treasurenet/ethereum/rpc"
+	ethsrv "github.com/treasurenet/server"
+	treasurenet "github.com/treasurenet/types"
 )
 
 func startInProcess(cfg Config, val *Validator) error {
@@ -188,7 +188,7 @@ func collectGenFiles(cfg Config, vals []*Validator, outputDir string) error {
 	for i := 0; i < cfg.NumValidators; i++ {
 		tmCfg := vals[i].Ctx.Config
 
-		nodeDir := filepath.Join(outputDir, vals[i].Moniker, "ethermintd")
+		nodeDir := filepath.Join(outputDir, vals[i].Moniker, "treasurenetd")
 		gentxsDir := filepath.Join(outputDir, "gentxs")
 
 		tmCfg.Moniker = vals[i].Moniker
@@ -241,7 +241,7 @@ func initGenFiles(cfg Config, genAccounts []authtypes.GenesisAccount, genBalance
 	var stakingGenState stakingtypes.GenesisState
 	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[stakingtypes.ModuleName], &stakingGenState)
 
-	stakingGenState.Params.BondDenom = ethermint.AttoPhoton
+	stakingGenState.Params.BondDenom = treasurenet.AttoPhoton
 	cfg.GenesisState[stakingtypes.ModuleName] = cfg.Codec.MustMarshalJSON(&stakingGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(cfg.GenesisState, "", "  ")

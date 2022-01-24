@@ -75,14 +75,14 @@ func getLogFields(keyVals ...interface{}) map[string]interface{} {
 	return fields
 }
 
-// var ethermintLogger *tmlog.Logger = nil
+// var treasurenetLogger *tmlog.Logger = nil
 
 // func NewHandler(logger tmlog.Logger) ethlog.Handler {
 
-// 	ethermintLogger = &logger
+// 	treasurenetLogger = &logger
 
 // 	return ethlog.FuncHandler(func(r *ethlog.Record) error {
-// 		(*ethermintLogger).Debug(fmt.Sprintf("[EVM] %v", r))
+// 		(*treasurenetLogger).Debug(fmt.Sprintf("[EVM] %v", r))
 // 		return nil
 // 	})
 // }

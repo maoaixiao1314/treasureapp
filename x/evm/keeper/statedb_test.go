@@ -14,9 +14,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/tharsis/ethermint/tests"
-	"github.com/tharsis/ethermint/x/evm/types"
-	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+
+	"github.com/treasurenet/tests"
+	"github.com/treasurenet/x/evm/types"
+	evmtypes "github.com/treasurenet/x/evm/types"
 )
 
 func (suite *KeeperTestSuite) TestCreateAccount() {

@@ -13,8 +13,8 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	ethermint "github.com/tharsis/ethermint/types"
-	"github.com/tharsis/ethermint/x/evm/types"
+	treasurenet "github.com/treasurenet/types"
+	"github.com/treasurenet/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
@@ -39,7 +39,7 @@ func (k *Keeper) NewEVM(
 		Transfer:    core.Transfer,
 		GetHash:     k.GetHashFn(),
 		Coinbase:    coinbase,
-		GasLimit:    ethermint.BlockGasLimit(k.Ctx()),
+		GasLimit:    treasurenet.BlockGasLimit(k.Ctx()),
 		BlockNumber: big.NewInt(k.Ctx().BlockHeight()),
 		Time:        big.NewInt(k.Ctx().BlockHeader().Time.Unix()),
 		Difficulty:  big.NewInt(0), // unused. Only required in PoW context
@@ -62,7 +62,7 @@ func (k Keeper) VMConfig(msg core.Message, params types.Params, tracer vm.Tracer
 	}
 }
 
-// GetHashFn implements vm.GetHashFunc for Ethermint. It handles 3 cases:
+// GetHashFn implements vm.GetHashFunc for Treasurenet. It handles 3 cases:
 //  1. The requested height matches the current height from context (and thus same epoch number)
 //  2. The requested height is from an previous height from the same chain epoch
 //  3. The requested height is from a height greater than the latest one
@@ -263,7 +263,7 @@ func (k *Keeper) ApplyMessage(evm *vm.EVM, msg core.Message, cfg *params.ChainCo
 	if query {
 		// gRPC query handlers don't go through the AnteHandler to deduct the gas fee from the sender or have access historical state.
 		// We don't refund gas to the sender.
-		// For more info, see: https://github.com/tharsis/ethermint/issues/229 and https://github.com/cosmos/cosmos-sdk/issues/9636
+		// For more info, see: https://github.com/treasurenet/issues/229 and https://github.com/cosmos/cosmos-sdk/issues/9636
 		leftoverGas += k.GasToRefund(msg.Gas() - leftoverGas)
 	} else {
 		// refund gas prior to handling the vm error in order to match the Ethereum gas consumption instead of the default SDK one.

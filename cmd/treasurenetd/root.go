@@ -30,18 +30,18 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 
-	"github.com/tharsis/ethermint/app"
-	ethermintclient "github.com/tharsis/ethermint/client"
-	"github.com/tharsis/ethermint/client/debug"
-	"github.com/tharsis/ethermint/crypto/hd"
-	"github.com/tharsis/ethermint/encoding"
-	"github.com/tharsis/ethermint/server"
-	servercfg "github.com/tharsis/ethermint/server/config"
-	srvflags "github.com/tharsis/ethermint/server/flags"
-	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/treasurenet/app"
+	treasurenetclient "github.com/treasurenet/client"
+	"github.com/treasurenet/client/debug"
+	"github.com/treasurenet/crypto/hd"
+	"github.com/treasurenet/encoding"
+	"github.com/treasurenet/server"
+	servercfg "github.com/treasurenet/server/config"
+	srvflags "github.com/treasurenet/server/flags"
+	treasurenet "github.com/treasurenet/types"
 )
 
-const EnvPrefix = "ETHERMINT"
+const EnvPrefix = "TREASURENET"
 
 // NewRootCmd creates a new root command for simd. It is called once in the
 // main function.
@@ -60,8 +60,8 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		WithViper(EnvPrefix)
 
 	rootCmd := &cobra.Command{
-		Use:   "ethermintd",
-		Short: "Ethermint Daemon",
+		Use:   "treasurenetd",
+		Short: "Treasurenet Daemon",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -78,7 +78,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 				return err
 			}
 
-			customAppTemplate, customAppConfig := servercfg.AppConfig(ethermint.AttoPhoton)
+			customAppTemplate, customAppConfig := servercfg.AppConfig(treasurenet.AttoPhoton)
 
 			return sdkserver.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig)
 		},
@@ -91,7 +91,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	cfg.Seal()
 
 	rootCmd.AddCommand(
-		ethermintclient.ValidateChainID(
+		treasurenetclient.ValidateChainID(
 			genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
 		),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome),
@@ -100,7 +100,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		genutilcli.ValidateGenesisCmd(app.ModuleBasics),
 		AddGenesisAccountCmd(app.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
-		ethermintclient.TestnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
+		treasurenetclient.TestnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		config.Cmd(),
 	)
@@ -113,7 +113,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		rpc.StatusCommand(),
 		queryCommand(),
 		txCommand(),
-		ethermintclient.KeyCommands(app.DefaultNodeHome),
+		treasurenetclient.KeyCommands(app.DefaultNodeHome),
 	)
 	rootCmd = srvflags.AddTxFlags(rootCmd)
 
@@ -210,7 +210,7 @@ func (a appCreator) newApp(logger tmlog.Logger, db dbm.DB, traceStore io.Writer,
 		panic(err)
 	}
 
-	ethermintApp := app.NewEthermintApp(
+	treasurenetApp := app.NewTreasurenetApp(
 		logger, db, traceStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(sdkserver.FlagInvCheckPeriod)),
@@ -229,7 +229,7 @@ func (a appCreator) newApp(logger tmlog.Logger, db dbm.DB, traceStore io.Writer,
 		baseapp.SetSnapshotKeepRecent(cast.ToUint32(appOpts.Get(sdkserver.FlagStateSyncSnapshotKeepRecent))),
 	)
 
-	return ethermintApp
+	return treasurenetApp
 }
 
 // appExport creates a new simapp (optionally at a given height)
@@ -239,21 +239,21 @@ func (a appCreator) appExport(
 	appOpts servertypes.AppOptions,
 ) (servertypes.ExportedApp, error) {
 
-	var ethermintApp *app.EthermintApp
+	var treasurenetApp *app.TreasurenetApp
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
 
 	if height != -1 {
-		ethermintApp = app.NewEthermintApp(logger, db, traceStore, false, map[int64]bool{}, "", uint(1), a.encCfg, appOpts)
+		treasurenetApp = app.NewTreasurenetApp(logger, db, traceStore, false, map[int64]bool{}, "", uint(1), a.encCfg, appOpts)
 
-		if err := ethermintApp.LoadHeight(height); err != nil {
+		if err := treasurenetApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
-		ethermintApp = app.NewEthermintApp(logger, db, traceStore, true, map[int64]bool{}, "", uint(1), a.encCfg, appOpts)
+		treasurenetApp = app.NewTreasurenetApp(logger, db, traceStore, true, map[int64]bool{}, "", uint(1), a.encCfg, appOpts)
 	}
 
-	return ethermintApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
+	return treasurenetApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
 }

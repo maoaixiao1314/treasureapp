@@ -17,12 +17,12 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tharsis/ethermint/app"
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
-	"github.com/tharsis/ethermint/encoding"
-	"github.com/tharsis/ethermint/tests"
-	ethermint "github.com/tharsis/ethermint/types"
-	"github.com/tharsis/ethermint/x/evm/types"
+	"github.com/treasurenet/app"
+	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/treasurenet/encoding"
+	"github.com/treasurenet/tests"
+	treasurenet "github.com/treasurenet/types"
+	"github.com/treasurenet/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethcmn "github.com/ethereum/go-ethereum/common"
@@ -39,7 +39,7 @@ type KeeperTestSuite struct {
 	suite.Suite
 
 	ctx         sdk.Context
-	app         *app.EthermintApp
+	app         *app.TreasurenetApp
 	queryClient types.QueryClient
 	address     ethcmn.Address
 	consAddress sdk.ConsAddress
@@ -69,7 +69,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 	suite.app = app.Setup(checkTx)
 	suite.ctx = suite.app.BaseApp.NewContext(checkTx, tmproto.Header{
 		Height:          1,
-		ChainID:         "ethermint_9000-1",
+		ChainID:         "treasurenet_9000-1",
 		Time:            time.Now().UTC(),
 		ProposerAddress: suite.consAddress.Bytes(),
 	})
@@ -79,7 +79,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 	types.RegisterQueryServer(queryHelper, suite.app.EvmKeeper)
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
-	acc := &ethermint.EthAccount{
+	acc := &treasurenet.EthAccount{
 		BaseAccount: authtypes.NewBaseAccount(sdk.AccAddress(suite.address.Bytes()), nil, 0, 0),
 		CodeHash:    common.BytesToHash(ethcrypto.Keccak256(nil)).String(),
 	}

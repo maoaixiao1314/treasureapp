@@ -15,7 +15,7 @@ import (
 	tmlog "github.com/tendermint/tendermint/libs/log"
 	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 
-	"github.com/tharsis/ethermint/app"
+	"github.com/treasurenet/app"
 )
 
 // add server commands

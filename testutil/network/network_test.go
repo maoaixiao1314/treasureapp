@@ -1,3 +1,4 @@
+//go:build norace
 // +build norace
 
 package network_test
@@ -8,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/tharsis/ethermint/testutil/network"
+	"github.com/treasurenet/testutil/network"
 )
 
 type IntegrationTestSuite struct {

@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/tharsis/ethermint/ethereum/rpc/backend"
+	"github.com/treasurenet/ethereum/rpc/backend"
 
 	"github.com/cosmos/cosmos-sdk/client"
 
-	"github.com/tharsis/ethermint/crypto/hd"
-	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/treasurenet/crypto/hd"
+	treasurenet "github.com/treasurenet/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -24,8 +24,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/tharsis/ethermint/crypto/ethsecp256k1"
-	rpctypes "github.com/tharsis/ethermint/ethereum/rpc/types"
+	"github.com/treasurenet/crypto/ethsecp256k1"
+	rpctypes "github.com/treasurenet/ethereum/rpc/types"
 )
 
 // PrivateAccountAPI is the personal_ prefixed set of APIs in the Web3 JSON-RPC spec.
@@ -33,7 +33,7 @@ type PrivateAccountAPI struct {
 	clientCtx  client.Context
 	backend    backend.Backend
 	logger     log.Logger
-	hdPathIter ethermint.HDPathIterator
+	hdPathIter treasurenet.HDPathIterator
 }
 
 // NewAPI creates an instance of the public Personal Eth API.
@@ -41,7 +41,7 @@ func NewAPI(logger log.Logger, clientCtx client.Context, backend backend.Backend
 	cfg := sdk.GetConfig()
 	basePath := cfg.GetFullFundraiserPath()
 
-	iterator, err := ethermint.NewHDPathIterator(basePath, true)
+	iterator, err := treasurenet.NewHDPathIterator(basePath, true)
 	if err != nil {
 		panic(err)
 	}
@@ -133,7 +133,7 @@ func (api *PrivateAccountAPI) NewAccount(password string) (common.Address, error
 
 	addr := common.BytesToAddress(info.GetPubKey().Address().Bytes())
 	api.logger.Info("Your new key was generated", "address", addr.String())
-	api.logger.Info("Please backup your key file!", "path", os.Getenv("HOME")+"/.ethermint/"+name) // TODO: pass the correct binary
+	api.logger.Info("Please backup your key file!", "path", os.Getenv("HOME")+"/.treasurenet/"+name) // TODO: pass the correct binary
 	api.logger.Info("Please remember your password!")
 	return addr, nil
 }

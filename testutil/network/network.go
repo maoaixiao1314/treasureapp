@@ -49,11 +49,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tharsis/ethermint/app"
-	"github.com/tharsis/ethermint/crypto/hd"
-	"github.com/tharsis/ethermint/encoding"
-	srvconfig "github.com/tharsis/ethermint/server/config"
-	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/treasurenet/app"
+	"github.com/treasurenet/crypto/hd"
+	"github.com/treasurenet/encoding"
+	srvconfig "github.com/treasurenet/server/config"
+	treasurenet "github.com/treasurenet/types"
 )
 
 // package-wide network lock to only allow one test network at a time
@@ -66,7 +66,7 @@ type AppConstructor = func(val Validator) servertypes.Application
 // NewAppConstructor returns a new simapp AppConstructor
 func NewAppConstructor(encodingCfg params.EncodingConfig) AppConstructor {
 	return func(val Validator) servertypes.Application {
-		return app.NewEthermintApp(
+		return app.NewTreasurenetApp(
 			val.Ctx.Logger, dbm.NewMemDB(), nil, true, make(map[int64]bool), val.Ctx.Config.RootDir, 0,
 			encodingCfg,
 			simapp.EmptyAppOptions{},
@@ -117,13 +117,13 @@ func DefaultConfig() Config {
 		AppConstructor:    NewAppConstructor(encCfg),
 		GenesisState:      app.NewDefaultGenesisState(),
 		TimeoutCommit:     2 * time.Second,
-		ChainID:           "ethermint_9000-" + fmt.Sprintf("%d", tmrand.NewRand().Int63n(1000)),
+		ChainID:           "treasurenet_9000-" + fmt.Sprintf("%d", tmrand.NewRand().Int63n(1000)),
 		NumValidators:     4,
-		BondDenom:         ethermint.AttoPhoton,
-		MinGasPrices:      fmt.Sprintf("0.000006%s", ethermint.AttoPhoton),
-		AccountTokens:     sdk.TokensFromConsensusPower(1000, ethermint.PowerReduction),
-		StakingTokens:     sdk.TokensFromConsensusPower(500, ethermint.PowerReduction),
-		BondedTokens:      sdk.TokensFromConsensusPower(100, ethermint.PowerReduction),
+		BondDenom:         treasurenet.AttoPhoton,
+		MinGasPrices:      fmt.Sprintf("0.000006%s", treasurenet.AttoPhoton),
+		AccountTokens:     sdk.TokensFromConsensusPower(1000, treasurenet.PowerReduction),
+		StakingTokens:     sdk.TokensFromConsensusPower(500, treasurenet.PowerReduction),
+		BondedTokens:      sdk.TokensFromConsensusPower(100, treasurenet.PowerReduction),
 		PruningStrategy:   storetypes.PruningOptionNothing,
 		CleanupDir:        true,
 		SigningAlgo:       string(hd.EthSecp256k1Type),
@@ -270,7 +270,7 @@ func New(t *testing.T, cfg Config) *Network {
 		ctx.Logger = logger
 
 		nodeDirName := fmt.Sprintf("node%d", i)
-		nodeDir := filepath.Join(network.BaseDir, nodeDirName, "ethermintd")
+		nodeDir := filepath.Join(network.BaseDir, nodeDirName, "treasurenetd")
 		gentxsDir := filepath.Join(network.BaseDir, "gentxs")
 
 		require.NoError(t, os.MkdirAll(filepath.Join(nodeDir, "config"), 0755))

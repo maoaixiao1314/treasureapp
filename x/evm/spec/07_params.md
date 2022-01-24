@@ -8,7 +8,7 @@ The evm module contains the following parameters:
 
 | Key            | Type   | Default Value |
 |----------------|--------|---------------|
-| `EVMDenom`     | string | `"aphoton"`   |
+| `EVMDenom`     | string | `"aunit"`   |
 | `EnableCreate` | bool   | `true`        |
 | `EnableCall`   | bool   | `true`        |
 | `ExtraEIPs`    | []int  | TBD           |
@@ -25,10 +25,10 @@ The EVM Denom is used on the following cases:
 * `stateObject`: to track the `evm_denom` balance of the object account.
 * `CommitStateDB`: to update account balance from an existing state object.
 
-For example, on Ethereum, the `evm_denom` would be `ETH`. In the case of Ethermint, the default denomination is the [atto photon](./../../../docs/basics/photon.md). In terms of precision, the `PHOTON` and `ETH` share the same value, _i.e_ `1 PHOTON = 10^18 atto photon` and `1 ETH = 10^18 wei`.
+For example, on Ethereum, the `evm_denom` would be `ETH`. In the case of Treasurenet, the default denomination is the [atto unit](./../../../docs/basics/photon.md). In terms of precision, the `UNIT` and `ETH` share the same value, _i.e_ `1 UNIT = 10^18 atto unit` and `1 ETH = 10^18 wei`.
 
 ::: danger
-SDK applications that want to import the EVM module as a dependency will need to set their own `evm_denom` (i.e not `"aphoton"`).
+SDK applications that want to import the EVM module as a dependency will need to set their own `evm_denom` (i.e not `"aunit"`).
 :::
 
 ## Enable Create

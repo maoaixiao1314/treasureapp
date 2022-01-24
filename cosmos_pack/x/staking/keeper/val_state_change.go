@@ -213,7 +213,6 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 	}
 
 	// Iterate over validators, highest power to lowest.
-	fmt.Println("creat_validator后的路径")
 	iterator := k.ValidatorsPowerStoreIterator(ctx)
 	defer iterator.Close()
 
@@ -222,7 +221,6 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		// part of the bonded validator set
 		valAddr := sdk.ValAddress(iterator.Value())
 		validator := k.mustGetValidator(ctx, valAddr)
-		//fmt.Printf("11111111111111111111111111=%+v\n", validator.TatTokens)
 		if validator.Jailed {
 			panic("should never retrieve a jailed validator from the power store")
 		}
@@ -234,20 +232,15 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		}
 
 		// apply the appropriate state change if necessary
-		//fmt.Println("222222222222222222222222")
 		switch {
 		case validator.IsUnbonded():
-			//	fmt.Println("aaaaaaaaaaaaaaaa")
 			validator, err = k.unbondedToBonded(ctx, validator)
-			//	fmt.Println("bbbbbbbbbbbbbbbb")
 			if err != nil {
 				return
 			}
 			amtFromNotBondedToBonded = amtFromNotBondedToBonded.Add(validator.GetTokens())
 		case validator.IsUnbonding():
-			//	fmt.Println("cccccccccccccccc")
 			validator, err = k.unbondingToBonded(ctx, validator)
-			//	fmt.Println("dddddddddddddddd")
 			if err != nil {
 				return
 			}
@@ -257,7 +250,6 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		default:
 			panic("unexpected validator status")
 		}
-		//fmt.Println("33333333333333333333333333333333")
 		// fetch the old power bytes
 		valAddrStr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32ValidatorAddrPrefix(), valAddr)
 		if err != nil {
@@ -266,14 +258,12 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		oldPowerBytes, found := last[valAddrStr]
 		newPower := validator.ConsensusPower(powerReduction)
 		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
-		//fmt.Println("444444444444444444444444444444")
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
 			updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
 
 			k.SetLastValidatorPower(ctx, valAddr, newPower)
 		}
-		//fmt.Printf("creat_validator后的路径打印last:%+v\n", last)
 		delete(last, valAddrStr)
 		count++
 
@@ -323,47 +313,39 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	var Data [][]interface{}
 	// var tat int64
 	// var newunit int64
-	fmt.Println("log-val_state_change:", log)
-	fmt.Println("params", params)
 	//fmt.Printf("ctx=%+v\n", ctx)
 	maxValidators := params.MaxValidators
 	powerReduction := k.PowerReduction(ctx)
-	//nft为0时的新powerReduction值
 	powerReduction2 := k.PowerReduction2(ctx)
 	totalPower := sdk.ZeroInt()
-	//TattotalPower := sdk.ZeroInt()
 	amtFromBondedToNotBonded, amtFromNotBondedToBonded := sdk.ZeroInt(), sdk.ZeroInt()
-	fmt.Println("maxValidators:", maxValidators)
-	fmt.Println("powerReduction:", powerReduction)
 	//fmt.Println("powerReduction2:", powerReduction2)
-	fmt.Println("totalPower:", totalPower)
 	// Retrieve the last validator set.
 	// The persistent set is updated later in this function.
 	// (see LastValidatorPowerKey).
 	//last, err := k.getLastValidatorsByAddr(ctx)
 	last, err := k.getLastValidatorsNewByAddr(ctx)
-	fmt.Printf("last=%+v\n", last)
 	if err != nil {
 		return nil, err
 	}
 	/*
-	 * 通过accounts_address也就是从事件日志中返回的账户地址转换成对应的validator_addresss的地址，然后就行pos的替换
+	 * accounts_address  That is, the account address returned from the event log is converted into the corresponding validator_ Addresses, and then replace POS
 	 */
-	//从Bech32字符串创建ValAddress
-	delegator_address := "eth1ujuwccre5kadumtlcae7dy5z96k2xqyv7lpp0h"
-	account_address, _ := sdk.AccAddressFromBech32(delegator_address)
-	fmt.Printf("account_address:%v\n", account_address)
-	fmt.Println("测试路径")
+	//Create valaddress from bech32 string
+
+	// delegator_address := "eth1ujuwccre5kadumtlcae7dy5z96k2xqyv7lpp0h"
+	// account_address, _ := sdk.AccAddressFromBech32(delegator_address)
+	// fmt.Printf("account_address:%v\n", account_address)
 	gasUsed := ctx.BlockGasMeter().GasConsumed()
-	fmt.Println("EndBlock 中监听到gas的用量:", gasUsed)
+	fmt.Println("EndBlock Monitor the usage of gas:", gasUsed)
 	// validator, _ := sdk.ValAddressFromBech32(delegator_address)
 	// fmt.Printf("validator:%v\n", validator)
-	validator_address := sdk.ValAddress(account_address).String()
-	fmt.Printf("validator_address:%v\n", validator_address)
+	// validator_address := sdk.ValAddress(account_address).String()
+	// fmt.Printf("validator_address:%v\n", validator_address)
 
-	//将TAT质押比例作为validator验证器
 	//k.SetValidatorByPowerIndex(ctx, validator)
-	// Iterate over validators, highest power to lowest.迭代验证器，从最高权力到最低权力
+	// Iterate over validators, highest power to lowest.  Iterative verifier, from highest power to lowest power
+
 	iterator := k.ValidatorsPowerStoreIterator(ctx)
 	//TatIterator := k.ValidatorsNewPowerStoreIterator(ctx)
 	//iterator := k.ValidatorsNewPowerStoreIterator(ctx)
@@ -387,27 +369,24 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 
 		for _, eventlog := range log {
 			if eventlog.MsgIndex == 1 {
-				fmt.Printf("获取日志成功:%+v\n", eventlog)
-				fmt.Printf("获取日志成功2:%+v\n", eventlog.Log)
 				asslog := []byte(eventlog.Log)
 				err := json.Unmarshal(asslog, &Data)
 				if err != nil {
 					fmt.Println("error:", err)
 				}
 				for index, vlog := range Data {
-					fmt.Printf("账户地址到验证器地址的转换:%+v\n", vlog[0].(string))
+					fmt.Printf("Conversion of account address to verifier address :%+v\n", vlog[0].(string))
 					a := []byte(vlog[0].(string))
 					c := string(a[2:])
 					s := strings.ToUpper(c)
 					NewValidatoradd, _ := sdk.ValAddressFromHex(s)
-					fmt.Printf("NewValidatoradd22222:%+v\n", NewValidatoradd)
 					fmt.Println("index", index)
-					//state 1 表示TAT;2表示unit
+					//state 1 TAT;2 unit
 					state := int64(vlog[2].(float64) * math.Pow10(int(0)))
 					fmt.Println("state:", state)
 					fmt.Println(reflect.TypeOf(vlog[2]))
 					if state == int64(1) {
-						//现将日志中的数据转化成string 然后在将string转换为Int类型
+						//Now convert the data in the log to string, and then convert the string to int type
 						fmt.Println(reflect.TypeOf(vlog[1]))
 						stringtat := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
 						fmt.Println("stringtat:", stringtat)
@@ -417,8 +396,6 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
 						fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
-						fmt.Println("tat监听值:", tat)
-						fmt.Println("newunit监听值:", newunit)
 						newtat, _ := tat.MarshalJSON()
 						newunitbyte, _ := newunit.MarshalJSON()
 						fmt.Println("newtat:", newtat)
@@ -432,8 +409,6 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
 						fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
-						fmt.Println("tat监听值:", tat)
-						fmt.Println("newunit监听值:", newunit)
 						newtat, _ := tat.MarshalJSON()
 						newunitbyte, _ := newunit.MarshalJSON()
 						fmt.Println("newtat:", newtat)
@@ -457,28 +432,30 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 
 		//tatInt := sdk.NewInt(newtat)
 		//newunitInt := sdk.NewInt(newunit)
-		//保存对应验证器TAT的值和unit的值
+		//Save the value of the corresponding verifier Tat and the value of unit
 		// k.SetTat(ctx, tat, valAddr)
 		// k.SetNewToken(ctx, newunit, valAddr)
 		validator := k.mustGetValidator(ctx, valAddr)
 
 		fmt.Printf("validator:%+v\n", validator)
-		//通过判断validator struct中的jailed来证明是否被监禁
+		//Prove whether you are imprisoned by judging the jailed in validator struct
 		if validator.Jailed {
 			panic("should never retrieve a jailed validator from the power store")
 		}
-		// if we get to a zero-power validator (which we don't bond),如果我们得到一个零功率验证器（我们不绑定它）
-		// there are no more possible bonded validators 没有更多可能的保税验证器
+		// if we get to a zero-power validator (which we don't bond)
+		// there are no more possible bonded validators
 		if validator.PotentialConsensusPower(k.PowerReduction(ctx)) == 0 {
 			break
 		}
 
 		// apply the appropriate state change if necessary
-		/**
-		*validators可以有以下三种状态:
-		*未绑定Unbonded,验证人尚不在active集合中，不能签署区块以及获得奖励，他们可以收到委托
-		*绑定Bonded，一旦验证者收到了足够的绑定token，他们就会在EndBlock时自动加入active集合，并且他们的状态会更新为Binded。这个是就可以签署区块和收到奖励了，他们可以继续被委托，当他们犯错时也会被扣钱。委托人要解绑代理(提现)时，需要等到解绑时间UnbondingTime(链的特定参数)后，在解绑时间段内，如果验证人犯错同样会被扣除相应绑定的token
-		*未绑定Unbonding，当验证者离开active集合的时候，无论是因为自动退出还是被扣钱等，所有委托人的Unbonding的开始了，他们必须等待解绑时间UnbondingTime才能从BondedPool中收到他们的token
+		/*Validators can have the following three statuses:
+
+		*Unbound, the verifier is not in the active collection, and cannot sign blocks and get rewards. They can receive delegates
+
+		*Bind bound. Once the verifier receives enough binding tokens, they will automatically join the active collection at endblock, and their status will be updated to bound. This is to sign blocks and receive rewards. They can continue to be entrusted and will be deducted when they make mistakes. When the principal wants to unbind the agent (withdraw), it needs to wait until the unbinding time (specific parameters of the chain). During the unbinding time period, if the verifier makes a mistake, the corresponding bound token will also be deducted
+
+		*Unbound. When the verifier leaves the active collection, whether it is due to automatic exit or money deduction, the unbonding of all principals begins. They must wait for the unboundingtime to receive their tokens from the bondedpool
 		 */
 		switch {
 		case validator.IsUnbonded():
@@ -509,32 +486,22 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 			return nil, err
 		}
 		oldPowerBytes, found := last[valAddrStr]
-		fmt.Println("oldPowerBytes:", oldPowerBytes)
-		fmt.Println("found", found)
 		//newPower := validator.ConsensusPower(powerReduction)
 		newPower2 := validator.ConsensusTatPower(powerReduction2)
-		fmt.Println("newPower2:", newPower2)
 		newPower := validator.ConsensusNewsPower(powerReduction)
-		fmt.Println("newPower:", newPower)
 		newunitPower := validator.ConsensusNewPower(powerReduction)
-		fmt.Println("newunitPower:", newunitPower)
 		k.SetTatPower(ctx, newPower2, valAddr)
 		k.SetNewUnitPower(ctx, newunitPower, valAddr)
 		//newPower := validator.ConsensusNewPower(powerReduction)
-		fmt.Println("newPower:", newPower)
-		//将tatpower累计起来
+		//Accumulate tatpower
 		// contatpower := params.TatTokens
 		// contatpower += newPower2
 		// params.TatTokens = contatpower
 		// k.SetParams(ctx, params)
 		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
-		fmt.Println("updatesold1:", updates)
-		fmt.Println("newPowerBytes:", newPowerBytes)
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
 			updates = append(updates, validator.ABCIValidatorNewUpdate(powerReduction))
-			fmt.Println("updatesold2:", updates)
-			fmt.Println("valAddrold", valAddr)
 			k.SetLastValidatorPower(ctx, valAddr, newPower)
 		}
 
@@ -544,103 +511,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 		totalPower = totalPower.Add(sdk.NewInt(newPower))
 		fmt.Println("totalPowerold:", totalPower)
 	}
-	/*
-	  循环TAT 如果传回来的值tat不为0
-	*/
-	/*
-		lasttat, err := k.getLastValidatorsTatByAddr(ctx)
-		fmt.Printf("lasttat:%+v\n", lasttat)
-		if err != nil {
-			return nil, err
-		}
-		for count := 0; TatIterator.Valid() && count < int(maxValidators); TatIterator.Next() {
-			// everything that is iterated in this loop is becoming or already a
-			// part of the bonded validator set
-			fmt.Printf("tatiterator.Value:%v\n", TatIterator.Value())
-			valAddr := sdk.ValAddress(TatIterator.Value())
-			fmt.Println("valAddr:", valAddr)
-			validatorold := k.mustGetValidator(ctx, valAddr)
-			//自定义：newtat
-			newtat := int64(120000000000)
-			newtatInt := sdk.NewInt(newtat)
-			//获取对应tat
-			//TatTokens, _ := k.GetTatTokens(ctx, validator.GetOperator())(目前不需要累加了)
-			//TatTokens := validatorold.AddTatTokens(newtatInt)
-			//保存对应验证器TAT的值
-			k.SetTat(ctx, TatTokens.Int64(), valAddr)
-			//保存tat
-			validator := k.mustGetValidator(ctx, valAddr)
-			fmt.Printf("测试tatvalidator:%+v\n", validator)
-			//通过判断validator struct中的jailed来证明是否被监禁
-			if validator.Jailed {
-				panic("should never retrieve a jailed validator from the power store")
-			}
-
-			// if we get to a zero-power validator (which we don't bond),如果我们得到一个零功率验证器（我们不绑定它）
-			// there are no more possible bonded validators 没有更多可能的保税验证器
-			if validator.PotentialConsensusPower(k.PowerReduction(ctx)) == 0 {
-				break
-			}
-	*/
 	// apply the appropriate state change if necessary
-	/**
-	*validators可以有以下三种状态:
-	*未绑定Unbonded,验证人尚不在active集合中，不能签署区块以及获得奖励，他们可以收到委托
-	*绑定Bonded，一旦验证者收到了足够的绑定token，他们就会在EndBlock时自动加入active集合，并且他们的状态会更新为Binded。这个是就可以签署区块和收到奖励了，他们可以继续被委托，当他们犯错时也会被扣钱。委托人要解绑代理(提现)时，需要等到解绑时间UnbondingTime(链的特定参数)后，在解绑时间段内，如果验证人犯错同样会被扣除相应绑定的token
-	*未绑定Unbonding，当验证者离开active集合的时候，无论是因为自动退出还是被扣钱等，所有委托人的Unbonding的开始了，他们必须等待解绑时间UnbondingTime才能从BondedPool中收到他们的token
-	 */
-	/*
-			switch {
-			case validator.IsUnbonded():
-				validator, err = k.unbondedToBonded(ctx, validator)
-				if err != nil {
-					return
-				}
-				amtFromNotBondedToBonded = amtFromNotBondedToBonded.Add(validator.GetTokens())
-			case validator.IsUnbonding():
-				validator, err = k.unbondingToBonded(ctx, validator)
-				if err != nil {
-					return
-				}
-				amtFromNotBondedToBonded = amtFromNotBondedToBonded.Add(validator.GetTokens())
-			case validator.IsBonded():
-				// no state change
-			default:
-				panic("unexpected validator status")
-			}
-
-			// fetch the old power bytes
-			valAddrStr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32ValidatorAddrPrefix(), valAddr)
-			//newvalAddrStr, _ := sdk.ValAddressFromBech32(valAddrStr)
-			//newValidator, _ := k.GetValidator(ctx, newvalAddrStr)
-
-			fmt.Println("tatvalAddrStr", valAddrStr)
-			//fmt.Printf("通过vailaddress获取validator:%v\n", newValidator)
-			if err != nil {
-				return nil, err
-			}
-			oldPowerBytes, found := lasttat[valAddrStr]
-			fmt.Println("tatoldPowerBytes:", oldPowerBytes)
-			fmt.Println("tatfound", found)
-			newPower2 := validator.ConsensusTatPower(powerReduction)
-			fmt.Println("tatnewPower2:", newPower2)
-			newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower2})
-			fmt.Println("tatnewPowerBytes:", newPowerBytes)
-			// update the validator set if power has changed
-			if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
-				updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
-				fmt.Println("tatupdates !found:", updates)
-				fmt.Println("tatvalAddr", valAddr)
-				k.SetLastValidatorTatPower(ctx, valAddr, newPower2)
-			}
-
-			delete(lasttat, valAddrStr)
-			count++
-
-			TattotalPower = TattotalPower.Add(sdk.NewInt(newPower2))
-			fmt.Println("TattotalPower:", TattotalPower)
-		}
-	*/
 	noLongerBonded, err := sortNoLongerBonded(last)
 	if err != nil {
 		return nil, err
@@ -698,7 +569,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, log sdk.AB
 	return updates, err
 }
 
-// Validator state transitions 验证程序状态转换
+// Validator state transitions
 
 func (k Keeper) bondedToUnbonding(ctx sdk.Context, validator types.Validator) (types.Validator, error) {
 	if !validator.IsBonded() {

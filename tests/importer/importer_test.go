@@ -30,10 +30,10 @@ package importer
 // 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 // 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-// 	"github.com/tharsis/ethermint/encoding/codec"
-// 	"github.com/tharsis/ethermint/types"
-// 	evmkeeper "github.com/tharsis/ethermint/x/evm/keeper"
-// 	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+// 	"github.com/treasurenet/encoding/codec"
+// 	"github.com/treasurenet/types"
+// 	evmkeeper "github.com/treasurenet/x/evm/keeper"
+// 	evmtypes "github.com/treasurenet/x/evm/types"
 
 // 	ethcmn "github.com/ethereum/go-ethereum/common"
 // 	"github.com/ethereum/go-ethereum/consensus/ethash"
@@ -111,7 +111,7 @@ package importer
 // 	ctx := sdk.NewContext(ms, tmproto.Header{}, false, logger)
 // 	evmKeeper.WithContext(ctx)
 
-// 	// Set the default Ethermint parameters to the parameter keeper store
+// 	// Set the default Treasurenet parameters to the parameter keeper store
 // 	evmKeeper.SetParams(ctx, evmtypes.DefaultParams())
 
 // 	// sort the addresses and insertion of key/value pairs matters
