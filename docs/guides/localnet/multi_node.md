@@ -28,15 +28,19 @@ To build start a 4 node testnet run:
 make localnet-start
 ```
 
-This command creates a 4-node network using the `ethermintdnode` Docker image.
+This command creates a 4-node network using the `treasurenetdnode` Docker image.
 The ports for each node are found in this table:
 
-| Node ID          | P2P Port | Tendermint RPC Port | REST/ Ethereum JSON-RPC Port | WebSocket Port |
-|------------------|----------|---------------------|------------------------------|----------------|
-| `ethermintnode0` | `26656`  | `26657`             | `8545`                       | `8546`         |
-| `ethermintnode1` | `26659`  | `26660`             | `8547`                       | `8548`         |
-| `ethermintnode2` | `26661`  | `26662`             | `8549`                       | `8550`         |
-| `ethermintnode3` | `26663`  | `26664`             | `8551`                       | `8552`         |
+| Node ID             | P2P Port | Tendermint RPC Port | REST/ Ethereum JSON-RPC Port | WebSocket Port |
+|---------------------|----------|---------------------|------------------------------|----------------|
+| `treasurenetdnode0` | `26656`  | `26657`             | `8545`                       | `8546`         |
+| `treasurenetdnode1` | `26659`  | `26660`             | `8547`                       | `8548`         |
+| `treasurenetdnode2` | `26661`  | `26662`             | `8549`                       | `8550`         |
+| `treasurenetdnode3` | `26663`  | `26664`             | `8551`                       | `8552`         |
+| `treasurenetdnode4` | `26665`  | `26666`             | `8553`                       | `8554`         |
+| `treasurenetdnode5` | `26667`  | `26668`             | `8555`                       | `8556`         |
+| `treasurenetdnode6` | `26669`  | `26670`             | `8557`                       | `8558`         |
+| `treasurenetdnode7` | `26671`  | `26672`             | `8559`                       | `8560`         |
 
 To update the binary, just rebuild it and restart the nodes
 
@@ -48,11 +52,15 @@ The command above  command will run containers in the background using Docker co
 
 ```bash
 ...
-Creating network "ethermint_localnet" with driver "bridge"
-Creating ethermintdnode0 ... done
-Creating ethermintdnode2 ... done
-Creating ethermintdnode1 ... done
-Creating ethermintdnode3 ... done
+Creating network "treasurenet_localnet" with driver "bridge"
+Creating treasurenetdnode0 ... done
+Creating treasurenetdnode2 ... done
+Creating treasurenetdnode1 ... done
+Creating treasurenetdnode3 ... done
+Creating treasurenetdnode4 ... done
+Creating treasurenetdnode5 ... done
+Creating treasurenetdnode6 ... done
+Creating treasurenetdnode7 ... done
 ```
 
 
@@ -67,55 +75,87 @@ make localnet-stop
 ### Configuration
 
 The `make localnet-start` creates files for a 4-node testnet in `./build` by
-calling the `ethermintd testnet` command. This outputs a handful of files in the
+calling the `treasurenetd testnet` command. This outputs a handful of files in the
 `./build` directory:
 
 ```bash
 tree -L 3 build/
 
 build/
-├── ethermintd
-├── ethermintd
+├── treasurenetd
+├── treasurenetd
 ├── gentxs
 │   ├── node0.json
 │   ├── node1.json
 │   ├── node2.json
 │   └── node3.json
 ├── node0
-│   ├── ethermintd
+│   ├── treasurenetd
 │   │   ├── key_seed.json
 │   │   └── keyring-test-cosmos
-│   └── ethermintd
+│   └── treasurenetd
 │       ├── config
 │       ├── data
-│       └── ethermintd.log
+│       └── treasurenetd.log
 ├── node1
-│   ├── ethermintd
+│   ├── treasurenetd
 │   │   ├── key_seed.json
 │   │   └── keyring-test-cosmos
-│   └── ethermintd
+│   └── treasurenetd
 │       ├── config
 │       ├── data
-│       └── ethermintd.log
+│       └── treasurenetd.log
 ├── node2
-│   ├── ethermintd
+│   ├── treasurenetd
 │   │   ├── key_seed.json
 │   │   └── keyring-test-cosmos
-│   └── ethermintd
+│   └── treasurenetd
 │       ├── config
 │       ├── data
-│       └── ethermintd.log
+│       └── treasurenetd.log
 └── node3
-    ├── ethermintd
+|    ├── treasurenetd
+|    │   ├── key_seed.json
+|    │   └── keyring-test-cosmos
+|    └── treasurenetd
+|        ├── config
+|        ├── data
+|        └── treasurenetd.log
+├── node4
+│   ├── treasurenetd
+│   │   ├── key_seed.json
+│   │   └── keyring-test-cosmos
+│   └── treasurenetd
+│       ├── config
+│       ├── data
+│       └── treasurenetd.log
+├── node5
+│   ├── treasurenetd
+│   │   ├── key_seed.json
+│   │   └── keyring-test-cosmos
+│   └── treasurenetd
+│       ├── config
+│       ├── data
+│       └── treasurenetd.log
+├── node6
+│   ├── treasurenetd
+│   │   ├── key_seed.json
+│   │   └── keyring-test-cosmos
+│   └── treasurenetd
+│       ├── config
+│       ├── data
+│       └── treasurenetd.log
+└── node7
+    ├── treasurenetd
     │   ├── key_seed.json
     │   └── keyring-test-cosmos
-    └── ethermintd
+    └── treasurenetd
         ├── config
         ├── data
-        └── ethermintd.log
+        └── treasurenetd.log       
 ```
 
-Each `./build/nodeN` directory is mounted to the `/ethermintd` directory in each container.
+Each `./build/nodeN` directory is mounted to the `/treasurenetd` directory in each container.
 
 ### Logging
 
@@ -123,10 +163,10 @@ In order to see the logs of a particular node you can use the following command:
 
 ```bash
 # node 0: daemon logs
-docker exec ethermintdnode0 tail ethermintd.log
+docker exec treasurenetdnode0 tail treasurenetd.log
 
 # node 0: REST & RPC logs
-docker exec ethermintdnode0 tail ethermintd.log
+docker exec treasurenetdnode0 tail treasurenetd.log
 ```
 
 The logs for the daemon will look like:
@@ -164,7 +204,7 @@ You can also watch logs as they are produced via Docker with the `--follow` (`-f
 example:
 
 ```bash
-docker logs -f ethermintdnode0
+docker logs -f treasurenetdnode0
 ```
 
 ### Interact with the Localnet
@@ -191,18 +231,18 @@ Additional instructions on how to interact with the WebSocket can be found on th
 
 ### Keys & Accounts
 
-To interact with `ethermintd` and start querying state or creating txs, you use the
-`ethermintd` directory of any given node as your `home`, for example:
+To interact with `treasurenetd` and start querying state or creating txs, you use the
+`treasurenetd` directory of any given node as your `home`, for example:
 
 ```bash
-ethermintd keys list --home ./build/node0/ethermintd
+treasurenetd keys list --home ./build/node0/treasurenetd
 ```
 
 Now that accounts exists, you may create new accounts and send those accounts
 funds!
 
 ::: tip
-**Note**: Each node's seed is located at `./build/nodeN/ethermintd/key_seed.json` and can be restored to the CLI using the `ethermintd keys add --restore` command
+**Note**: Each node's seed is located at `./build/nodeN/treasurenetd/key_seed.json` and can be restored to the CLI using the `treasurenetd keys add --restore` command
 :::
 
 ### Special Binaries

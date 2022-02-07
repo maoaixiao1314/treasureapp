@@ -15,6 +15,7 @@ require (
 	github.com/dgraph-io/badger/v2 v2.2007.3 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
 	github.com/ethereum/go-ethereum v1.10.3
+	github.com/fjl/gencodec v0.0.0-20191126094850-e283372f291f // indirect
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/glog v0.0.0-20210429001901-424d2337a529 // indirect
 	github.com/golang/protobuf v1.5.2
@@ -65,4 +66,4 @@ replace github.com/tendermint/tendermint v0.34.12 => ./tendermint_pack
 
 replace github.com/cosmos/ibc-go v1.0.0 => ./ibc-go_pack
 
-//r eplace github.com/ethereum/go-ethereum v1.10.3 => ./ethereum_pack
+//replace github.com/ethereum/go-ethereum v1.10.3 => ./ethereum_pack
