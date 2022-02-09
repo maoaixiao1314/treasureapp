@@ -13,7 +13,7 @@ services:
       - ID=0
       - LOG=${LOG:-treasurenetd.log}
     volumes:
-      - ./localnet-setup/node0/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node0/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -30,7 +30,7 @@ services:
       - ID=1
       - LOG=${LOG:-treasurenetd.log}
     volumes:
-      - ./localnet-setup/node1/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node1/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -47,7 +47,7 @@ services:
       - "8566:8546"
       - "8127:8125"
     volumes:
-      - ./localnet-setup/node2/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node2/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -64,7 +64,7 @@ services:
       - "8576:8546"
       - "8128:8125"
     volumes:
-      - ./localnet-setup/node3/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node3/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -81,7 +81,7 @@ services:
       - ID=4
       - LOG=${LOG:-treasurenetd.log}
     volumes:
-      - ./localnet-setup/node4/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node4/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -98,7 +98,7 @@ services:
       - ID=5
       - LOG=${LOG:-treasurenetd.log}
     volumes:
-      - ./localnet-setup/node5/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node5/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -115,7 +115,7 @@ services:
       - "8606:8546"
       - "8131:8125"
     volumes:
-      - ./localnet-setup/node6/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node6/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
@@ -132,7 +132,7 @@ services:
       - "8616:8546"
       - "8132:8125"
     volumes:
-      - ./localnet-setup/node7/treasurenetd:/treasurenet:Z
+      - /data/localnet-setup/node7/treasurenetd:/treasurenet:Z
     networks:
       - localnet
     entrypoint: "bash start-docker.sh"
