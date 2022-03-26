@@ -10,7 +10,7 @@ import (
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
 )
 
 // NewAddrKey generates an Ethereum address and its corresponding private key.

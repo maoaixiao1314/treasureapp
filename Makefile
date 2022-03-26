@@ -262,7 +262,7 @@ update-swagger-docs: statik
 .PHONY: update-swagger-docs
 
 godocs:
-	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/treasurenet/types"
+	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/maoaixiao1314/treasureapp/types"
 	godoc -http=:6060
 
 # Start docs site at localhost:8080
@@ -413,7 +413,7 @@ lint-fix:
 format:
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs gofmt -w -s
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs goimports -w -local github.com/treasurenet
+	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs goimports -w -local github.com/maoaixiao1314/treasureapp
 .PHONY: format
 
 ###############################################################################
@@ -551,7 +551,7 @@ localnet-show-logstream:
 ###                                Releasing                                ###
 ###############################################################################
 
-PACKAGE_NAME:=github.com/treasurenet
+PACKAGE_NAME:=github.com/maoaixiao1314/treasureapp
 GOLANG_CROSS_VERSION  = v1.16.4
 release-dry-run:
 	docker run \

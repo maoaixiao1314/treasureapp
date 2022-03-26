@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	treasurenet "github.com/treasurenet/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	sdk "github.com/cosmos/cosmos-sdk/types"

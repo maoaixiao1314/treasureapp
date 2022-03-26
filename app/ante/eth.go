@@ -8,8 +8,8 @@ import (
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/palantir/stacktrace"
 
-	treasurenet "github.com/treasurenet/types"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"

@@ -10,10 +10,10 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	proto "github.com/gogo/protobuf/proto"
 
-	"github.com/treasurenet/app"
-	"github.com/treasurenet/crypto/ethsecp256k1"
-	"github.com/treasurenet/encoding"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/app"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/encoding"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	"github.com/stretchr/testify/require"
 

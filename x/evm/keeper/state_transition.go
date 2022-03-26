@@ -13,8 +13,8 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	treasurenet "github.com/treasurenet/types"
-	"github.com/treasurenet/x/evm/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
@@ -263,7 +263,7 @@ func (k *Keeper) ApplyMessage(evm *vm.EVM, msg core.Message, cfg *params.ChainCo
 	if query {
 		// gRPC query handlers don't go through the AnteHandler to deduct the gas fee from the sender or have access historical state.
 		// We don't refund gas to the sender.
-		// For more info, see: https://github.com/treasurenet/issues/229 and https://github.com/cosmos/cosmos-sdk/issues/9636
+		// For more info, see: https://github.com/maoaixiao1314/treasureapp/issues/229 and https://github.com/cosmos/cosmos-sdk/issues/9636
 		leftoverGas += k.GasToRefund(msg.Gas() - leftoverGas)
 	} else {
 		// refund gas prior to handling the vm error in order to match the Ethereum gas consumption instead of the default SDK one.

@@ -8,10 +8,10 @@ import (
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/treasurenet/app"
-	"github.com/treasurenet/encoding"
-	"github.com/treasurenet/tests"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/app"
+	"github.com/maoaixiao1314/treasureapp/encoding"
+	"github.com/maoaixiao1314/treasureapp/tests"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 func TestTxEncoding(t *testing.T) {

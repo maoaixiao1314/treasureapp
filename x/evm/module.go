@@ -17,9 +17,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/treasurenet/x/evm/client/cli"
-	"github.com/treasurenet/x/evm/keeper"
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/client/cli"
+	"github.com/maoaixiao1314/treasureapp/x/evm/keeper"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 var (

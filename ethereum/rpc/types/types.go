@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	evmtypes "github.com/treasurenet/x/evm/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // Copied the Account and StorageResult types since they are registered under an

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/treasurenet/ethereum/rpc/types"
+	"github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -19,7 +19,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth/filters"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	evmtypes "github.com/treasurenet/x/evm/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // Backend defines the methods requided by the PublicFilterAPI backend

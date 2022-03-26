@@ -11,10 +11,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	cryptocodec "github.com/treasurenet/crypto/codec"
-	"github.com/treasurenet/crypto/ethsecp256k1"
-	treasurenetcodec "github.com/treasurenet/encoding/codec"
-	"github.com/treasurenet/types"
+	cryptocodec "github.com/maoaixiao1314/treasureapp/crypto/codec"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
+	treasurenetcodec "github.com/maoaixiao1314/treasureapp/encoding/codec"
+	"github.com/maoaixiao1314/treasureapp/types"
 )
 
 func init() {

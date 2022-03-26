@@ -21,12 +21,12 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"github.com/treasurenet/app"
-	ante "github.com/treasurenet/app/ante"
-	"github.com/treasurenet/crypto/ethsecp256k1"
-	"github.com/treasurenet/encoding"
-	"github.com/treasurenet/tests"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/app"
+	ante "github.com/maoaixiao1314/treasureapp/app/ante"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/encoding"
+	"github.com/maoaixiao1314/treasureapp/tests"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )

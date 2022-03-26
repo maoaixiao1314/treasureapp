@@ -5,11 +5,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/treasurenet/ethereum/rpc/types"
+	"github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
 )
 
 // PublicAPI offers and API for the transaction pool. It only operates on data that is non-confidential.
-// NOTE: For more info about the current status of this endpoints see https://github.com/treasurenet/issues/124
+// NOTE: For more info about the current status of this endpoints see https://github.com/maoaixiao1314/treasureapp/issues/124
 type PublicAPI struct {
 	logger log.Logger
 }

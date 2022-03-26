@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	evmtypes "github.com/treasurenet/x/evm/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 func (suite AnteTestSuite) TestAnteHandler() {

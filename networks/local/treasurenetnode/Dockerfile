@@ -8,7 +8,7 @@ RUN apt-get update && apt-get upgrade -y && \
 
 # Set working directory for the build
 # WORKDIR /go/src/github.com/tharsis/ethermint
-WORKDIR /go/src/github.com/treasurenet
+WORKDIR /go/src/github.com/maoaixiao1314/treasureapp
 
 # Add source files
 COPY . .
@@ -28,8 +28,8 @@ RUN apt-get update
 # COPY --from=build-env /go/src/github.com/tharsis/ethermint/build/ethermintd /
 # COPY --from=build-env /go/src/github.com/tharsis/ethermint/scripts/start-docker.sh /
 
-COPY --from=build-env /go/src/github.com/treasurenet/build/treasurenetd /
-COPY --from=build-env /go/src/github.com/treasurenet/scripts/start-docker.sh /
+COPY --from=build-env /go/src/github.com/maoaixiao1314/treasureapp/build/treasurenetd /
+COPY --from=build-env /go/src/github.com/maoaixiao1314/treasureapp/scripts/start-docker.sh /
 
 EXPOSE 26656 26657 1317 8545 8546
 

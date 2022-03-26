@@ -19,9 +19,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	rpctypes "github.com/treasurenet/ethereum/rpc/types"
-	treasurenet "github.com/treasurenet/types"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	rpctypes "github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	ethcmn "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

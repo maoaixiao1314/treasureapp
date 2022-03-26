@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/treasurenet/tests"
+	"github.com/maoaixiao1314/treasureapp/tests"
 )
 
 func TestTxData_chainID(t *testing.T) {

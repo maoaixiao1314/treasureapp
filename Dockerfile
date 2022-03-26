@@ -4,7 +4,7 @@ FROM golang:alpine AS build-env
 ENV PACKAGES git build-base
 
 # Set working directory for the build
-WORKDIR /go/src/github.com/treasurenet
+WORKDIR /go/src/github.com/maoaixiao1314/treasureapp
 
 # Install dependencies
 RUN apk add --update $PACKAGES
@@ -24,6 +24,6 @@ RUN apk add --update ca-certificates jq
 WORKDIR /
 
 # Copy over binaries from the build-env
-COPY --from=build-env /go/src/github.com/treasurenet/build/treasurenetd /usr/bin/treasurenetd
+COPY --from=build-env /go/src/github.com/maoaixiao1314/treasureapp/build/treasurenetd /usr/bin/treasurenetd
 # Run treasurenetd by default
 CMD ["treasurenetd"]

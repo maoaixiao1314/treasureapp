@@ -12,9 +12,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
 
-	"github.com/treasurenet/crypto/hd"
+	"github.com/maoaixiao1314/treasureapp/crypto/hd"
 )
 
 // UnsafeImportKeyCommand imports private keys from a keyfile.

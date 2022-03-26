@@ -39,10 +39,10 @@ import (
 	mintypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/treasurenet/crypto/hd"
-	"github.com/treasurenet/server/config"
-	treasurenet "github.com/treasurenet/types"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/crypto/hd"
+	"github.com/maoaixiao1314/treasureapp/server/config"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 var (

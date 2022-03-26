@@ -18,7 +18,7 @@ import (
 	channelkeeper "github.com/cosmos/ibc-go/modules/core/04-channel/keeper"
 	ibcante "github.com/cosmos/ibc-go/modules/core/ante"
 
-	"github.com/treasurenet/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
 )
 
 const (

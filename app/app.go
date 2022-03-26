@@ -94,14 +94,14 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
 
 	// unnamed import of statik for swagger UI support
-	"github.com/treasurenet/app/ante"
-	_ "github.com/treasurenet/client/docs/statik"
-	srvflags "github.com/treasurenet/server/flags"
-	treasurenet "github.com/treasurenet/types"
-	"github.com/treasurenet/x/evm"
-	evmrest "github.com/treasurenet/x/evm/client/rest"
-	evmkeeper "github.com/treasurenet/x/evm/keeper"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/app/ante"
+	_ "github.com/maoaixiao1314/treasureapp/client/docs/statik"
+	srvflags "github.com/maoaixiao1314/treasureapp/server/flags"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm"
+	evmrest "github.com/maoaixiao1314/treasureapp/x/evm/client/rest"
+	evmkeeper "github.com/maoaixiao1314/treasureapp/x/evm/keeper"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 func init() {

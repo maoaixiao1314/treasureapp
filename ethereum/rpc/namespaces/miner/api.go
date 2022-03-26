@@ -21,9 +21,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/treasurenet/ethereum/rpc/backend"
-	rpctypes "github.com/treasurenet/ethereum/rpc/types"
-	"github.com/treasurenet/server/config"
+	"github.com/maoaixiao1314/treasureapp/ethereum/rpc/backend"
+	rpctypes "github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
+	"github.com/maoaixiao1314/treasureapp/server/config"
 )
 
 // API is the miner prefixed set of APIs in the Miner JSON-RPC spec.

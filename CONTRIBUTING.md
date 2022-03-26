@@ -25,8 +25,8 @@ Contributing to this repo can mean many things such as participating in
 discussion or proposing code changes. To ensure a smooth workflow for all
 contributors, the general procedure for contributing has been established:
 
-1. Either [open](https://github.com/treasurenet/issues/new/choose) or
-   [find](https://github.com/treasurenet/issues) an issue you'd like to help with
+1. Either [open](https://github.com/maoaixiao1314/treasureapp/issues/new/choose) or
+   [find](https://github.com/maoaixiao1314/treasureapp/issues) an issue you'd like to help with
 2. Participate in thoughtful discussion on that issue
 3. If you would like to contribute:
    1. If the issue is a proposal, ensure that the proposal has been accepted
@@ -64,7 +64,7 @@ Other notes:
 
 ## Architecture Decision Records (ADR)
 
-When proposing an architecture decision for Treasurenet, please start by opening an [issue](https://github.com/treasurenet/issues/new/choose) or a [discussion](https://github.com/treasurenet/discussions/new) with a summary of the proposal. Once the proposal has been discussed and there is rough alignment on a high-level approach to the design, the [ADR creation process](https://github.com/treasurenet/blob/main/docs/architecture/PROCESS.md) can begin. We are following this process to ensure all involved parties are in agreement before any party begins coding the proposed implementation. If you would like to see examples of how these are written, please refer to the current [ADRs](https://github.com/treasurenet/tree/main/docs/architecture).
+When proposing an architecture decision for Treasurenet, please start by opening an [issue](https://github.com/maoaixiao1314/treasureapp/issues/new/choose) or a [discussion](https://github.com/maoaixiao1314/treasureapp/discussions/new) with a summary of the proposal. Once the proposal has been discussed and there is rough alignment on a high-level approach to the design, the [ADR creation process](https://github.com/maoaixiao1314/treasureapp/blob/main/docs/architecture/PROCESS.md) can begin. We are following this process to ensure all involved parties are in agreement before any party begins coding the proposed implementation. If you would like to see examples of how these are written, please refer to the current [ADRs](https://github.com/maoaixiao1314/treasureapp/tree/main/docs/architecture).
 
 ## Pull Requests
 
@@ -204,7 +204,7 @@ should be targeted against the release candidate branch.
 - `main` must never fail `make lint test test-race`
 - `main` should not fail `make lint`
 - no `--force` onto `main` (except when reverting a broken commit, which should seldom happen)
-- create a development branch either on github.com/treasurenet, or your fork (using `git remote add origin`)
+- create a development branch either on github.com/maoaixiao1314/treasureapp, or your fork (using `git remote add origin`)
 - before submitting a pull request, begin `git rebase` on top of `main`
 
 ### Pull Merge Procedure
@@ -327,7 +327,7 @@ is broken up into three distinct stages: **Strategy Discovery**, **Concept Appro
 
 - Architecture Decision Records (ADRs) may be proposed by any contributors or maintainers of Treasurenet,
     and should follow the guidelines outlined in the
-    [ADR Creation Process](https://github.com/treasurenet/blob/main/docs/architecture/PROCESS.md)
+    [ADR Creation Process](https://github.com/maoaixiao1314/treasureapp/blob/main/docs/architecture/PROCESS.md)
 - After proposal, a time bound period for Request for Comment (RFC) on ADRs commences
 - ADRs are intended to be iterative, and may be merged into `main` while still in a `Proposed` status
 

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sort"
 
-	treasurenethd "github.com/treasurenet/crypto/hd"
+	treasurenethd "github.com/maoaixiao1314/treasureapp/crypto/hd"
 
 	bip39 "github.com/cosmos/go-bip39"
 	"github.com/spf13/cobra"

@@ -5,10 +5,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/treasurenet/app/ante"
-	"github.com/treasurenet/tests"
+	"github.com/maoaixiao1314/treasureapp/app/ante"
+	"github.com/maoaixiao1314/treasureapp/tests"
 
-	evmtypes "github.com/treasurenet/x/evm/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"

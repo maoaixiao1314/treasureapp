@@ -11,9 +11,9 @@ The `x/evm` module is responsible for executing Ethereum Virtual Machine (EVM) s
       "github.com/cosmos/cosmos-sdk/x/auth"
       "github.com/cosmos/cosmos-sdk/x/bank"
        
-      "github.com/treasurenet/app/ante"
-      treasurenet "github.com/treasurenet/types"
-      "github.com/treasurenet/x/evm"
+      "github.com/maoaixiao1314/treasureapp/app/ante"
+      treasurenet "github.com/maoaixiao1314/treasureapp/types"
+      "github.com/maoaixiao1314/treasureapp/x/evm"
    )
    ```
 

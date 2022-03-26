@@ -10,7 +10,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-	"github.com/treasurenet/encoding"
+	"github.com/maoaixiao1314/treasureapp/encoding"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in

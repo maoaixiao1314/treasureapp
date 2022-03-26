@@ -3,7 +3,7 @@ package config
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	treasurenet "github.com/treasurenet/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 const (

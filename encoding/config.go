@@ -11,8 +11,8 @@ import (
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	enccodec "github.com/treasurenet/encoding/codec"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	enccodec "github.com/maoaixiao1314/treasureapp/encoding/codec"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // MakeConfig creates an EncodingConfig for testing

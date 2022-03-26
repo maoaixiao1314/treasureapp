@@ -17,8 +17,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	//"github.com/treasurenet/x/evm/types"
-	store "github.com/treasurenet/app/contract"
+	//"github.com/maoaixiao1314/treasureapp/x/evm/types"
+	store "github.com/maoaixiao1314/treasureapp/app/contract"
 )
 
 type EventLog struct {

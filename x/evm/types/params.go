@@ -9,7 +9,7 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	"github.com/treasurenet/types"
+	"github.com/maoaixiao1314/treasureapp/types"
 )
 
 var _ paramtypes.ParamSet = &Params{}

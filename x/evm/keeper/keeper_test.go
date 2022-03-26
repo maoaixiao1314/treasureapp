@@ -17,12 +17,12 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/treasurenet/app"
-	"github.com/treasurenet/crypto/ethsecp256k1"
-	"github.com/treasurenet/encoding"
-	"github.com/treasurenet/tests"
-	treasurenet "github.com/treasurenet/types"
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/app"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/encoding"
+	"github.com/maoaixiao1314/treasureapp/tests"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethcmn "github.com/ethereum/go-ethereum/common"

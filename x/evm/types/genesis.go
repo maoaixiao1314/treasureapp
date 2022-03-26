@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	ethcmn "github.com/ethereum/go-ethereum/common"
-	treasurenet "github.com/treasurenet/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 // Validate performs a basic validation of a GenesisAccount fields.

@@ -2,12 +2,12 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
-	rpctypes "github.com/treasurenet/ethereum/rpc/types"
+	rpctypes "github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // GetQueryCmd returns the parent command for all x/bank CLi query commands.

@@ -10,8 +10,8 @@ import (
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 
-	"github.com/treasurenet/app"
-	treasurenetd "github.com/treasurenet/cmd/treasurenetd"
+	"github.com/maoaixiao1314/treasureapp/app"
+	treasurenetd "github.com/maoaixiao1314/treasureapp/cmd/treasurenetd"
 )
 
 func TestInitCmd(t *testing.T) {

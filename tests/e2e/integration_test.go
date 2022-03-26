@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/treasurenet/testutil/network"
-	treasurenet "github.com/treasurenet/types"
+	"github.com/maoaixiao1314/treasureapp/testutil/network"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 type IntegrationTestSuite struct {

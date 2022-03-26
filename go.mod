@@ -1,4 +1,4 @@
-module github.com/treasurenet
+module github.com/maoaixiao1314/treasureapp
 
 go 1.16
 

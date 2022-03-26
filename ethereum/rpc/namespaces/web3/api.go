@@ -1,7 +1,7 @@
 package web3
 
 import (
-	"github.com/treasurenet/version"
+	"github.com/maoaixiao1314/treasureapp/version"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

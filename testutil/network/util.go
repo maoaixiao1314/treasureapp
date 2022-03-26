@@ -30,9 +30,9 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/treasurenet/ethereum/rpc"
-	ethsrv "github.com/treasurenet/server"
-	treasurenet "github.com/treasurenet/types"
+	"github.com/maoaixiao1314/treasureapp/ethereum/rpc"
+	ethsrv "github.com/maoaixiao1314/treasureapp/server"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 func startInProcess(cfg Config, val *Validator) error {

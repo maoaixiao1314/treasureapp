@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/treasurenet/testutil/network"
+	"github.com/maoaixiao1314/treasureapp/testutil/network"
 )
 
 type IntegrationTestSuite struct {

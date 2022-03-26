@@ -15,9 +15,9 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/treasurenet/tests"
-	"github.com/treasurenet/x/evm/types"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/tests"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 func (suite *KeeperTestSuite) TestCreateAccount() {

@@ -13,8 +13,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
-	cryptocodec "github.com/treasurenet/crypto/codec"
-	treasurenet "github.com/treasurenet/types"
+	cryptocodec "github.com/maoaixiao1314/treasureapp/crypto/codec"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 func init() {

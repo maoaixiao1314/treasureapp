@@ -3,7 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // GetParams returns the total set of evm parameters.

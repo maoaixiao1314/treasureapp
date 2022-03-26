@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 
-	treasurenet "github.com/treasurenet/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 // PublicAPI is the eth_ prefixed set of APIs in the Web3 JSON-RPC spec.

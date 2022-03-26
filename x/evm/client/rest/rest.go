@@ -14,7 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 
-	rpctypes "github.com/treasurenet/ethereum/rpc/types"
+	rpctypes "github.com/maoaixiao1314/treasureapp/ethereum/rpc/types"
 
 	"github.com/ethereum/go-ethereum/common"
 )

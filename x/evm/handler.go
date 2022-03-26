@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 // NewHandler returns a handler for Treasurenet type messages.

@@ -12,7 +12,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	treasurenet "github.com/treasurenet/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 // InitConfig adds the chain-id, encoding and output flags to the persistent flag set.

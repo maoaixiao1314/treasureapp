@@ -22,8 +22,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	ethparams "github.com/ethereum/go-ethereum/params"
 
-	treasurenet "github.com/treasurenet/types"
-	"github.com/treasurenet/x/evm/types"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 var _ types.QueryServer = Keeper{}

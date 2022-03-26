@@ -5,7 +5,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/treasurenet/types"
+	"github.com/maoaixiao1314/treasureapp/types"
 
 	ethcmn "github.com/ethereum/go-ethereum/common"
 )

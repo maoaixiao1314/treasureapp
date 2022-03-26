@@ -49,11 +49,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/treasurenet/app"
-	"github.com/treasurenet/crypto/hd"
-	"github.com/treasurenet/encoding"
-	srvconfig "github.com/treasurenet/server/config"
-	treasurenet "github.com/treasurenet/types"
+	"github.com/maoaixiao1314/treasureapp/app"
+	"github.com/maoaixiao1314/treasureapp/crypto/hd"
+	"github.com/maoaixiao1314/treasureapp/encoding"
+	srvconfig "github.com/maoaixiao1314/treasureapp/server/config"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
 )
 
 // package-wide network lock to only allow one test network at a time

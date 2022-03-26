@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/treasurenet/version"
+	"github.com/maoaixiao1314/treasureapp/version"
 )
 
 const (

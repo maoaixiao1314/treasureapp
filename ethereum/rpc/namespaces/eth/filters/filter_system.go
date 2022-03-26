@@ -22,8 +22,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/treasurenet/ethereum/rpc/pubsub"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/ethereum/rpc/pubsub"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 var (

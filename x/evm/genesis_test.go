@@ -7,9 +7,9 @@ import (
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"github.com/treasurenet/crypto/ethsecp256k1"
-	"github.com/treasurenet/x/evm"
-	"github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/crypto/ethsecp256k1"
+	"github.com/maoaixiao1314/treasureapp/x/evm"
+	"github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 func (suite *EvmTestSuite) TestInitGenesis() {

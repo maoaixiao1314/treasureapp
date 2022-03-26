@@ -20,9 +20,9 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/treasurenet/crypto/hd"
-	treasurenet "github.com/treasurenet/types"
-	evmtypes "github.com/treasurenet/x/evm/types"
+	"github.com/maoaixiao1314/treasureapp/crypto/hd"
+	treasurenet "github.com/maoaixiao1314/treasureapp/types"
+	evmtypes "github.com/maoaixiao1314/treasureapp/x/evm/types"
 )
 
 const (
