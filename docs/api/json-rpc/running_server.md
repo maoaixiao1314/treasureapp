@@ -1,17 +1,17 @@
 <!--
-order: 1
+order: 2
 -->
 
 # Running the Server
 
-Learn how to run and setup the JSON-RPC server on Treasurenet. {synopsis}
+Learn how to run and setup the JSON-RPC server on Evmos. {synopsis}
 
 ## Enable Server
 
 To enable RPC server use the following flag (set to true by default).
 
 ```bash
-treasurenetd start --json-rpc.enable
+evmosd start --json-rpc.enable
 ```
 
 ## Defining Namespaces
@@ -19,7 +19,7 @@ treasurenetd start --json-rpc.enable
 `Eth`,`Net` and `Web3` [namespaces](./namespaces) are enabled by default. In order to enable other namespaces use flag `--json-rpc.api`.
 
 ```bash
-treasurenetd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
+evmosd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
 ```
 
 ## Set a Gas Cap
@@ -28,10 +28,10 @@ treasurenetd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
 
 ```bash
 # set gas cap to 85M
-treasurenetd start --json-rpc.gas-cap 85000000000
+evmosd start --json-rpc.gas-cap 85000000000
 
 # set gas cap to infinite (=0)
-treasurenetd start --json-rpc.gas-cap 0
+evmosd start --json-rpc.gas-cap 0
 ```
 
 ## CORS

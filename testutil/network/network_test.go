@@ -4,12 +4,17 @@
 package network_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/suite"
 
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/treasurenet/server/config"
 	"github.com/treasurenet/testutil/network"
+
+	treasurenetnetwork "github.com/treasurenet/testutil/network"
 )
 
 type IntegrationTestSuite struct {
@@ -21,11 +26,23 @@ type IntegrationTestSuite struct {
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
 
-	s.network = network.New(s.T(), network.DefaultConfig())
+	var err error
+	cfg := treasurenetnetwork.DefaultConfig()
+	cfg.JSONRPCAddress = config.DefaultJSONRPCAddress
+	cfg.NumValidators = 1
+
+	s.network, err = network.New(s.T(), s.T().TempDir(), cfg)
+	s.Require().NoError(err)
 	s.Require().NotNil(s.network)
 
-	_, err := s.network.WaitForHeight(1)
+	_, err = s.network.WaitForHeight(2)
 	s.Require().NoError(err)
+
+	if s.network.Validators[0].JSONRPCClient == nil {
+		address := fmt.Sprintf("http://%s", s.network.Validators[0].AppConfig.JSONRPC.Address)
+		s.network.Validators[0].JSONRPCClient, err = ethclient.Dial(address)
+		s.Require().NoError(err)
+	}
 }
 
 func (s *IntegrationTestSuite) TearDownSuite() {

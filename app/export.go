@@ -24,10 +24,9 @@ func NewDefaultGenesisState() simapp.GenesisState {
 
 // ExportAppStateAndValidators exports the state of the application for a genesis
 // file.
-func (app *TreasurenetApp) ExportAppStateAndValidators(
+func (app *Treasurenet) ExportAppStateAndValidators(
 	forZeroHeight bool, jailAllowedAddrs []string,
 ) (servertypes.ExportedApp, error) {
-
 	// Creates context with current height and checks txs for ctx to be usable by start of next block
 	ctx := app.NewContext(true, tmproto.Header{Height: app.LastBlockHeight()})
 
@@ -64,7 +63,7 @@ func (app *TreasurenetApp) ExportAppStateAndValidators(
 // prepare for fresh start at zero height
 // NOTE zero height genesis is a temporary feature which will be deprecated
 //      in favor of export at a block height
-func (app *TreasurenetApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) error {
+func (app *Treasurenet) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) error {
 	applyAllowedAddrs := false
 
 	// check if there is a allowed address list
@@ -87,7 +86,7 @@ func (app *TreasurenetApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowed
 
 	/* Handle fee distribution state. */
 
-	// withdraw all validator commission 撤销所有验证者佣金
+	// withdraw all validator commission
 	app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
 		_, _ = app.DistrKeeper.WithdrawValidatorCommission(ctx, val.GetOperator())
 		return false
@@ -174,7 +173,7 @@ func (app *TreasurenetApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowed
 	counter := int16(0)
 
 	for ; iter.Valid(); iter.Next() {
-		addr := sdk.ValAddress(stakingtypes.AddressFromValidatorsKey(iter.Key()))
+		addr := sdk.ValAddress(iter.Key()[1:])
 		validator, found := app.StakingKeeper.GetValidator(ctx, addr)
 		if !found {
 			return fmt.Errorf("expected validator %s not found", addr)
@@ -189,7 +188,9 @@ func (app *TreasurenetApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowed
 		counter++
 	}
 
-	iter.Close()
+	if err := iter.Close(); err != nil {
+		return err
+	}
 
 	if _, err := app.StakingKeeper.ApplyAndReturnValidatorSetUpdates(ctx); err != nil {
 		return err

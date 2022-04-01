@@ -12,6 +12,6 @@
   },
   "scripts": {
     "test-ganache": "yarn truffle test",
-    "test-ethermint": "yarn truffle test --network ethermint"
+    "test-treasurenet": "yarn truffle test --network treasurenet"
   }
 }

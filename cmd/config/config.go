@@ -7,27 +7,28 @@ import (
 )
 
 const (
-	// EthBech32Prefix defines the Bech32 prefix used for EthAccounts
-	EthBech32Prefix = "eth"
+	// Bech32Prefix defines the Bech32 prefix used for EthAccounts
+	Bech32Prefix = "eth"
 
 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
-	Bech32PrefixAccAddr = EthBech32Prefix
+	Bech32PrefixAccAddr = Bech32Prefix
 	// Bech32PrefixAccPub defines the Bech32 prefix of an account's public key
-	Bech32PrefixAccPub = EthBech32Prefix + sdk.PrefixPublic
+	Bech32PrefixAccPub = Bech32Prefix + sdk.PrefixPublic
 	// Bech32PrefixValAddr defines the Bech32 prefix of a validator's operator address
-	Bech32PrefixValAddr = EthBech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator
+	Bech32PrefixValAddr = Bech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator
 	// Bech32PrefixValPub defines the Bech32 prefix of a validator's operator public key
-	Bech32PrefixValPub = EthBech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator + sdk.PrefixPublic
+	Bech32PrefixValPub = Bech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator + sdk.PrefixPublic
 	// Bech32PrefixConsAddr defines the Bech32 prefix of a consensus node address
-	Bech32PrefixConsAddr = EthBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus
+	Bech32PrefixConsAddr = Bech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus
 	// Bech32PrefixConsPub defines the Bech32 prefix of a consensus node public key
-	Bech32PrefixConsPub = EthBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus + sdk.PrefixPublic
+	Bech32PrefixConsPub = Bech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus + sdk.PrefixPublic
 )
 
 const (
 	// DisplayDenom defines the denomination displayed to users in client applications.
-	//DisplayDenom = "photon"
 	DisplayDenom = "unit"
+	// BaseDenom defines to the default denomination used in Treasurenet (staking, EVM, governance, etc.)
+	BaseDenom = "aunit"
 )
 
 // SetBech32Prefixes sets the global prefixes to be used when serializing addresses and public keys to Bech32 strings.
@@ -50,7 +51,7 @@ func RegisterDenoms() {
 		panic(err)
 	}
 
-	if err := sdk.RegisterDenom(treasurenet.AttoPhoton, sdk.NewDecWithPrec(1, treasurenet.BaseDenomUnit)); err != nil {
+	if err := sdk.RegisterDenom(BaseDenom, sdk.NewDecWithPrec(1, treasurenet.BaseDenomUnit)); err != nil {
 		panic(err)
 	}
 }

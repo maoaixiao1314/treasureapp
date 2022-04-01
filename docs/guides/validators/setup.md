@@ -11,11 +11,11 @@ Learn how to setup and run a validator node {synopsis}
 - [Validator Overview](./overview.md) {prereq}
 - [Full Node Setup](../localnet/single_node.md#manual-localnet) {prereq}
 
-If you plan to use a KMS (key management system), you should go through these steps first: [Using a KMS](./../kms/kms.md).
+If you plan to use a Key Management System (KMS), you should go through these steps first: [Using a KMS](./../kms/kms.md).
 
 ## What is a Validator?
 
-[Validators](./overview.md) are responsible for committing new blocks to the blockchain through voting. A validator's stake is slashed if they become unavailable or sign blocks at the same height. Please read about [Sentry Node Architecture](./validator-faq.md#how-can-validators-protect-themselves-from-denial-of-service-attacks) to protect your node from DDOS attacks and to ensure high-availability.
+[Validators](./overview.md) are responsible for committing new blocks to the blockchain through voting. A validator's stake is slashed if they become unavailable or sign blocks at the same height. Please read about [Sentry Node Architecture](./validator-faq.md#how-can-validators-protect-themselves-from-denial-of-service-attacks) to protect your node from DDoS attacks and to ensure high-availability.
 
 ::: danger Warning
 If you want to become a validator for the Hub's `mainnet`, you should [research security](./security.md).
@@ -29,39 +29,37 @@ architecture.
 
 ## Minimum Requirements
 
-To run testnet nodes, you will need a machine with the following minimum requirements:
+To run testnet nodes, you will need a machine with the following minimum hardware requirements:
 
-<!-- TODO: verify -->
-- 4-core, x86_64 architecture processor;
-- 16 GB RAM;
-- 256 GB of storage space.
+- 4 or more physical CPU cores
+- At least 500GB of SSD disk storage
+- At least 32GB of memory (RAM)
+- At least 100mbps network bandwidth
+
+As the usage of the blockchain grows, the server requirements may increase as well, so you should have a plan for updating your server as well.
 
 ## Create Your Validator
 
-Your `ethvalconspub` can be used to create a new validator by staking tokens. You can find your validator pubkey by running:
+Your `evmosvalconspub` can be used to create a new validator by staking tokens. You can find your validator pubkey by running:
 
 ```bash
-ethermintd tendermint show-validator
+evmosd tendermint show-validator
 ```
 
 To create your validator, just use the following command:
 
-::: warning
-Don't use more `aphoton` than you have!
-:::
-
 ```bash
-ethermintd tx staking create-validator \
-  --amount=1000000aphoton \
-  --pubkey=$(ethermintd tendermint show-validator) \
+evmosd tx staking create-validator \
+  --amount=1000000aevmos \
+  --pubkey=$(evmosd tendermint show-validator) \
   --moniker="choose a moniker" \
   --chain-id=<chain_id> \
-  --commission-rate="0.10" \
-  --commission-max-rate="0.20" \
+  --commission-rate="0.05" \
+  --commission-max-rate="0.10" \
   --commission-max-change-rate="0.01" \
   --min-self-delegation="1000000" \
   --gas="auto" \
-  --gas-prices="0.025aphoton" \
+  --gas-prices="0.025aevmos" \
   --from=<key_name>
 ```
 
@@ -70,39 +68,31 @@ When specifying commission parameters, the `commission-max-change-rate` is used 
 :::
 
 ::: tip
-`Min-self-delegation` is a strictly positive integer that represents the minimum amount of self-delegated voting power your validator must always have. A `min-self-delegation` of `1000000` means your validator will never have a self-delegation lower than `1atom`
+`Min-self-delegation` is a strictly positive integer that represents the minimum amount of self-delegated voting power your validator must always have. A `min-self-delegation` of `1000000` means your validator will never have a self-delegation lower than `1 aevmos`
 :::
 
 You can confirm that you are in the validator set by using a third party explorer.
 
 ## Participate in Genesis as a Validator
 
-::: warning
-The genesis ceremony for Ethermint mainnet is closed. Please skip to the next section.
-:::
-
 If you want to participate in genesis as a validator, you need to justify that
 you have some stake at genesis, create one (or multiple) transactions to bond this stake to your validator address, and include this transaction in the genesis file.
 
-Your `ethvalconspub` can be used to create a new validator by staking tokens. You can find your validator pubkey by running:
+Your `evmosvalconspub` can be used to create a new validator by staking tokens. You can find your validator pubkey by running:
 
 ```bash
-ethermintd tendermint show-validator
+evmosd tendermint show-validator
 ```
 
-Next, craft your `ethermintd gentx` command.
+Next, craft your `evmosd gentx` command.
 
 ::: tip
 A `gentx` is a JSON file carrying a self-delegation. All genesis transactions are collected by a `genesis coordinator` and validated against an initial `genesis.json`.
 :::
 
-::: warning Note
-Don't use more `aphoton` than you have!
-:::
-
 ```bash
-ethermintd gentx \
-  --amount <amount_of_delegation_aphoton> \
+evmosd gentx \
+  --amount <amount_of_delegation_aevmos> \
   --commission-rate <commission_rate> \
   --commission-max-rate <commission_max_rate> \
   --commission-max-change-rate <commission_max_change_rate> \
@@ -114,7 +104,7 @@ ethermintd gentx \
 When specifying commission parameters, the `commission-max-change-rate` is used to measure % _point_ change over the `commission-rate`. E.g. 1% to 2% is a 100% rate increase, but only 1 percentage point.
 :::
 
-You can then submit your `gentx` on the [launch repository](https://github.com/cosmos/launch). These `gentx` will be used to form the final genesis file. 
+You can then submit your `gentx` on the [launch repository](https://github.com/cosmos/launch). These `gentx` will be used to form the final genesis file.
 
 ## Edit Validator Description
 
@@ -125,14 +115,14 @@ The <key_name> specifies which validator you are editing. If you choose to not i
 The `--identity` can be used as to verify identity with systems like Keybase or UPort. When using with Keybase `--identity` should be populated with a 16-digit string that is generated with a [keybase.io](https://keybase.io) account. It's a cryptographically secure method of verifying your identity across multiple online networks. The Keybase API allows us to retrieve your Keybase avatar. This is how you can add a logo to your validator profile.
 
 ```bash
-ethermintd tx staking edit-validator
+evmosd tx staking edit-validator
   --moniker="choose a moniker" \
-  --website="https://ethermint.dev" \
+  --website="https://evmos.org" \
   --identity=6A0D65E29A4CBC8E \
   --details="To infinity and beyond!" \
   --chain-id=<chain_id> \
   --gas="auto" \
-  --gas-prices="0.025aphoton" \
+  --gas-prices="0.025aevmos" \
   --from=<key_name> \
   --commission-rate="0.10"
 ```
@@ -149,7 +139,7 @@ __Note__: The `commission-rate` value must adhere to the following invariants:
 View the validator's information with this command:
 
 ```bash
-ethermintd query staking validator <account_cosmos>
+evmosd query staking validator <account_cosmos>
 ```
 
 ## Track Validator Signing Information
@@ -157,7 +147,7 @@ ethermintd query staking validator <account_cosmos>
 In order to keep track of a validator's signatures in the past you can do so by using the `signing-info` command:
 
 ```bash
-ethermintd query slashing signing-info <validator-pubkey>\
+evmosd query slashing signing-info <validator-pubkey>\
   --chain-id=<chain_id>
 ```
 
@@ -166,7 +156,7 @@ ethermintd query slashing signing-info <validator-pubkey>\
 When a validator is "jailed" for downtime, you must submit an `Unjail` transaction from the operator account in order to be able to get block proposer rewards again (depends on the zone fee distribution).
 
 ```bash
-ethermintd tx slashing unjail \
+evmosd tx slashing unjail \
   --from=<key_name> \
   --chain-id=<chain_id>
 ```
@@ -176,10 +166,10 @@ ethermintd tx slashing unjail \
 Your validator is active if the following command returns anything:
 
 ```bash
-ethermintd query tendermint-validator-set | grep "$(ethermintd tendermint show-address)"
+evmosd query tendermint-validator-set | grep "$(evmosd tendermint show-address)"
 ```
 
-You should now see your validator in one of Ethermint explorers. You are looking for the `bech32` encoded `address` in the `~/.ethermintd/config/priv_validator.json` file.
+You should now see your validator in one of Evmos explorers. You are looking for the `bech32` encoded `address` in the `~/.evmosd/config/priv_validator.json` file.
 
 ::: warning Note
 To be in the validator set, you need to have more total voting power than the 100th validator.
@@ -190,7 +180,7 @@ To be in the validator set, you need to have more total voting power than the 10
 When attempting to perform routine maintenance or planning for an upcoming coordinated
 upgrade, it can be useful to have your validator systematically and gracefully halt.
 You can achieve this by either setting the `halt-height` to the height at which
-you want your node to shutdown or by passing the `--halt-height` flag to `ethermintd`.
+you want your node to shutdown or by passing the `--halt-height` flag to `evmosd`.
 The node will shutdown with a zero exit code at that given height after committing
 the block.
 
@@ -198,12 +188,12 @@ the block.
 
 ### Problem #1: My validator has `voting_power: 0`
 
-Your validator has become jailed. Validators get jailed, i.e. get removed from the active validator set, if they do not vote on `500` of the last `10000` blocks, or if they double sign. 
+Your validator has become jailed. Validators get jailed, i.e. get removed from the active validator set, if they do not vote on `500` of the last `10000` blocks, or if they double sign.
 
-If you got jailed for downtime, you can get your voting power back to your validator. First, if `ethermintd` is not running, start it up again:
+If you got jailed for downtime, you can get your voting power back to your validator. First, if `evmosd` is not running, start it up again:
 
 ```bash
-ethermintd start
+evmosd start
 ```
 
 Wait for your full node to catch up to the latest block. Then, you can [unjail your validator](#unjail-validator)
@@ -211,26 +201,26 @@ Wait for your full node to catch up to the latest block. Then, you can [unjail y
 Lastly, check your validator again to see if your voting power is back.
 
 ```bash
-ethermintd status
+evmosd status
 ```
 
 You may notice that your voting power is less than it used to be. That's because you got slashed for downtime!
 
 ### Problem #2: My node crashes because of `too many open files`
 
-The default number of files Linux can open (per-process) is `1024`. `ethermintd` is known to open more than `1024` files. This causes the process to crash. A quick fix is to run `ulimit -n 4096` (increase the number of open files allowed) and then restart the process with `ethermintd start`. If you are using `systemd` or another process manager to launch `ethermintd` this may require some configuration at that level. A sample `systemd` file to fix this issue is below:
+The default number of files Linux can open (per-process) is `1024`. `evmosd` is known to open more than `1024` files. This causes the process to crash. A quick fix is to run `ulimit -n 4096` (increase the number of open files allowed) and then restart the process with `evmosd start`. If you are using `systemd` or another process manager to launch `evmosd` this may require some configuration at that level. A sample `systemd` file to fix this issue is below:
 
 ```toml
-# /etc/systemd/system/ethermintd.service
+# /etc/systemd/system/evmosd.service
 [Unit]
-Description=Ethermint Node
+Description=Evmos Node
 After=network.target
 
 [Service]
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu
-ExecStart=/home/ubuntu/go/bin/ethermintd start
+ExecStart=/home/ubuntu/go/bin/evmosd start
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=4096

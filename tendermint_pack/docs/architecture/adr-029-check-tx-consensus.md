@@ -98,7 +98,7 @@ func (app *CounterApplication) DeliverTx(tx []byte) types.ResponseDeliverTx {
 }
 ```
 
-The txCount is like the nonce in ethermint, it should be restored when entering the deliverTx phase. While some operation like checking the tx signature needs not to be done again. So the deliverTx can focus on how a tx can be applied, ignoring the checking of the tx, because all the checking has already been done in the checkBlock phase before.
+The txCount is like the nonce in treasurenet, it should be restored when entering the deliverTx phase. While some operation like checking the tx signature needs not to be done again. So the deliverTx can focus on how a tx can be applied, ignoring the checking of the tx, because all the checking has already been done in the checkBlock phase before.
 
 An optional optimization is alter the deliverTx to deliverBlock. For the block has already been checked by checkBlock, so all the txs in it are valid. So the app can cache the block, and in the deliverBlock phase, it just needs to apply the block in the cache. This optimization can save network current in deliverTx.
 

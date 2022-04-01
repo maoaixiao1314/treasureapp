@@ -20,11 +20,11 @@ function checkTestEnv() {
   
   const argv = yargs(hideBin(process.argv))
     .usage('Usage: $0 [options] <tests>')
-    .example('$0 --network ethermint', 'run all tests using ethermint network')
-    .example('$0 --network ethermint test1 test2', 'run only test1 and test2 using ethermint network')
+    .example('$0 --network treasurenet', 'run all tests using treasurenet network')
+    .example('$0 --network treasurenet test1 test2', 'run only test1 and test2 using treasurenet network')
     .help('h').alias('h', 'help')
-    .describe('network', 'set which network to use: ganache|ethermint')
-    .boolean('verbose-log').describe('verbose-log', 'print ethermintd output, default false')
+    .describe('network', 'set which network to use: ganache|treasurenet')
+    .boolean('verbose-log').describe('verbose-log', 'print treasurenetd output, default false')
     .argv;
 
   if (!fs.existsSync(path.join(__dirname, './node_modules'))) {
@@ -37,8 +37,8 @@ function checkTestEnv() {
     runConfig.network = 'ganache';
   }
   else {
-    if (argv.network !== 'ethermint' && argv.network !== 'ganache') {
-      panic('network is invalid. Must be ganache or ethermint');
+    if (argv.network !== 'treasurenet' && argv.network !== 'ganache') {
+      panic('network is invalid. Must be ganache or treasurenet');
     }
     else {
       runConfig.network = argv.network;
@@ -74,7 +74,7 @@ function loadTests() {
     // test package.json
     try {
       const testManifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'suites', dirname, 'package.json'), 'utf-8'))
-      const needScripts = ['test-ganache', 'test-ethermint'];
+      const needScripts = ['test-ganache', 'test-treasurenet'];
       for (const s of needScripts) {
         if (Object.keys(testManifest['scripts']).indexOf(s) === -1) {
           logger.warn(`${dirname} does not have test script: \`${s}\`. Skip this test suite.`);
@@ -92,7 +92,7 @@ function loadTests() {
 }
 
 function performTestSuite({ testName, network }) {
-  const cmd = network === 'ganache' ? 'test-ganache' : 'test-ethermint';
+  const cmd = network === 'ganache' ? 'test-ganache' : 'test-treasurenet';
   return new Promise((resolve, reject) => {
     const testProc = spawn('yarn', [cmd], {
       cwd: path.join(__dirname, 'suites', testName)
@@ -135,37 +135,37 @@ async function performTests({ allTests, runConfig }) {
 }
 
 function setupNetwork({ runConfig, timeout }) {
-  if (runConfig.network !== 'ethermint') {
+  if (runConfig.network !== 'treasurenet') {
     // no need to start ganache. Truffle will start it
     return;
   }
 
-  // Spawn the ethermint process
+  // Spawn the treasurenet process
 
   const spawnPromise = new Promise((resolve, reject) => {
-    const ethermintdProc = spawn('./init-test-node.sh', {
+    const treasurenetdProc = spawn('./init-test-node.sh', {
       cwd: __dirname,
       stdio: ['ignore', runConfig.verboseLog ? 'pipe' : 'ignore', 'pipe'],
     });
 
     logger.info(`Starting Ethermintd process... timeout: ${timeout}ms`);
     if (runConfig.verboseLog) {
-      ethermintdProc.stdout.pipe(process.stdout);
+      treasurenetdProc.stdout.pipe(process.stdout);
     }
-    ethermintdProc.stderr.on('data', d => {
+    treasurenetdProc.stderr.on('data', d => {
       const oLine = d.toString();
       if (runConfig.verboseLog) {
         process.stdout.write(oLine);
       }
       if (oLine.indexOf('Starting EVM RPC server') !== -1) {
         logger.info('Ethermintd started');
-        resolve(ethermintdProc);
+        resolve(treasurenetdProc);
       }
     });
   });
 
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error('Start ethermintd timeout!')), timeout);
+    setTimeout(() => reject(new Error('Start treasurenetd timeout!')), timeout);
   });
   return Promise.race([spawnPromise, timeoutPromise]);
 }

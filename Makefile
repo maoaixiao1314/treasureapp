@@ -2,7 +2,9 @@
 
 PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
-VERSION := $(shell echo $(shell git describe --always) | sed 's/^v//')
+DIFF_TAG=$(shell git rev-list --tags="v*" --max-count=1 --not $(shell git rev-list --tags="v*" "HEAD..origin"))
+DEFAULT_TAG=$(shell git rev-list --tags="v*" --max-count=1)
+VERSION ?= $(shell echo $(shell git describe --tags $(or $(DIFF_TAG), $(DEFAULT_TAG))) | sed 's/^v//')
 TMVERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::')
 COMMIT := $(shell git log -1 --format='%H')
 LEDGER_ENABLED ?= true
@@ -11,9 +13,14 @@ TREASURENET_BINARY = treasurenetd
 TREASURENET_DIR = treasurenet
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
-HTTPS_GIT := https://github.com/tharsis/ethermint.git
+HTTPS_GIT := https://github.com/treasurenet.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
+NAMESPACE := tharsishq
+PROJECT := treasurenet
+DOCKER_IMAGE := $(NAMESPACE)/$(PROJECT)
+COMMIT_HASH := $(shell git rev-parse --short=7 HEAD)
+DOCKER_TAG := $(COMMIT_HASH)
 
 export GO111MODULE = on
 
@@ -118,18 +125,35 @@ $(BUILD_TARGETS): go.sum $(BUILDDIR)/
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
 
-docker-build:
+build-reproducible: go.sum
+	$(DOCKER) rm latest-build || true
+	$(DOCKER) run --volume=$(CURDIR):/sources:ro \
+        --env TARGET_PLATFORMS='linux/amd64' \
+        --env APP=treasurenetd \
+        --env VERSION=$(VERSION) \
+        --env COMMIT=$(COMMIT) \
+        --env CGO_ENABLED=1 \
+        --env LEDGER_ENABLED=$(LEDGER_ENABLED) \
+        --name latest-build tendermintdev/rbuilder:latest
+	$(DOCKER) cp -a latest-build:/home/builder/artifacts/ $(CURDIR)/
+
+
+build-docker:
 	# TODO replace with kaniko
-	docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-	docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
+	$(DOCKER) build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+	$(DOCKER) tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
 	# docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${COMMIT_HASH}
 	# update old container
-	docker rm treasurenet || true
+	$(DOCKER) rm treasurenet || true
 	# create a new container from the latest image
-	docker create --name treasurenet -t -i treasurenet:latest treasurenet
+	$(DOCKER) create --name treasurenet -t -i ${DOCKER_IMAGE}:latest treasurenet
 	# move the binaries to the ./build directory
 	mkdir -p ./build/
-	docker cp treasurenet:/usr/bin/treasurenetd ./build/
+	$(DOCKER) cp treasurenet:/usr/bin/treasurenetd ./build/
+
+push-docker: build-docker
+	$(DOCKER) push ${DOCKER_IMAGE}:${DOCKER_TAG}
+	$(DOCKER) push ${DOCKER_IMAGE}:latest
 
 $(MOCKS_DIR):
 	mkdir -p $(MOCKS_DIR)
@@ -299,18 +323,22 @@ build-docs-versioned:
 
 test: test-unit
 test-all: test-unit test-race
-
+PACKAGES_UNIT=$(shell go list ./...)
 TEST_PACKAGES=./...
-TEST_TARGETS := test-unit test-race
+TEST_TARGETS := test-unit test-unit-cover test-race
 
 # Test runs-specific rules. To add a new test target, just add
 # a new rule, customise ARGS or TEST_PACKAGES ad libitum, and
 # append the new rule to the TEST_TARGETS list.
-test-unit: ARGS=-tags='norace'
+test-unit: ARGS=-timeout=10m -race
+test-unit: TEST_PACKAGES=$(PACKAGES_UNIT)
+
 test-race: ARGS=-race
 test-race: TEST_PACKAGES=$(PACKAGES_NOSIMULATION)
 $(TEST_TARGETS): run-tests
 
+test-unit-cover: ARGS=-timeout=10m -race -coverprofile=coverage.txt -covermode=atomic
+test-unit-cover: TEST_PACKAGES=$(PACKAGES_UNIT)
 
 run-tests:
 ifneq (,$(shell which tparse 2>/dev/null))
@@ -330,18 +358,7 @@ test-rpc:
 test-rpc-pending:
 	./scripts/integration-test-all.sh -t "pending" -q 1 -z 1 -s 2 -m "pending" -r "true"
 
-test-contract:
-	@type "npm" 2> /dev/null || (echo 'Npm does not exist. Please install node.js and npm."' && exit 1)
-	@type "solcjs" 2> /dev/null || (echo 'Solcjs does not exist. Please install solcjs using make contract-tools."' && exit 1)
-	@type "protoc" 2> /dev/null || (echo 'Failed to install protoc. Please reinstall protoc using make contract-tools.' && exit 1)
-	bash scripts/contract-test.sh
-
-test-solidity:
-	@echo "Beginning solidity tests..."
-	./scripts/run-solidity-tests.sh
-
-
-.PHONY: run-tests test test-all test-import test-rpc test-contract test-solidity $(TEST_TARGETS)
+.PHONY: run-tests test test-all test-import test-rpc $(TEST_TARGETS)
 
 test-sim-nondeterminism:
 	@echo "Running non-determinism test..."
@@ -391,10 +408,6 @@ test-sim-multi-seed-short \
 test-sim-multi-seed-long \
 test-sim-benchmark-invariants
 
-test-cover:
-	@export VERSION=$(VERSION); bash -x contrib/test_cover.sh
-.PHONY: test-cover
-
 benchmark:
 	@go test -mod=readonly -bench=. $(PACKAGES_NOSIMULATION)
 .PHONY: benchmark
@@ -406,8 +419,19 @@ benchmark:
 lint:
 	golangci-lint run --out-format=tab
 
+lint-contracts:
+	@cd contracts && \
+	npm i && \
+	npm run lint
+
 lint-fix:
 	golangci-lint run --fix --out-format=tab --issues-exit-code=0
+
+lint-fix-contracts:
+	@cd contracts && \
+	npm i && \
+	npm run lint-fix
+
 .PHONY: lint lint-fix
 
 format:
@@ -441,15 +465,17 @@ proto-format:
 	find ./ -not -path "./third_party/*" -name *.proto -exec clang-format -i {} \;
 
 proto-lint:
-	@$(DOCKER_BUF) check lint --error-format=json
+	@$(DOCKER_BUF) lint --error-format=json
 
 proto-check-breaking:
-	@$(DOCKER_BUF) check breaking --against-input $(HTTPS_GIT)#branch=main
+	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
 
-TM_URL              = https://raw.githubusercontent.com/tendermint/tendermint/v0.34.1/proto/tendermint
+TM_URL              = https://raw.githubusercontent.com/tendermint/tendermint/v0.34.15/proto/tendermint
 GOGO_PROTO_URL      = https://raw.githubusercontent.com/regen-network/protobuf/cosmos
-COSMOS_SDK_URL      = https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.42.5
+COSMOS_SDK_URL      = https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.1
+ETHERMINT_URL      	= https://raw.githubusercontent.com/treasurenet/v0.10.0
+IBC_GO_URL      		= https://raw.githubusercontent.com/cosmos/ibc-go/v3.0.0-rc0
 COSMOS_PROTO_URL    = https://raw.githubusercontent.com/regen-network/cosmos-proto/master
 
 TM_CRYPTO_TYPES     = third_party/proto/tendermint/crypto
@@ -578,7 +604,63 @@ release:
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
 		-w /go/src/$(PACKAGE_NAME) \
-		troian/golang-cross:${GOLANG_CROSS_VERSION} \
+		ghcr.io/troian/golang-cross:${GOLANG_CROSS_VERSION} \
 		release --rm-dist --skip-validate
 
 .PHONY: release-dry-run release
+
+###############################################################################
+###                        Compile Solidity Contracts                       ###
+###############################################################################
+
+CONTRACTS_DIR := contracts
+COMPILED_DIR := contracts/compiled_contracts
+TMP := tmp
+TMP_CONTRACTS := $(TMP).contracts
+TMP_COMPILED := $(TMP)/compiled.json
+TMP_JSON := $(TMP)/tmp.json
+
+# Compile and format solidity contracts for the erc20 module. Also install
+# openzeppeling as the contracts are build on top of openzeppelin templates.
+contracts-compile: contracts-clean openzeppelin create-contracts-json
+
+# Install openzeppelin solidity contracts
+openzeppelin:
+	@echo "Importing openzeppelin contracts..."
+	@cd $(CONTRACTS_DIR)
+	@npm install
+	@cd ../../../../
+	@mv node_modules $(TMP)
+	@mv package-lock.json $(TMP)
+	@mv $(TMP)/@openzeppelin $(CONTRACTS_DIR)
+
+# Clean tmp files
+contracts-clean:
+	@rm -rf tmp
+	@rm -rf node_modules
+	@rm -rf $(COMPILED_DIR)
+	@rm -rf $(CONTRACTS_DIR)/@openzeppelin
+
+# Compile, filter out and format contracts into the following format.
+# {
+# 	"abi": "[{\"inpu 			# JSON string
+# 	"bin": "60806040
+# 	"contractName": 			# filename without .sol
+# }
+create-contracts-json:
+	@for c in $(shell ls $(CONTRACTS_DIR) | grep '\.sol' | sed 's/.sol//g'); do \
+		command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed."; exit 1; } ;\
+		command -v solc > /dev/null 2>&1 || { echo >&2 "solc not installed."; exit 1; } ;\
+		mkdir -p $(COMPILED_DIR) ;\
+		mkdir -p $(TMP) ;\
+		echo "\nCompiling solidity contract $${c}..." ;\
+		solc --combined-json abi,bin $(CONTRACTS_DIR)/$${c}.sol > $(TMP_COMPILED) ;\
+		echo "Formatting JSON..." ;\
+		get_contract=$$(jq '.contracts["$(CONTRACTS_DIR)/'$$c'.sol:'$$c'"]' $(TMP_COMPILED)) ;\
+		add_contract_name=$$(echo $$get_contract | jq '. + { "contractName": "'$$c'" }') ;\
+		echo $$add_contract_name | jq > $(TMP_JSON) ;\
+		abi_string=$$(echo $$add_contract_name | jq -cr '.abi') ;\
+		echo $$add_contract_name | jq --arg newval "$$abi_string" '.abi = $$newval' > $(TMP_JSON) ;\
+		mv $(TMP_JSON) $(COMPILED_DIR)/$${c}.json ;\
+	done
+	@rm -rf tmp

@@ -6,7 +6,11 @@ parent:
 
 # Architecture Decision Records (ADR)
 
+<<<<<<< HEAD
 This is a location to record all high-level architecture decisions in Ethermint.
+=======
+This is a location to record all high-level architecture decisions in Evmos.
+>>>>>>> trevmos/upgrade-v1.1.2-to-v2
 
 You can read more about the ADR concept in this blog posts:
 
@@ -34,7 +38,12 @@ Please add a entry below in your Pull Request for an ADR.
 
 ## ADR Table of Contents
 
+<<<<<<< HEAD
 <!--
 Add an entry in the following format: 
 - [ADR XXX: ADR Title](./adr-XXX-adr-title.md)
 -->
+=======
+- [ADR 001: State](adr-001-state.md)
+- [ADR 002: EVM Hooks](adr-002-evm-hooks.md)
+>>>>>>> trevmos/upgrade-v1.1.2-to-v2

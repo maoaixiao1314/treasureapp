@@ -1,5 +1,5 @@
 <!--
-order: 4
+order: 5
 -->
 
 # Interacting with the Node
@@ -11,34 +11,34 @@ There are multiple ways to interact with a node: using the CLI, using gRPC or us
 Now that your very own node is running, it is time to try sending tokens from the first account you created to a second account. In a new terminal window, start by running the following query command:
 
 ```bash
-ethermintd query bank balances $MY_VALIDATOR_ADDRESS --chain-id=ethermintd-1
+evmosd query bank balances $MY_VALIDATOR_ADDRESS --chain-id=evmos_9000-3
 ```
 
-You should see the current balance of the account you created, equal to the original balance of `eth` you granted it minus the amount you delegated via the `gentx`. Now, create a second account:
+You should see the current balance of the account you created, equal to the original balance of tokens you granted it minus the amount you delegated via the `gentx`. Now, create a second account:
 
 ```bash
-ethermintd keys add recipient --keyring-backend=file
+evmosd keys add recipient --keyring-backend=file
 
 # Put the generated address in a variable for later use.
-RECIPIENT=$(ethermintd keys show recipient -a --keyring-backend=file)
+RECIPIENT=$(evmosd keys show recipient -a --keyring-backend=file)
 ```
 
 The command above creates a local key-pair that is not yet registered on the chain. An account is created the first time it receives tokens from another account. Now, run the following command to send tokens to the `recipient` account:
 
 ```bash
-ethermintd tx bank send $MY_VALIDATOR_ADDRESS $RECIPIENT 1000000aphoton --chain-id=ethermintd-1 --keyring-backend=file
+evmosd tx bank send $MY_VALIDATOR_ADDRESS $RECIPIENT 1000000aevmos --chain-id=evmos_9000-3 --keyring-backend=file
 
 # Check that the recipient account did receive the tokens.
-ethermintd query bank balances $RECIPIENT --chain-id=ethermintd-1
+evmosd query bank balances $RECIPIENT --chain-id=evmos_9000-3
 ```
 
 Finally, delegate some of the stake tokens sent to the `recipient` account to the validator:
 
 ```bash
-ethermintd tx staking delegate $(ethermintd keys show my_validator --bech val -a --keyring-backend=file) 500aphoton --from=recipient --chain-id=ethermintd-1 --keyring-backend=file
+evmosd tx staking delegate $(evmosd keys show my_validator --bech val -a --keyring-backend=file) 500aevmos --from=recipient --chain-id=evmos_9000-3 --keyring-backend=file
 
 # Query the total delegations to `validator`.
-ethermintd query staking delegations-to $(ethermintd keys show my_validator --bech val -a --keyring-backend=file) --chain-id=ethermintd-1
+evmosd query staking delegations-to $(evmosd keys show my_validator --bech val -a --keyring-backend=file) --chain-id=evmos_9000-3
 ```
 
 You should see two delegations, the first one made from the `gentx`, and the second one you just performed from the `recipient` account.
@@ -217,7 +217,3 @@ Assuming the state at that block has not yet been pruned by the node, this query
 ### Cross-Origin Resource Sharing (CORS)
 
 [CORS policies](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) are not enabled by default to help with security. If you would like to use the rest-server in a public environment we recommend you provide a reverse proxy, this can be done with [nginx](https://www.nginx.com/). For testing and development purposes there is an `enabled-unsafe-cors` field inside [`app.toml`](/run-node.md#configuring-the-node-using-apptoml).
-
-## Next {hide}
-
-Sending transactions using gRPC and REST requires some additional steps: generating the transaction, signing it, and finally broadcasting it. Read about [generating and signing transactions](./txs.md). {hide}

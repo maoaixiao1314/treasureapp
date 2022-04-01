@@ -1,6 +1,6 @@
 module.exports = {
   theme: 'cosmos',
-  title: 'Ethermint Documentation',
+  title: 'Treasurenet Documentation',
   locales: {
     '/': {
       lang: 'en-US'
@@ -12,38 +12,70 @@ module.exports = {
     },
   },
   head: [
-      [
-          "link",
-          {
-              rel: "stylesheet",
-              href:
-                  "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css",
-          },
-      ],
-      [
-          "link",
-          {
-              rel: "stylesheet",
-              href:
-                  "https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css",
-          },
-      ],
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href:
+          "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css",
+      },
+    ],
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href:
+          "https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css",
+      },
+    ],
   ],
   base: process.env.VUEPRESS_BASE || '/',
+  plugins: [
+    'vuepress-plugin-element-tabs'
+  ],
+  head: [
+    // ['link', { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }],
+    ['link', { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon32.png" }],
+    ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon16.png" }],
+    ['link', { rel: "manifest", href: "/site.webmanifest" }],
+    ['meta', { name: "msapplication-TileColor", content: "#2e3148" }],
+    ['meta', { name: "theme-color", content: "#ffffff" }],
+    ['link', { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    // ['link', { rel: "apple-touch-icon-precomposed", href: "/apple-touch-icon-precomposed.png" }],
+  ],
   themeConfig: {
-    repo: 'tharsis/ethermint',
-    docsRepo: 'tharsis/ethermint',
+    repo: 'tharsis/treasurenet',
+    docsRepo: 'tharsis/treasurenet',
     docsBranch: 'main',
     docsDir: 'docs',
     editLinks: true,
     custom: true,
+    project: {
+      name: 'Treasurenet',
+      denom: 'Treasurenet',
+      ticker: 'TREASURENET',
+      binary: 'treasurenetd',
+      testnet_denom: 'tTreasurenet',
+      testnet_ticker: 'tEVMOS',
+      rpc_url: 'https://eth.bd.evmos.org',
+      rpc_url_testnet: 'https://eth.bd.evmos.dev',
+      rpc_url_local: 'http://localhost:8545/',
+      chain_id: '9001',
+      testnet_chain_id: '9000',
+      latest_version: 'v1.0.0',
+      version_number: '1',
+      testnet_version_number: '3',
+      testnet_evm_explorer_url: 'https://evm.evmos.dev',
+      evm_explorer_url: 'https://evm.evmos.org',
+      testnet_cosmos_explorer_url: 'https://explorer.evmos.dev/',
+    },
     logo: {
-      src: '/ethermint-logo-horizontal-alpha.svg',
+      src: '/evmos-black.svg',
     },
     algolia: {
       id: 'BH4D9OD16A',
-      key: 'c5da4dd3636828292e3c908a0db39688',
-      index: 'ethermint'
+      key: 'a5d55fe5f540cc3bd28fa2c72f2b5bd8',
+      index: 'treasurenet'
     },
     topbar: {
       banner: false
@@ -100,6 +132,11 @@ module.exports = {
               path: '/guides/validators'
             },
             {
+              title: 'Upgrades',
+              directory: true,
+              path: '/guides/upgrades'
+            },
+            {
               title: 'Key Management System',
               directory: true,
               path: '/guides/kms'
@@ -130,10 +167,15 @@ module.exports = {
               path: '/testnet/join'
             },
             {
+              title: 'Token Faucet',
+              directory: false,
+              path: '/testnet/faucet'
+            },
+            {
               title: 'Deploy Node on Cloud',
               directory: false,
               path: '/testnet/cloud_providers'
-            },
+            }
           ]
         },
         {
@@ -143,19 +185,41 @@ module.exports = {
             directory: true,
             path: '/modules'
           }]
-        }, {
+        },
+        {
+          title: 'Block Explorers',
+          children: [
+            {
+              title: 'Block Explorers',
+              path: '/tools/explorers'
+            },
+            {
+              title: 'Blockscout (EVM)',
+              path: 'https://evm.evmos.dev'
+            },
+            {
+              title: 'Mintscan (Cosmos)',
+              path: 'https://explorer.evmos.dev/'
+            },
+          ]
+        },
+        {
           title: 'Resources',
           children: [
             {
-              title: 'Ethermint API Reference',
-              path: 'https://pkg.go.dev/github.com/tharsis/ethermint'
+              title: 'Treasurenet Go API',
+              path: 'https://pkg.go.dev/github.com/treasurenet'
             },
             {
-              title: 'Cosmos REST API Spec',
-              path: 'https://cosmos.network/rpc/'
+              title: 'Ethermint Library Go API',
+              path: 'https://pkg.go.dev/github.com/treasurenet'
             },
             {
-              title: 'JSON-RPC API Reference',
+              title: 'Treasurenet gRPC Gateway API',
+              path: 'https://api.evmos.dev/'
+            },
+            {
+              title: 'JSON-RPC API',
               path: '/api/json-rpc/endpoints'
             }
           ]
@@ -166,14 +230,14 @@ module.exports = {
       title: 'Help & Support',
       chat: {
         title: 'Developer Chat',
-        text: 'Chat with Ethermint developers on Discord.',
-        url: 'https://discord.gg/3ZbxEq4KDu',
+        text: 'Chat with Treasurenet developers on Discord.',
+        url: 'https://discord.gg/evmos',
         bg: 'linear-gradient(103.75deg, #1B1E36 0%, #22253F 100%)'
       },
       forum: {
-        title: 'Ethermint Developer Forum',
-        text: 'Join the Ethermint Developer Forum to learn more.',
-        url: 'https://forum.cosmos.network/c/ethermint',
+        title: 'Treasurenet Developer Forum',
+        text: 'Join the Treasurenet Developer Forum to learn more.',
+        url: 'https://forum.cosmos.network/c/treasurenet', // TODO: replace with commonwealth link
         bg: 'linear-gradient(221.79deg, #3D6B99 -1.08%, #336699 95.88%)',
         logo: 'ethereum-white'
       },
@@ -184,67 +248,67 @@ module.exports = {
       }
     },
     footer: {
-      logo: '/logo-bw.svg',
+      logo: '/evmos-black.svg',
       textLink: {
-        text: 'ethermint.dev',
-        url: 'https://ethermint.dev'
+        text: 'treasurenet.org',
+        url: 'https://evmos.org'
       },
       services: [
         {
           service: 'github',
-          url: 'https://github.com/tharsis/ethermint'
+          url: 'https://github.com/treasurenet'
         },
         {
           service: "twitter",
-          url: "https://twitter.com/ethermint",
+          url: "https://twitter.com/EvmosOrg",
+        },
+        {
+          service: "telegram",
+          url: "https://t.me/EvmosOrg",
         },
         {
           service: "linkedin",
           url: "https://www.linkedin.com/company/tharsis-finance/",
-      },
-      {
+        },
+        {
           service: "medium",
-          url: "https://medium.com/@tharsis_labs",
-      },
+          url: "https://evmos.blog/",
+        },
       ],
       smallprint: 'This website is maintained by Tharsis Labs Ltd.',
       links: [{
-          title: 'Documentation',
-          children: [{
-              title: 'Cosmos SDK Docs',
-              url: 'https://docs.cosmos.network/master/'
-            },
-            {
-              title: 'Ethereum Docs',
-              url: 'https://ethereum.org/developers'
-            },
-            {
-              title: 'Tendermint Core Docs',
-              url: 'https://docs.tendermint.com'
-            }
-          ]
+        title: 'Documentation',
+        children: [{
+          title: 'Cosmos SDK Docs',
+          url: 'https://docs.cosmos.network/master/'
         },
         {
-          title: 'Community',
-          children: [{
-              title: 'Ethermint Community',
-              url: 'https://discord.gg/3ZbxEq4KDu'
-            },
-            {
-              title: 'Ethermint Forum',
-              url: 'https://forum.cosmos.network/c/ethermint'
-            }
-          ]
+          title: 'Ethereum Docs',
+          url: 'https://ethereum.org/developers'
         },
         {
-          title: 'Tharsis',
-          children: [
-            {
-              title: 'Jobs at Tharsis',
-              url: 'https://tharsis.notion.site/Jobs-at-Tharsis-5a1642eb89b34747ae6f2db2d356fc0d'
-            }
-          ]
+          title: 'Tendermint Core Docs',
+          url: 'https://docs.tendermint.com'
         }
+        ]
+      },
+      {
+        title: 'Community',
+        children: [{
+          title: 'Treasurenet Community',
+          url: 'https://discord.gg/evmos'
+        },
+        ]
+      },
+      {
+        title: 'Tharsis',
+        children: [
+          {
+            title: 'Jobs at Tharsis',
+            url: 'https://tharsis.notion.site/'
+          }
+        ]
+      }
       ]
     },
     versions: [
@@ -252,10 +316,6 @@ module.exports = {
         "label": "main",
         "key": "main"
       },
-      {
-        "label": "v0.5",
-        "key": "v0.5"
-      }
     ],
   }
 };

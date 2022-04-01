@@ -1,5 +1,5 @@
 <!--
-order: 2
+order: 3
 -->
 
 # Deploy Node on Cloud
@@ -48,32 +48,32 @@ ssh -i digital-ocean-key root@<DROPLET_IP_ADDRESS>
 
 Now you are connected to the droplet.
 
-#### Install Ethermint
+#### Install Evmos
 
-Clone and build Ethermint in the droplet using `git`:
+Clone and build Evmos in the droplet using `git`:
 
 ```bash
-go install https://github.com/tharsis/ethermint.git
+go install https://github.com/treasurenet.git
 ```
 
 Check that the binaries have been successfully installed:
 
 ```bash
-ethermintd -h
+evmosd -h
 ```
 
 ### Copy the Genesis File
 
-To connect the node to the existing testnet, fetch the testnet's `genesis.json` file and copy it into the new droplets config directory (i.e `$HOME/.ethermintd/config/genesis.json`).
+To connect the node to the existing testnet, fetch the testnet's `genesis.json` file and copy it into the new droplets config directory (i.e `$HOME/.evmosd/config/genesis.json`).
 
 To do this ssh into both the testnet droplet and the new node droplet.
 
 On your local machine copy the genesis.json file from the testnet droplet to the new droplet using:
 
 ```bash
-scp -3 root@<TESTNET_IP_ADDRESS>:$HOME/.ethermintd/config/genesis.json root@<NODE_IP_ADDRESS>:$HOME/.ethermintd/config/genesis.json
+scp -3 root@<TESTNET_IP_ADDRESS>:$HOME/.evmosd/config/genesis.json root@<NODE_IP_ADDRESS>:$HOME/.evmosd/config/genesis.json
 ```
 
 ### Start the Node
 
-Once the genesis file is copied over run `ethermind start` inside the node droplet.
+Once the genesis file is copied over run `evmosd start` inside the node droplet.

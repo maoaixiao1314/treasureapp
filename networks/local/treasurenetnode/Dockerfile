@@ -7,7 +7,7 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y $PACKAGES
 
 # Set working directory for the build
-# WORKDIR /go/src/github.com/tharsis/ethermint
+# WORKDIR /go/src/github.com/treasurenet
 WORKDIR /go/src/github.com/treasurenet
 
 # Add source files
@@ -25,8 +25,8 @@ WORKDIR /
 RUN apt-get update
 
 # Copy over binaries from the build-env
-# COPY --from=build-env /go/src/github.com/tharsis/ethermint/build/ethermintd /
-# COPY --from=build-env /go/src/github.com/tharsis/ethermint/scripts/start-docker.sh /
+# COPY --from=build-env /go/src/github.com/treasurenet/build/treasurenetd /
+# COPY --from=build-env /go/src/github.com/treasurenet/scripts/start-docker.sh /
 
 COPY --from=build-env /go/src/github.com/treasurenet/build/treasurenetd /
 COPY --from=build-env /go/src/github.com/treasurenet/scripts/start-docker.sh /

@@ -16,9 +16,9 @@ import (
 	"github.com/treasurenet/encoding"
 )
 
-func TestTreasurenetAppExport(t *testing.T) {
+func TestTreasurenetExport(t *testing.T) {
 	db := dbm.NewMemDB()
-	app := NewTreasurenetApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, DefaultNodeHome, 0, encoding.MakeConfig(ModuleBasics), simapp.EmptyAppOptions{})
+	app := NewTreasurenet(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, DefaultNodeHome, 0, encoding.MakeConfig(ModuleBasics), simapp.EmptyAppOptions{})
 
 	genesisState := NewDefaultGenesisState()
 	stateBytes, err := json.MarshalIndent(genesisState, "", "  ")

@@ -6,7 +6,7 @@ order: 2
 
 ## Pre-requisite Readings
 
-- [Install Starport](https://docs.starport.network/intro/install.html)  {prereq}
+- [Install Starport](https://docs.starport.network/#install-starport)  {prereq}
 - [Install Docker](https://docs.docker.com/engine/installation/)  {prereq}
 - [Install docker-compose](https://docs.docker.com/compose/install/)  {prereq}
 
@@ -15,7 +15,7 @@ order: 2
 Once you have installed `starport`, just run the localnet by using
 
 ```bash
-starport serve
+starport chain serve --reset-once -v -c ./starport.yml
 ```
 
 ## Automated Localnet with Docker
@@ -251,5 +251,5 @@ If you have multiple binaries with different names, you can specify which one to
 
 ```bash
 # Run with custom binary
-BINARY=ethermint make localnet-start
+BINARY=treasurenet make localnet-start
 ```

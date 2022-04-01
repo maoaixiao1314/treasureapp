@@ -4,57 +4,78 @@ order: 1
 
 # Installation
 
+Build and install the Evmos binaries from source or using Docker. {synopsis}
+
 ## Pre-requisites
 
-### Install [`jq`](https://stedolan.github.io/jq)
+- [Install Go 1.17.5+](https://golang.org/dl/) {prereq}
+- [Install jq](https://stedolan.github.io/jq/download/) {prereq}
 
-On Mac `brew install jq` or download the official binaries on the project [website](https://stedolan.github.io/jq/download/).
+## Install Go
+
+::: warning
+Evmos is built using [Go](https://golang.org/dl/) version `1.17.5+`
+:::
+
+```bash
+go version
+```
+
+:::tip
+If the `evmosd: command not found` error message is returned, confirm that your [`GOPATH`](https://golang.org/doc/gopath_code#GOPATH) is correctly configured by running the following command:
+
+```bash
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+:::
 
 ## Install Binaries
 
+::: tip
+The latest {{ $themeConfig.project.name }} [version](https://github.com/treasurenet/releases) is `{{ $themeConfig.project.binary }} {{ $themeConfig.project.latest_version }}`
+:::
+
 ### GitHub
 
-Clone and build Ethermint using `git`:
+Clone and build {{ $themeConfig.project.name }} using `git`:
 
 ```bash
-git clone https://github.com/tharsis/ethermint.git
-cd ethermint
+git clone https://github.com/treasurenet.git
+cd evmos
 make install
 ```
 
-Check that the binaries have been successfully installed:
+Check that the `{{ $themeConfig.project.binary }}` binaries have been successfully installed:
 
 ```bash
-ethermintd version
+evmosd version
 ```
 
-## Docker
+### Docker
 
-You can build Ethermint using Docker by running:
+You can build {{ $themeConfig.project.name }} using Docker by running:
 
 ```bash
-make docker-build
+make build-docker
 ```
 
-This will install the binaries on the `./build` directory. Now, check that the binaries have been
-successfully installed:
+The command above will create a docker container: `tharsishq/evmos:latest`. Now you can run `evmosd` in the container.
 
 ```bash
-ethermintd version
+docker run -it -p 26657:26657 -p 26656:26656 -v ~/.evmosd/:/root/.evmosd tharsishq/evmos:latest evmosd version
+
+# To initialize
+# docker run -it -p 26657:26657 -p 26656:26656 -v ~/.evmosd/:/root/.evmosd tharsishq/evmos:latest evmosd init test-chain --chain-id test_9000-2
+
+# To run
+# docker run -it -p 26657:26657 -p 26656:26656 -v ~/.evmosd/:/root/.evmosd tharsishq/evmos:latest evmosd start
 ```
 
-## Releases
+### Releases
 
-::: warning
-Ethermint is under VERY ACTIVE DEVELOPMENT and should be treated as pre-alpha software. This means it is not meant to be run in production, its APIs are subject to change without warning and should not be relied upon, and it should not be used to hold any value. We will remove this warning when we have a release that is stable, secure, and properly tested.
-:::
-
-You can also download a specific release available on the Ethermint [repository](https://github.com/tharsis/ethermint/releases) or via command line:
+You can also download a specific release available on the {{ $themeConfig.project.name }} [repository](https://github.com/treasurenet/releases) or via command line:
 
 ```bash
-go install github.com/tharsis/ethermint@latest
+go install github.com/treasurenet@latest
 ```
-
-## Next {hide}
-
-Learn how to [run a node](./.run_node.md) {hide}

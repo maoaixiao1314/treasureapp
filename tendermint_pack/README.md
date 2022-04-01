@@ -150,7 +150,7 @@ Additional tooling can be found in [/docs/tools](/docs/tools).
 ### Applications
 
 - [Cosmos SDK](http://github.com/cosmos/cosmos-sdk); a cryptocurrency application framework
-- [Ethermint](http://github.com/cosmos/ethermint); Ethereum on Tendermint
+- [Ethermint](http://github.com/cosmos/treasurenet); Ethereum on Tendermint
 - [Many more](https://tendermint.com/ecosystem)
 
 ### Research

@@ -14,8 +14,8 @@ Learn about the differences between `Gas` and `Fees` in Ethereum and Cosmos. {sy
 The concept of Gas represents the amount of computational effort required to execute specific operations on the state machine.
 
 Gas was created on Ethereum to disallow the EVM (Ethereum Virtual Machine) from running infinite
-loops by allocating a small amount of monetary value into the system. A unit of gas, usually in a
-form as a fraction of the native coin, is consumed for every operation on the EVM and requires a
+loops by allocating a small amount of monetary value into the system. A unit of gas, usually in the
+form of a fraction of the native coin, is consumed for every operation on the EVM and requires a
 user to pay for these operations. These operations consist in state transitions such as sending a
 transaction or calling a contract.
 
@@ -23,11 +23,9 @@ Exactly like Ethereum, Cosmos utilizes the concept of gas and this is how Cosmos
 usage of operations during execution. Operations on Cosmos are represented as read or writes done to the chain's store.
 
 In Cosmos, a fee is calculated and charged to the user during a message execution. This fee is
-calculated from the sum of all gas consumed in an message execution:
+calculated from the sum of all gas consumed in a message execution:
 
-```
-fee = gas * gas price
-```
+$$fee = gas ~ * ~ gasPrice$$
 
 In both networks, gas is used to make sure that operations do not require an excess amount of
 computational power to complete and as a way to deter bad-acting users from spamming the network.
@@ -43,18 +41,18 @@ More information regarding gas in Cosmos SDK can be found [here](https://docs.co
 
 ## Matching EVM Gas consumption
 
-Ethermint is an EVM-compatible chain that supports Ethereum Web3 tooling. For this reason, gas
+Evmos is an EVM-compatible chain that supports Ethereum Web3 tooling. For this reason, gas
 consumption must be equitable with other EVMs, most importantly Ethereum.
 
 The main difference between EVM and Cosmos state transitions, is that the EVM uses a [gas table](https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go) for each OPCODE, whereas Cosmos uses a `GasConfig` that charges gas for each CRUD operation by setting a flat and per-byte cost for accessing the database.
 
 +++ https://github.com/cosmos/cosmos-sdk/blob/3fd376bd5659f076a4dc79b644573299fd1ec1bf/store/types/gas.go#L187-L196
 
-In order to match the the gas consumed by the EVM, the gas consumption logic from the SDK is ignored, and instead the gas consumed is calculated by subtracting the state transition leftover gas plus refund from the gas limit defined on the message.
+In order to match the gas consumed by the EVM, the gas consumption logic from the SDK is ignored, and instead the gas consumed is calculated by subtracting the state transition leftover gas plus refund from the gas limit defined on the message.
 
 To ignore the SDK gas consumption, we reset the transaction `GasMeter` count to 0 and manually set it to the `gasUsed` value computed by the EVM module at the end of the execution.
 
-+++ https://github.com/tharsis/ethermint/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/state_transition.go#L188
++++ https://github.com/treasurenet/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/state_transition.go#L188
 
 ### `AnteHandler`
 
@@ -79,24 +77,20 @@ by the validators of the network, and each validator can specify a different min
 This potentially allows end users to submit 0 fee transactions if there is at least one single
 validator that is willing to include transactions with `0` gas price in their blocks proposed.
 
-For this same reason, in Ethermint it is possible to send transactions with `0` fees for transaction
+For this same reason, in Evmos it is possible to send transactions with `0` fees for transaction
 types other than the ones defined by the `evm` module. EVM module transactions cannot have `0` fees
 as gas is required inherently by the EVM. This check is done by the EVM transactions stateless validation
-(i.e `ValidateBasic`) function as well as on the custom `AnteHandler` defined by Ethermint.
+(i.e `ValidateBasic`) function as well as on the custom `AnteHandler` defined by Evmos.
 
 ## Gas estimation
 
-Ethereum provides a JSON-RPC endpoint `eth_estimateGas` to help users set up a correct gas limit in their transactions. 
+Ethereum provides a JSON-RPC endpoint `eth_estimateGas` to help users set up a correct gas limit in their transactions.
 
 Unfortunately, we cannot make use of the SDK `tx simulation` for gas estimation because the pre-check in the Ante Handlers would require a valid signature, and the sender balance to be enough to pay for the gas. But in Ethereum, this endpoint can be called without specifying any sender address.
 
-For that reason, a specific query API `EstimateGas` is implemented in Ethermint. It will apply the transaction against the current block/state and perform a binary search in order to find the optimal gas value to return to the user (the same transaction will be applied over and over until we find the minimum gas needed before it fails). The reason we need to use a binary search is that the gas required for the
+For that reason, a specific query API `EstimateGas` is implemented in Evmos. It will apply the transaction against the current block/state and perform a binary search in order to find the optimal gas value to return to the user (the same transaction will be applied over and over until we find the minimum gas needed before it fails). The reason we need to use a binary search is that the gas required for the
 transaction might be higher than the value returned by the EVM after applying the transaction, so we need to try until we find the optimal value.
 
 A cache context will be used during the whole execution to avoid changes be persisted in the state.
 
-+++ https://github.com/tharsis/ethermint/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/grpc_query.go#L100
-
-## Next {hide}
-
-Learn about the different types of [tokens](./tokens.md) available {hide}
++++ https://github.com/treasurenet/blob/098da6d0cc0e0c4cefbddf632df1057383973e4a/x/evm/keeper/grpc_query.go#L100
