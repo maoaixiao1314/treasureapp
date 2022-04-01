@@ -42,7 +42,7 @@ list of `event` categories
 [here](https://godoc.org/github.com/tendermint/tendermint/types#pkg-constants).
 
 The `type` and `attribute` value of the `query` allow you to filter the specific `event` you are
-looking for. For example, a `MsgEthereumTx` transaction triggers an `event` of type `ethermint` and
+looking for. For example, a `MsgEthereumTx` transaction triggers an `event` of type `treasurenet` and
 has `sender` and `recipient` as `attributes`. Subscribing to this `event` would be done like so:
 
 ```json
@@ -60,7 +60,7 @@ where `hexAddress` is an Ethereum hex address (eg: `0x11223344556677889900112233
 
 ### Ethereum JSON-RPC Events
 
-Ethermint also supports the Ethereum [JSON-RPC](https://eth.wiki/json-rpc/API) filters calls to
+Treasurenet also supports the Ethereum [JSON-RPC](https://eth.wiki/json-rpc/API) filters calls to
 subscribe to [state logs](https://eth.wiki/json-rpc/API#eth_newfilter),
 [blocks](https://eth.wiki/json-rpc/API#eth_newblockfilter) or [pending
 transactions](https://eth.wiki/json-rpc/API#eth_newpendingtransactionfilter) changes.
@@ -90,7 +90,7 @@ To start a connection with the Tendermint websocket you need to define the addre
 flag when starting the node (default `tcp://127.0.0.1:26657`):
 
 ```bash
-ethermintd start --rpc.laddr="tcp://127.0.0.1:26657"
+treasurenetd start --rpc.laddr="tcp://127.0.0.1:26657"
 ```
 
 Then, start a websocket subscription with [ws](https://github.com/hashrocket/ws)
@@ -105,17 +105,17 @@ ws ws://localhost:8080/websocket
 
 ### Ethereum Websocket
 
-Since Ethermint runs uses Tendermint Core as it's consensus Engine and it's built with the Cosmos
+Since Treasurenet runs uses Tendermint Core as it's consensus Engine and it's built with the Cosmos
 SDK framework, it inherits the event format from them. However, in order to support the native Web3
 compatibility for websockets of the [Ethereum's
-PubSubAPI](https://geth.ethereum.org/docs/rpc/pubsub), Ethermint needs to cast the Tendermint
+PubSubAPI](https://geth.ethereum.org/docs/rpc/pubsub), Treasurenet needs to cast the Tendermint
 responses retrieved into the Ethereum types.
 
 You can start a connection with the Ethereum websocket using the `--json-rpc.ws-address` flag when starting
 the node (default `"0.0.0.0:8546"`):
 
 ```bash
-ethermintd start  --json-rpc.address"0.0.0.0:8545" --json-rpc.ws-address="0.0.0.0:8546" --evm.rpc.api="eth,web3,net,txpool,debug" --json-rpc.enable
+treasurenetd start  --json-rpc.address"0.0.0.0:8545" --json-rpc.ws-address="0.0.0.0:8546" --evm.rpc.api="eth,web3,net,txpool,debug" --json-rpc.enable
 ```
 
 Then, start a websocket subscription with [`ws`](https://github.com/hashrocket/ws)

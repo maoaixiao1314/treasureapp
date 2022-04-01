@@ -57,4 +57,4 @@ aside: false
 
 ## Contribute
 
-See [this file](https://github.com/tharsis/ethermint/blob/main/docs/DOCS_README.md) for details of the build process and considerations when making changes.
+See [this file](https://github.com/treasurenet/blob/main/docs/DOCS_README.md) for details of the build process and considerations when making changes.

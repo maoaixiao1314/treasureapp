@@ -15,6 +15,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterInterface((*AccountI)(nil), nil)
 	cdc.RegisterConcrete(&BaseAccount{}, "cosmos-sdk/BaseAccount", nil)
 	cdc.RegisterConcrete(&ModuleAccount{}, "cosmos-sdk/ModuleAccount", nil)
+	// cdc.RegisterConcrete(&EthAccount{}, "cosmos-sdk/EthAccount", nil)
 
 	legacytx.RegisterLegacyAminoCodec(cdc)
 }
@@ -27,6 +28,7 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		(*AccountI)(nil),
 		&BaseAccount{},
 		&ModuleAccount{},
+		//&EthAccount{},
 	)
 
 	registry.RegisterInterface(
@@ -34,6 +36,7 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		(*GenesisAccount)(nil),
 		&BaseAccount{},
 		&ModuleAccount{},
+		//&EthAccount{},
 	)
 }
 

@@ -6,12 +6,12 @@ order: 1
 
 This document outlines the steps to join an existing testnet {synopsis}
 
-## Install `ethermintd`
+## Install `treasurenetd`
 
-Follow the [installation](./../quickstart/installation) document to install the Ethermint binary `ethermintd`.
+Follow the [installation](./../quickstart/installation) document to install the Treasurenet binary `treasurenetd`.
 
 :::warning
-Make sure you have the right version of `ethermintd` installed
+Make sure you have the right version of `treasurenetd` installed
 :::
 
 ## Initialize Node
@@ -19,33 +19,33 @@ Make sure you have the right version of `ethermintd` installed
 We need to initialize the node to create all the necessary validator and node configuration files:
 
 ```bash
-ethermintd init <your_custom_moniker>
+treasurenetd init <your_custom_moniker>
 ```
 
 ::: danger
 Monikers can contain only ASCII characters. Using Unicode characters will render your node unreachable.
 :::
 
-By default, the `init` command creates your `~/.ethermintd` directory with subfolders `config/` and `data/`.
+By default, the `init` command creates your `~/.treasurenetd` directory with subfolders `config/` and `data/`.
 In the `config` directory, the most important files for configuration are `app.toml` and `config.toml`.
 
 ## Genesis & Seeds
 
 ### Copy the Genesis File
 
-Check the genesis file from the [`testnets`](https://github.com/tharsis/testnets) repository and copy it over to the `config` directory: `~/.ethermintd/config/genesis.json`.
+Check the genesis file from the [`testnets`](https://github.com/tharsis/testnets) repository and copy it over to the `config` directory: `~/.treasurenetd/config/genesis.json`.
 
 Then verify the correctness of the genesis configuration file:
 
 ```bash
-ethermintd validate-genesis
+treasurenetd validate-genesis
 ```
 
 ### Add Seed Nodes
 
-Your node needs to know how to find peers. You'll need to add healthy seed nodes to `$HOME/.ethermintd/config/config.toml`. The [`testnets`](https://github.com/tharsis/testnets) repo contains links to some seed nodes.
+Your node needs to know how to find peers. You'll need to add healthy seed nodes to `$HOME/.treasurenetd/config/config.toml`. The [`testnets`](https://github.com/tharsis/testnets) repo contains links to some seed nodes.
 
-Edit the file located in `~/.ethermintd/config/config.toml` and the `seeds` to the following:
+Edit the file located in `~/.treasurenetd/config/config.toml` and the `seeds` to the following:
 
 ```toml
 #######################################################
@@ -68,7 +68,7 @@ For more information on seeds and peers, you can the Tendermint [P2P documentati
 The final step is to [start the nodes](./../quickstart/run_node#start-node). Once enough voting power (+2/3) from the genesis validators is up-and-running, the testnet will start producing blocks.
 
 ```bash
-ethermintd start
+treasurenetd start
 ```
 
 ## Upgrading Your Node
@@ -84,8 +84,8 @@ If the version <new_version> you are upgrading to is not breaking from the previ
 First, remove the outdated files and reset the data.
 
 ```bash
-rm $HOME/.ethermintd/config/addrbook.json $HOME/.ethermintd/config/genesis.json
-ethermintd unsafe-reset-all
+rm $HOME/.treasurenetd/config/addrbook.json $HOME/.treasurenetd/config/genesis.json
+treasurenetd unsafe-reset-all
 ```
 
 Your node is now in a pristine state while keeping the original `priv_validator.json` and `config.toml`. If you had any sentry nodes or full nodes setup before,
@@ -101,5 +101,5 @@ Make sure that every node has a unique `priv_validator.json`. Do not copy the `p
 To restart your node, just type:
 
 ```bash
-ethermintd start
+treasurenetd start
 ```

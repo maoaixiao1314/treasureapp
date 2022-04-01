@@ -255,7 +255,12 @@ func (registry *interfaceRegistry) UnpackAny(any *Any, iface interface{}) error 
 // registered with RegisterInterface/RegisterImplementations, as well as those
 // registered with RegisterWithCustomTypeURL.
 func (registry *interfaceRegistry) Resolve(typeURL string) (proto.Message, error) {
+	// if typeURL == "/treasurenet.types.v1.EthAccount" {
+	// 	typeURL = "/cosmos.auth.v1beta1.BaseAccount"
+	// }
 	typ, found := registry.typeURLMap[typeURL]
+	// fmt.Printf("typeURL:%+v\n", typeURL)
+	//fmt.Printf("typeURLMap:%+v\n", registry.typeURLMap)
 	if !found {
 		return nil, fmt.Errorf("unable to resolve type URL %s", typeURL)
 	}

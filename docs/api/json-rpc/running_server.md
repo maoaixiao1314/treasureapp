@@ -4,14 +4,14 @@ order: 1
 
 # Running the Server
 
-Learn how to run and setup the JSON-RPC server on Ethermint. {synopsis}
+Learn how to run and setup the JSON-RPC server on Treasurenet. {synopsis}
 
 ## Enable Server
 
 To enable RPC server use the following flag (set to true by default).
 
 ```bash
-ethermintd start --json-rpc.enable
+treasurenetd start --json-rpc.enable
 ```
 
 ## Defining Namespaces
@@ -19,7 +19,7 @@ ethermintd start --json-rpc.enable
 `Eth`,`Net` and `Web3` [namespaces](./namespaces) are enabled by default. In order to enable other namespaces use flag `--json-rpc.api`.
 
 ```bash
-ethermintd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
+treasurenetd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
 ```
 
 ## Set a Gas Cap
@@ -28,10 +28,10 @@ ethermintd start --json-rpc.api eth,txpool,personal,net,debug,web3,miner
 
 ```bash
 # set gas cap to 85M
-ethermintd start --json-rpc.gas-cap 85000000000
+treasurenetd start --json-rpc.gas-cap 85000000000
 
 # set gas cap to infinite (=0)
-ethermintd start --json-rpc.gas-cap 0
+treasurenetd start --json-rpc.gas-cap 0
 ```
 
 ## CORS

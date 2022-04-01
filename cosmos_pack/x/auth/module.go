@@ -167,6 +167,7 @@ func (AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.Validato
 func (AppModule) NewEndBlock(_ sdk.Context, _ abci.RequestEndBlock, _ sdk.ABCIMessageLogs) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
+
 // AppModuleSimulation functions
 
 // GenerateGenesisState creates a randomized GenState of the auth module

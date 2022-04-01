@@ -4,7 +4,6 @@ FROM golang:alpine AS build-env
 ENV PACKAGES git build-base
 
 # Set working directory for the build
-# WORKDIR /go/src/github.com/tharsis/ethermint
 WORKDIR /go/src/github.com/treasurenet
 
 # Install dependencies
@@ -25,8 +24,6 @@ RUN apk add --update ca-certificates jq
 WORKDIR /
 
 # Copy over binaries from the build-env
-# COPY --from=build-env /go/src/github.com/tharsis/ethermint/build/ethermintd /usr/bin/ethermintd
 COPY --from=build-env /go/src/github.com/treasurenet/build/treasurenetd /usr/bin/treasurenetd
-# Run ethermintd by default
-# CMD ["ethermintd"]
+# Run treasurenetd by default
 CMD ["treasurenetd"]

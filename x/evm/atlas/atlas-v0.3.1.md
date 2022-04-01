@@ -11,9 +11,9 @@ The `x/evm` module is responsible for executing Ethereum Virtual Machine (EVM) s
       "github.com/cosmos/cosmos-sdk/x/auth"
       "github.com/cosmos/cosmos-sdk/x/bank"
        
-      "github.com/tharsis/ethermint/app/ante"
-      ethermint "github.com/tharsis/ethermint/types"
-      "github.com/tharsis/ethermint/x/evm"
+      "github.com/treasurenet/app/ante"
+      treasurenet "github.com/treasurenet/types"
+      "github.com/treasurenet/x/evm"
    )
    ```
 
@@ -37,13 +37,13 @@ The `x/evm` module is responsible for executing Ethereum Virtual Machine (EVM) s
    }
    ```
 
-4. Define the Ethermint `ProtoAccount` for the `AccountKeeper`
+4. Define the Treasurenet `ProtoAccount` for the `AccountKeeper`
 
    ```go
    func NewApp(...) *App {
       // ...
         app.AccountKeeper = auth.NewAccountKeeper(
-            cdc, keys[auth.StoreKey], app.subspaces[auth.ModuleName], ethermint.ProtoAccount,
+            cdc, keys[auth.StoreKey], app.subspaces[auth.ModuleName], treasurenet.ProtoAccount,
         )
    }
    ```
@@ -92,7 +92,7 @@ The `x/evm` module is responsible for executing Ethereum Virtual Machine (EVM) s
     }
     ```
 
-9. Set the Ethermint `AnteHandler` to support EVM transactions. Note,
+9. Set the Treasurenet `AnteHandler` to support EVM transactions. Note,
 the default `AnteHandler` provided by the `x/evm` module depends on the `x/auth` and `x/supply`
 modules.
 
@@ -172,10 +172,3 @@ type Params struct {
 
 ## Client
 
-### JSON-RPC
-
-See the Ethermint [JSON-RPC docs](https://ethermint.dev/basics/json_rpc.html) for reference.
-
-## Documentation and Specification
-
-* Ethermint documentation: [https://ethermint.dev](https://ethermint.dev)

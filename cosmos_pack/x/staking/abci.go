@@ -27,9 +27,6 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) []abci.ValidatorUpdate {
 }
 func NewEndBlocker(ctx sdk.Context, k keeper.Keeper, log sdk.ABCIMessageLogs) []abci.ValidatorUpdate {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyEndBlocker) //该库提供了一个metrics包，可用于以灵活的方式检测代码、公开应用程序指标和分析运行时性能。
-	//fmt.Println("这是endblock", 123)
-	//fmt.Println("k.NewBlockValidatorUpdates(ctx):", k.NewBlockValidatorUpdates(ctx, log))
-	//fmt.Println("log-cosmos:", log)
-	//return k.BlockValidatorUpdates(ctx)
+
 	return k.NewBlockValidatorUpdates(ctx, log)
 }

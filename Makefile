@@ -7,9 +7,7 @@ TMVERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::'
 COMMIT := $(shell git log -1 --format='%H')
 LEDGER_ENABLED ?= true
 BINDIR ?= $(GOPATH)/bin
-# ETHERMINT_BINARY = ethermintd
 TREASURENET_BINARY = treasurenetd
-# ETHERMINT_DIR = ethermint
 TREASURENET_DIR = treasurenet
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
@@ -128,7 +126,6 @@ docker-build:
 	# update old container
 	docker rm treasurenet || true
 	# create a new container from the latest image
-	# docker create --name treasurenet -t -i tharsis/ethermint:latest ethermint
 	docker create --name treasurenet -t -i treasurenet:latest treasurenet
 	# move the binaries to the ./build directory
 	mkdir -p ./build/
